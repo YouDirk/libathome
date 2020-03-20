@@ -15,7 +15,12 @@
 > along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-lib@home
-========
+logo-original.gfdl-attribution-sharealike.png
+=============================================
 
-A framework to develop a `*@home` project, for distributed calculations.
+Was downloaded from
+
+* https://upload.wikimedia.org/wikipedia/commons/3/3f/8tim_TIM_barrel.png
+* Copyright [Akane700](https://commons.wikimedia.org/wiki/User:Akane700)
+* License: [GNU Free Documentation License, Version 1.2 or any later](
+  https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt)
