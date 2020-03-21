@@ -15,15 +15,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-OUTPUT = client
-OBJ = main
+OUTPUT = libathome-common.so
+OBJ = Common
 
 DEBUGFLAGS = -g
 OPTFLAG = -O0
 
-INCLUDE_PATHS = ..
-LD_PATHS = ../libathome-common
-LIBS = athome-common
+INCLUDE_PATHS =
+LD_PATHS =
+LIBS =
 
 EBROWSEFILE = BROWSE
 CTAGSFILE = tags
@@ -50,9 +50,11 @@ OBJFILES = $(OBJ:=.$(OEXT))
 DEPFILES = $(OBJ:=.$(DEPEXT))
 
 FLAGS = $(DEBUGFLAGS) -Wall $(OPTFLAG)
-CCFLAGS = $(FLAGS) -c -DDEBUG $(addprefix -I,$(INCLUDE_PATHS))
+CCFLAGS = $(FLAGS) -c -fPIC -DPIC \
+          -DDEBUG $(addprefix -I,$(INCLUDE_PATHS))
 ASFLAGS = $(CCFLAGS)
-LDFLAGS = $(FLAGS) $(addprefix -L,$(LD_PATHS))
+LDFLAGS = $(FLAGS) \
+          -shared $(addprefix -L,$(LD_PATHS))
 DEBUGGERFLAGS = --quiet
 
 NULLCHAR =

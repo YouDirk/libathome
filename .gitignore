@@ -18,7 +18,7 @@
 # Source generation
 /src/**/*.o
 /src/**/*.d
-/src/client/client
+/src/**/*.so
 
 # Backup files
 *~

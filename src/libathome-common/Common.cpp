@@ -16,15 +16,19 @@
  */
 
 
-#ifndef COMMON_H__
-#define COMMON_H__
+#include "Common.hpp"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+using namespace libathome_common;
 
-#define STRING_LEN                 256
 
-typedef char                       string_t[STRING_LEN];
+Common::Common(int argc, char** argv)
+{
+  this->hello = strdup("Hello World!");
 
-#endif /* COMMON_H__  */
+  printf("%s: %s\n", argv[0], this->hello);
+}
+
+Common::~Common()
+{
+  free(this->hello);
+}

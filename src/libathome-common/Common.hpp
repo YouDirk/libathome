@@ -16,16 +16,30 @@
  */
 
 
-#include "libathome-common/Common.hpp"
+#ifndef LIBATHOME_COMMON_COMMON_H__
+#define LIBATHOME_COMMON_COMMON_H__
 
-using namespace libathome_common;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-
-int
-main(int argc, char** argv)
+namespace libathome_common
 {
-  Common* init = new Common(argc, argv);
 
-  delete init;
-  return 0;
-}
+class Common
+{
+public:
+  static const unsigned            STRING_LEN = 256;
+
+  explicit Common(int argc, char** argv);
+  virtual ~Common();
+
+private:
+  char* hello;
+
+}; /* class Common  */
+
+typedef char                       string_t[Common::STRING_LEN];
+
+} /* namespace libathome_common  */
+#endif /* LIBATHOME_COMMON_COMMON_H__  */
