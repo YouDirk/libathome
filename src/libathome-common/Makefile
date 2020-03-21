@@ -15,8 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-OUTPUT = libathome-common.so
+LIBNAME = libathome-common
 OBJ = Common
+
+OUTPUT = $(LIBNAME).so
+MAIN_HEADER = $(LIBNAME).hpp
 
 DEBUGFLAGS = -g
 OPTFLAG = -O0
@@ -38,6 +41,8 @@ VALGRIND = valgrind
 EBROWSE = ebrowse
 CTAGS = ctags
 ETAGS = etags
+SED = sed
+TOUCH = touch
 
 CEXT = cpp
 HEXT = hpp
@@ -48,6 +53,7 @@ LOGEXT = log
 
 OBJFILES = $(OBJ:=.$(OEXT))
 DEPFILES = $(OBJ:=.$(DEPEXT))
+HFILES = $(OBJ:=.$(HEXT))
 
 FLAGS = $(DEBUGFLAGS) -Wall $(OPTFLAG)
 CCFLAGS = $(FLAGS) -c -fPIC -DPIC \
@@ -72,7 +78,7 @@ MAKEDEP = $(CC) $(CCFLAGS) -M
 .PHONY: all recompile run debug debug-emacs ctags etags ebrowse \
         all-tags clean-deps clean-tags clean clean-all
 
-all: $(OUTPUT)
+all: $(OUTPUT) ../$(MAIN_HEADER)
 
 recompile: clean all
 
@@ -104,9 +110,10 @@ clean-tags:
 
 clean: clean-deps
 	rm -rf *.$(OEXT) *.$(LOGEXT) *~
+	$(TOUCH) $(MAIN_HEADER)
 
 clean-all: clean clean-tags
-	rm -f $(OUTPUT)
+	rm -f $(OUTPUT) ../$(MAIN_HEADER)
 
 %.$(DEPEXT): %.$(CEXT)
 	@$(MAKEDEP) -MQ $*.$(OEXT) -o $@ $<
@@ -129,5 +136,11 @@ $(EBROWSEFILE): $(TAGEDFILES)
 
 $(OUTPUT): $(OBJFILES)
 	$(LD) $(LDFLAGS) -o $@ $^ $(addprefix -l,$(LIBS))
+
+../$(MAIN_HEADER): $(MAIN_HEADER) $(HFILES)
+	@echo "Generating $@ from $<"
+	@$(SED) \
+	  's/^#error.*$$/$(patsubst %,\n#include "$(LIBNAME)\/%",$^)/' \
+	  $< > $@
 
 -include $(DEPFILES)
