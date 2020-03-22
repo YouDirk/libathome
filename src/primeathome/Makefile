@@ -1,5 +1,5 @@
 # `lib@home`, a distributed calculations framework
-# Copyright (C) 2019  Dirk "YouDirk" Lehmann
+# Copyright (C) 2020  Dirk "YouDirk" Lehmann
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,20 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Executables
-/src/*/*.so
-/src/*/*-client*
-/src/*/*-server*
+OUTPUT = primeathome-client
+OBJ = main
 
-# Compiling stuff
-/src/**/*.o
-/src/**/*.d
+INCLUDE_PATHS = ..
+LD_PATHS = ../libathome-common ../libathome-client
+LIBS = athome-common athome-client
 
-# Auto completion stuff
-/src/**/tags
-/src/**/TAGS
-/src/**/BROWSE
-
-# Backup files
-*~
-*.bak
+include ../../makeinc/makefile.inc.mk

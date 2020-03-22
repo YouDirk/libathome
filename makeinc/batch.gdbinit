@@ -1,5 +1,5 @@
 # `lib@home`, a distributed calculations framework
-# Copyright (C) 2019  Dirk "YouDirk" Lehmann
+# Copyright (C) 2020  Dirk "YouDirk" Lehmann
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,20 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# Executables
-/src/*/*.so
-/src/*/*-client*
-/src/*/*-server*
+# Using GDB shell:
+# (gdb)$> b{break} Class::method
+# (gdb)$> c{continue}
+# (gdb)$> wa{watch} Expression
+# (gdb)$> n{next}/s{step}
+# (gdb)$> q{quit}
 
-# Compiling stuff
-/src/**/*.o
-/src/**/*.d
-
-# Auto completion stuff
-/src/**/tags
-/src/**/TAGS
-/src/**/BROWSE
-
-# Backup files
-*~
-*.bak
+set directories ../libathome-client:../libathome-common
+start

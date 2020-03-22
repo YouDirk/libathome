@@ -15,15 +15,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-OUTPUT = client
-OBJ = main
-
 DEBUGFLAGS = -g
+DEBUGMACROS = -DDEBUG
 OPTFLAG = -O0
+WARNFLAGS = -Wall
 
-INCLUDE_PATHS = ..
-LD_PATHS = ../libathome-common ../libathome-client
-LIBS = athome-common athome-client
+# Compiling library?
+ifneq (,$(LIBNAME))
+  OUTPUT = $(LIBNAME).so
+  MAIN_HEADER = $(LIBNAME).hpp
+  FPICFLAGS = -fPIC -DPIC
+  SHAREDFLAGS = -shared
+else
+  MAIN_HEADER =
+  FPICFLAGS =
+  SHAREDFLAGS =
+endif
 
 EBROWSEFILE = BROWSE
 CTAGSFILE = tags
@@ -38,6 +45,8 @@ VALGRIND = valgrind
 EBROWSE = ebrowse
 CTAGS = ctags
 ETAGS = etags
+SED = sed
+TOUCH = touch
 
 CEXT = cpp
 HEXT = hpp
@@ -48,12 +57,14 @@ LOGEXT = log
 
 OBJFILES = $(OBJ:=.$(OEXT))
 DEPFILES = $(OBJ:=.$(DEPEXT))
+HFILES = $(OBJ:=.$(HEXT))
 
-FLAGS = $(DEBUGFLAGS) -Wall $(OPTFLAG)
-CCFLAGS = $(FLAGS) -c -DDEBUG $(addprefix -I,$(INCLUDE_PATHS))
+FLAGS = $(DEBUGFLAGS) $(WARNFLAGS) $(OPTFLAG)
+CCFLAGS = $(FLAGS) -c $(FPICFLAGS) $(DEBUGMACROS) \
+          $(addprefix -I,$(INCLUDE_PATHS))
 ASFLAGS = $(CCFLAGS)
-LDFLAGS = $(FLAGS) $(addprefix -L,$(LD_PATHS))
-DEBUGGERFLAGS = --quiet
+LDFLAGS = $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))
+DEBUGGERFLAGS = --quiet -x ../../makeinc/batch.gdbinit
 
 NULLCHAR =
 RUN_ENV = \
@@ -67,9 +78,8 @@ EBROWSEFLAGS =
 
 MAKEDEP = $(CC) $(CCFLAGS) -M
 
-.PHONY: all recompile run debug debug-emacs ctags etags ebrowse \
-        all-tags clean-deps clean-tags clean clean-all all-this
 
+.PHONY: all all-this
 all:
 	@for i in $(LD_PATHS); do \
 	  echo $(MAKE) -C $$i all-this; \
@@ -78,37 +88,50 @@ all:
 	$(MAKE) all-this
 all-this: $(OUTPUT) ../$(MAIN_HEADER)
 
+.PHONY: recompile
 recompile: clean all
 
+# TODO
+
+.PHONY: run run-leakcheck
 run: all
 	$(RUN_ENV) ./$(OUTPUT) $(ARGS)
 run-leakcheck: all
 	$(RUN_ENV) $(VALGRIND) --leak-check=full ./$(OUTPUT) $(ARGS)
 
+# Using GDB shell:
+# (gdb)$> b{break} Class::method
+# (gdb)$> c{continue}
+# (gdb)$> wa{watch} Expression
+# (gdb)$> n{next}/s{step}
+
+# TODO
+
+.PHONY: debug debug-emacs
 debug: all
 	$(RUN_ENV) $(DEBUGGER) $(DEBUGGERFLAGS) $(OUTPUT)
+debug-emacs:
+	@$(RUN_ENV) $(DEBUGGER) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
 
-# Set in GDB shell: 'set environment LD_LIBRARY_PATH=../lib'
-debug-emacs: all
-	$(RUN_ENV) $(DEBUGGER) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
-
+.PHONY: ctags etags ebrowse
 ctags: $(CTAGSFILE)
-
 etags: $(ETAGSFILE)
-
 ebrowse: $(EBROWSEFILE)
 
+.PHONY: all-tags
 all-tags: ctags etags ebrowse
 
+.PHONY: clean-deps clean-tags clean clean-all
 clean-deps:
 	rm -f *.$(DEPEXT)
-
 clean-tags:
 	rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
-
 clean: clean-deps
 	rm -rf *.$(OEXT) *.$(LOGEXT) *~
-
+# Compiling library?
+ifneq (,$(LIBNAME))
+	$(TOUCH) $(MAIN_HEADER)
+endif
 clean-all: clean clean-tags
 	rm -f $(OUTPUT)
 
@@ -124,14 +147,21 @@ clean-all: clean clean-tags
 
 $(CTAGSFILE): $(TAGEDFILES)
 	$(CTAGS) $(CTAGSFLAGS) -o $@ $^
-
 $(ETAGSFILE): $(TAGEDFILES)
 	$(ETAGS) $(ETAGSFLAGS) -o $@ $^
-
 $(EBROWSEFILE): $(TAGEDFILES)
 	$(EBROWSE) $(EBROWSEFLAGS) -o $@ $^
 
 $(OUTPUT): $(OBJFILES)
 	$(LD) $(LDFLAGS) -o $@ $^ $(addprefix -l,$(LIBS))
+
+# Compiling library?
+ifneq (,$(LIBNAME))
+../$(MAIN_HEADER): $(MAIN_HEADER) $(HFILES)
+	@echo "Generating $@ from $<"
+	@$(SED) \
+	  's/^#error.*$$/$(patsubst %,\n#include "$(LIBNAME)\/%",$^)/' \
+	  $< > $@
+endif
 
 -include $(DEPFILES)
