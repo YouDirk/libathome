@@ -16,16 +16,20 @@
  */
 
 
-#include <libathome-client.hpp>
+#include "Init.hpp"
 
 using namespace libathome_client;
 
 
-int
-main(int argc, char** argv)
+Init::
+Init(int argc, char** argv)
+  :libathome_common::Common(argc, argv)
 {
-  Init* init = new Init(argc, argv);
 
-  delete init;
-  return 0;
+}
+
+Init::
+~Init()
+{
+
 }

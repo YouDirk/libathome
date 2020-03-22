@@ -16,16 +16,16 @@
  */
 
 
-#include <libathome-client.hpp>
+#ifndef LIBATHOME_CLIENT_H__
+#define LIBATHOME_CLIENT_H__
 
-using namespace libathome_client;
+/* This file was generated using MAKE during compiling
+ * LIBATHOME-CLIENT.SO ...
+ *
+ * CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM !
+ */
 
+#include "libathome-client/libathome-client.hpp" 
+#include "libathome-client/Init.hpp"
 
-int
-main(int argc, char** argv)
-{
-  Init* init = new Init(argc, argv);
-
-  delete init;
-  return 0;
-}
+#endif /* LIBATHOME_CLIENT_H__  */

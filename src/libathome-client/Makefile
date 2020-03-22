@@ -15,8 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-LIBNAME = libathome-common
-OBJ = Common
+LIBNAME = libathome-client
+OBJ = Init
 
 OUTPUT = $(LIBNAME).so
 MAIN_HEADER = $(LIBNAME).hpp
@@ -24,9 +24,9 @@ MAIN_HEADER = $(LIBNAME).hpp
 DEBUGFLAGS = -g
 OPTFLAG = -O0
 
-INCLUDE_PATHS =
-LD_PATHS =
-LIBS =
+INCLUDE_PATHS = ..
+LD_PATHS = ../libathome-common
+LIBS = athome-common
 
 EBROWSEFILE = BROWSE
 CTAGSFILE = tags

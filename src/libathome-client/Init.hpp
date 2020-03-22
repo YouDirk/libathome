@@ -16,16 +16,21 @@
  */
 
 
-#include <libathome-client.hpp>
+#ifndef LIBATHOME_CLIENT_INIT_H__
+#define LIBATHOME_CLIENT_INIT_H__
 
-using namespace libathome_client;
+#include <libathome-common.hpp>
 
-
-int
-main(int argc, char** argv)
+namespace libathome_client
 {
-  Init* init = new Init(argc, argv);
 
-  delete init;
-  return 0;
-}
+class Init: public libathome_common::Common
+{
+public:
+  explicit Init(int argc, char** argv);
+  virtual ~Init();
+
+}; /* class Init  */
+
+} /* namespace libathome_client  */
+#endif /* LIBATHOME_CLIENT_INIT_H__  */

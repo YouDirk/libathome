@@ -22,8 +22,8 @@ DEBUGFLAGS = -g
 OPTFLAG = -O0
 
 INCLUDE_PATHS = ..
-LD_PATHS = ../libathome-common
-LIBS = athome-common
+LD_PATHS = ../libathome-common ../libathome-client
+LIBS = athome-common athome-client
 
 EBROWSEFILE = BROWSE
 CTAGSFILE = tags
@@ -68,9 +68,15 @@ EBROWSEFLAGS =
 MAKEDEP = $(CC) $(CCFLAGS) -M
 
 .PHONY: all recompile run debug debug-emacs ctags etags ebrowse \
-        all-tags clean-deps clean-tags clean clean-all
+        all-tags clean-deps clean-tags clean clean-all all-this
 
-all: $(OUTPUT)
+all:
+	@for i in $(LD_PATHS); do \
+	  echo $(MAKE) -C $$i all-this; \
+	  $(MAKE) -C $$i all-this; \
+	done;
+	$(MAKE) all-this
+all-this: $(OUTPUT) ../$(MAIN_HEADER)
 
 recompile: clean all
 

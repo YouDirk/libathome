@@ -21,14 +21,16 @@
 using namespace libathome_common;
 
 
-Common::Common(int argc, char** argv)
+Common::
+Common(int argc, char** argv)
 {
   this->hello = strdup("Hello World!");
 
   printf("%s: %s\n", argv[0], this->hello);
 }
 
-Common::~Common()
+Common::
+~Common()
 {
   free(this->hello);
 }
