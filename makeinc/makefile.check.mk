@@ -1,4 +1,4 @@
-# This file is part of the `youdirk_numeric_io` Minecraft mod
+# lib@home, framework to develop distributed calculations.
 # Copyright (C) 2019  Dirk "YouDirk" Lehmann
 #
 # This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ define NL
 $(_BLANK)
 endef
 ERRB = $(NL)$(NL)  ERROR:
+
 
 # ********************************************************************
 # Linux/MSYS2 commands, feature check
@@ -115,6 +116,8 @@ else
 endif
 
 endif # ifneq (,$(_CACHE_FILE))
+
+MAKEDEP := $(CC) $(CCFLAGS) -M
 
 # End of Linux/MSYS2 commands, feature check
 # ********************************************************************

@@ -19,6 +19,7 @@
 # (gdb)$> b{break} Class::method
 # (gdb)$> c{continue}
 # (gdb)$> wa{watch} Expression
+# (gdb)$> p{print} Expression
 # (gdb)$> n{next}/s{step}
 # (gdb)$> q{quit}
 

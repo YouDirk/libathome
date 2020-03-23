@@ -17,69 +17,14 @@
 
 include ../../makefile.config.mk
 
-# Debug build?
-ifeq (1,$(DEBUG_BUILD))
-  DEBUGFLAGS := -g
-  DEBUGMACROS := -DDEBUG
-else
-  OPTFLAG := -Ofast
-  DEBUGFLAGS := -g  # Provide debugging symbols in productive builds
-  DEBUGMACROS :=
-endif
-
-# Compiling library?
-ifneq (,$(LIBNAME))
-  OUTPUT := $(LIBNAME).so
-  MAIN_HEADER := $(LIBNAME).hpp
-  FPICFLAGS := -fPIC -DPIC
-  SHAREDFLAGS := -shared
-else
-  OUTPUT := $(PROJECT_DIRNAME)-client
-  MAIN_HEADER :=
-  FPICFLAGS :=
-  SHAREDFLAGS :=
-endif
-
-EBROWSEFILE := BROWSE
-CTAGSFILE := tags
-ETAGSFILE := TAGS
-MAKEFILEZ := $(addprefix ../../makeinc/, \
-  ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk \
-  makefile.check.mk)
-
-CEXT := cpp
-HEXT := hpp
-SEXT := S
-OEXT := o
-DEPEXT := d
-LOGEXT := log
-
-OBJFILES := $(OBJ:=.$(OEXT))
-DEPFILES := $(OBJ:=.$(DEPEXT))
-HFILES := $(OBJ:=.$(HEXT))
-
-FLAGS := $(DEBUGFLAGS) $(WARNFLAGS) $(OPTFLAG)
-CCFLAGS := $(FLAGS) -c $(FPICFLAGS) $(DEBUGMACROS) \
-           $(addprefix -I,$(INCLUDE_PATHS))
-ASFLAGS := $(CCFLAGS)
-LDFLAGS := $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))
-DEBUGGERFLAGS := --quiet -x ../../makeinc/batch.gdbinit
-
-NULLCHAR :=
-RUN_ENV := \
-  LD_LIBRARY_PATH=$(subst $(NULLCHAR) ,:,$(LD_PATHS)):$$LD_LIBRARY_PATH
-
-TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
-
-CTAGSFLAGS :=
-ETAGSFLAGS :=
-EBROWSEFLAGS :=
+include ../../makeinc/makefile.variables.mk
 
 include ../../.makefile.cache.mk
 include ../../makeinc/makefile.check.mk
 
-MAKEDEP := $(CC) $(CCFLAGS) -M
 
+# ********************************************************************
+# Targets for library dirs and project dirs
 
 .PHONY: all all-this
 all:
@@ -116,7 +61,9 @@ endif
 # (gdb)$> b{break} Class::method
 # (gdb)$> c{continue}
 # (gdb)$> wa{watch} Expression
+# (gdb)$> p{print} Expression
 # (gdb)$> n{next}/s{step}
+# (gdb)$> q{quit}
 .PHONY: debug debug-emacs
 
 # Compiling library?
@@ -230,3 +177,6 @@ _cache:
 	$(MAKE) _CACHE_FILE=$@ _cache
 
 -include $(DEPFILES)
+
+# End of Targets for library dirs and project dirs
+# ********************************************************************
