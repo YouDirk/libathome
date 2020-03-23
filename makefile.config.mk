@@ -20,13 +20,20 @@
 # the filename of the executables.
 PROJECT_DIRNAME = primeathome
 
-# 'DEBUG_BUILD := 1' if DEBUG build
+# Set to 1 if debug build (recommended during development)
+#
+# values: [1 0]
 DEBUG_BUILD := 1
 
-# Only used if DEBUG_BUILD = 1.  Otherwise max opimization level is
+# Only used if DEBUG_BUILD = 1, otherwise best opimization level is
 # used.
+#
+# values: [-Og -O0 -O1 -O2 -O3 -Os -Ofast]
 OPTFLAG := -Og
 
-WARNFLAGS := -Wall
+# Warning level of compiler.
+#
+# values: [-Wall -Wextra -Werror]
+WARNFLAGS := -Wextra
 
 # ********************************************************************
