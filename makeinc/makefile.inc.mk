@@ -43,7 +43,8 @@ endif
 EBROWSEFILE := BROWSE
 CTAGSFILE := tags
 ETAGSFILE := TAGS
-MAKEFILE := Makefile
+MAKEFILEZ := $(addprefix ../../makeinc/, \
+  ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk)
 
 CC := g++
 AS := g++
@@ -76,7 +77,7 @@ DEBUGGERFLAGS := --quiet -x ../../makeinc/batch.gdbinit
 
 NULLCHAR :=
 RUN_ENV := \
-  LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:$(subst $(NULLCHAR) ,:,$(LD_PATHS))
+  LD_LIBRARY_PATH=$(subst $(NULLCHAR) ,:,$(LD_PATHS)):$$LD_LIBRARY_PATH
 
 TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 
@@ -161,9 +162,9 @@ clean-all: clean clean-tags
 %.$(DEPEXT): %.$(SEXT)
 	@$(MAKEDEP) -MQ $*.$(OEXT) -o $@ $<
 
-%.$(OEXT): %.$(CEXT) $(MAKEFILE)
+%.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
 	$(CC) $(CCFLAGS) -o $@ $<
-%.$(OEXT): %.$(SEXT) $(MAKEFILE)
+%.$(OEXT): %.$(SEXT) $(MAKEFILEZ)
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(CTAGSFILE): $(TAGEDFILES)

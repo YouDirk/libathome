@@ -32,10 +32,15 @@ debug-emacs:
 .PHONY: recompile
 recompile: clean all
 
-.PHONY: ctags etags ebrowse all-tags clean clean-deps clean-tags clean \
-        clean-all
-ctags etags ebrowse all-tags clean-deps clean-tags clean clean-all:
+.PHONY: ctags etags ebrowse all-tags clean clean-deps clean-tags
+ctags etags ebrowse all-tags clean-deps clean-tags:
 	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-common $@
 	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-client $@
 	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
-	rm -f *.bak *~
+
+.PHONY: clean clean-all
+clean clean-all:
+	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-common $@
+	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-client $@
+	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+	rm -f *.bak *~ $(CLEAN_FILES)

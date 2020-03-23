@@ -17,6 +17,6 @@
 
 PREFIX_ITERATEDIR = src
 PREFIX_ROOTDIR = .
-CLEAN_FILES =
+CLEAN_FILES = $(addprefix makeinc/,*.bak *~) $(addprefix trunk/,*.bak *~)
 
 include makeinc/makefile.inc-global.mk
