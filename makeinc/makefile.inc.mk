@@ -15,68 +15,76 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-DEBUGFLAGS = -g
-DEBUGMACROS = -DDEBUG
-OPTFLAG = -O0
-WARNFLAGS = -Wall
+include ../../makefile.config.mk
+
+# Debug build?
+ifeq (1,$(DEBUG_BUILD))
+  DEBUGFLAGS := -g
+  DEBUGMACROS := -DDEBUG
+else
+  OPTFLAG := -Ofast
+  DEBUGFLAGS := -g  # Provide debugging symbols in productive builds
+  DEBUGMACROS :=
+endif
 
 # Compiling library?
 ifneq (,$(LIBNAME))
-  OUTPUT = $(LIBNAME).so
-  MAIN_HEADER = $(LIBNAME).hpp
-  FPICFLAGS = -fPIC -DPIC
-  SHAREDFLAGS = -shared
+  OUTPUT := $(LIBNAME).so
+  MAIN_HEADER := $(LIBNAME).hpp
+  FPICFLAGS := -fPIC -DPIC
+  SHAREDFLAGS := -shared
 else
-  MAIN_HEADER =
-  FPICFLAGS =
-  SHAREDFLAGS =
+  OUTPUT := $(PROJECT_DIRNAME)-client
+  MAIN_HEADER :=
+  FPICFLAGS :=
+  SHAREDFLAGS :=
 endif
 
-EBROWSEFILE = BROWSE
-CTAGSFILE = tags
-ETAGSFILE = TAGS
-MAKEFILE = Makefile
+EBROWSEFILE := BROWSE
+CTAGSFILE := tags
+ETAGSFILE := TAGS
+MAKEFILE := Makefile
 
-CC = g++
-AS = g++
-LD = g++
-DEBUGGER = gdb
-VALGRIND = valgrind
-EBROWSE = ebrowse
-CTAGS = ctags
-ETAGS = etags
-SED = sed
-TOUCH = touch
+CC := g++
+AS := g++
+LD := g++
+DEBUGGER := gdb
+VALGRIND := valgrind
+EBROWSE := ebrowse
+CTAGS := ctags
+ETAGS := etags
+SED := sed
+TOUCH := touch
 
-CEXT = cpp
-HEXT = hpp
-SEXT = S
-OEXT = o
-DEPEXT = d
-LOGEXT = log
+CEXT := cpp
+HEXT := hpp
+SEXT := S
+OEXT := o
+DEPEXT := d
+LOGEXT := log
 
-OBJFILES = $(OBJ:=.$(OEXT))
-DEPFILES = $(OBJ:=.$(DEPEXT))
-HFILES = $(OBJ:=.$(HEXT))
+OBJFILES := $(OBJ:=.$(OEXT))
+DEPFILES := $(OBJ:=.$(DEPEXT))
+HFILES := $(OBJ:=.$(HEXT))
 
-FLAGS = $(DEBUGFLAGS) $(WARNFLAGS) $(OPTFLAG)
-CCFLAGS = $(FLAGS) -c $(FPICFLAGS) $(DEBUGMACROS) \
-          $(addprefix -I,$(INCLUDE_PATHS))
-ASFLAGS = $(CCFLAGS)
-LDFLAGS = $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))
-DEBUGGERFLAGS = --quiet -x ../../makeinc/batch.gdbinit
+FLAGS := $(DEBUGFLAGS) $(WARNFLAGS) $(OPTFLAG)
+CCFLAGS := $(FLAGS) -c $(FPICFLAGS) $(DEBUGMACROS) \
+           $(addprefix -I,$(INCLUDE_PATHS))
+ASFLAGS := $(CCFLAGS)
+LDFLAGS := $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))
+DEBUGGERFLAGS := --quiet -x ../../makeinc/batch.gdbinit
 
-NULLCHAR =
-RUN_ENV = \
+NULLCHAR :=
+RUN_ENV := \
   LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:$(subst $(NULLCHAR) ,:,$(LD_PATHS))
 
-TAGEDFILES = $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
+TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 
-CTAGSFLAGS =
-ETAGSFLAGS =
-EBROWSEFLAGS =
+CTAGSFLAGS :=
+ETAGSFLAGS :=
+EBROWSEFLAGS :=
 
-MAKEDEP = $(CC) $(CCFLAGS) -M
+MAKEDEP := $(CC) $(CCFLAGS) -M
 
 
 .PHONY: all all-this
@@ -91,27 +99,40 @@ all-this: $(OUTPUT) ../$(MAIN_HEADER)
 .PHONY: recompile
 recompile: clean all
 
-# TODO
-
 .PHONY: run run-leakcheck
+
+# Compiling library?
+ifneq (,$(LIBNAME))
+run run-leakcheck:
+	$(MAKE) -C ../$(PROJECT_DIRNAME) $@
+else
 run: all
 	$(RUN_ENV) ./$(OUTPUT) $(ARGS)
 run-leakcheck: all
 	$(RUN_ENV) $(VALGRIND) --leak-check=full ./$(OUTPUT) $(ARGS)
+endif
 
 # Using GDB shell:
 # (gdb)$> b{break} Class::method
 # (gdb)$> c{continue}
 # (gdb)$> wa{watch} Expression
 # (gdb)$> n{next}/s{step}
-
-# TODO
-
 .PHONY: debug debug-emacs
+
+# Compiling library?
+ifneq (,$(LIBNAME))
+debug:
+	$(MAKE) -C ../$(PROJECT_DIRNAME) $@
+# Must have no output until GDB is started
+debug-emacs:
+	@$(MAKE) --no-print-directory -C ../$(PROJECT_DIRNAME) $@
+else
 debug: all
 	$(RUN_ENV) $(DEBUGGER) $(DEBUGGERFLAGS) $(OUTPUT)
+# Must have no output until GDB is started
 debug-emacs:
 	@$(RUN_ENV) $(DEBUGGER) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
+endif
 
 .PHONY: ctags etags ebrowse
 ctags: $(CTAGSFILE)

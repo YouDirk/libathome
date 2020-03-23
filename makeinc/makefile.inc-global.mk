@@ -14,10 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-OBJ = main
 
-INCLUDE_PATHS = ..
-LD_PATHS = ../libathome-common ../libathome-client
-LIBS = athome-common athome-client
+include $(PREFIX_ROOTDIR)/makefile.config.mk
 
-include ../../makeinc/makefile.inc.mk
+PROJECT_DIRNAME_ROOT = $(PREFIX_ITERATEDIR)/$(PROJECT_DIRNAME)
+
+all:
+
+.PHONY: all run run-leakcheck debug
+all run run-leakcheck debug:
+	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+
+.PHONY: debug-emacs
+debug-emacs:
+	@$(MAKE) --no-print-directory -C $(PROJECT_DIRNAME_ROOT) $@
+
+.PHONY: recompile
+recompile: clean all
+
+.PHONY: ctags etags ebrowse all-tags clean clean-deps clean-tags clean \
+        clean-all
+ctags etags ebrowse all-tags clean-deps clean-tags clean clean-all:
+	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-common $@
+	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-client $@
+	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+	rm -f *.bak *~

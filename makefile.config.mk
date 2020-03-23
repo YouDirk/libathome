@@ -14,10 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-OBJ = main
+# ********************************************************************
 
-INCLUDE_PATHS = ..
-LD_PATHS = ../libathome-common ../libathome-client
-LIBS = athome-common athome-client
+# The directory name where your project is located in src/.  Will be
+# the filename of the executables.
+PROJECT_DIRNAME = primeathome
 
-include ../../makeinc/makefile.inc.mk
+# 'DEBUG_BUILD := 1' if DEBUG build
+DEBUG_BUILD := 1
+
+# Only used if DEBUG_BUILD = 1.  Otherwise max opimization level is
+# used.
+OPTFLAG := -Og
+
+WARNFLAGS := -Wall
+
+# ********************************************************************
