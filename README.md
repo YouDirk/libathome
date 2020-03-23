@@ -1,4 +1,4 @@
-> `lib@home`, a distributed calculations framework
+> lib@home, framework to develop distributed calculations.
 > Copyright (C) 2020  Dirk "YouDirk" Lehmann
 >
 > This program is free software: you can redistribute it and/or modify
@@ -18,4 +18,4 @@
 lib@home
 ========
 
-A framework to develop a `*@home` project, for distributed calculations.
+A framework to develop `*@home` projects for distributed calculations.
