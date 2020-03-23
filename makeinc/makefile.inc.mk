@@ -44,18 +44,8 @@ EBROWSEFILE := BROWSE
 CTAGSFILE := tags
 ETAGSFILE := TAGS
 MAKEFILEZ := $(addprefix ../../makeinc/, \
-  ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk)
-
-CC := g++
-AS := g++
-LD := g++
-DEBUGGER := gdb
-VALGRIND := valgrind
-EBROWSE := ebrowse
-CTAGS := ctags
-ETAGS := etags
-SED := sed
-TOUCH := touch
+  ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk \
+  makefile.check.mk)
 
 CEXT := cpp
 HEXT := hpp
@@ -85,6 +75,9 @@ CTAGSFLAGS :=
 ETAGSFLAGS :=
 EBROWSEFLAGS :=
 
+include ../../.makefile.cache.mk
+include ../../makeinc/makefile.check.mk
+
 MAKEDEP := $(CC) $(CCFLAGS) -M
 
 
@@ -110,7 +103,13 @@ else
 run: all
 	$(RUN_ENV) ./$(OUTPUT) $(ARGS)
 run-leakcheck: all
-	$(RUN_ENV) $(VALGRIND) --leak-check=full ./$(OUTPUT) $(ARGS)
+  ifeq (,$(VALGRIND_OPT))
+	$(error $(ERRB) VALGRIND command not found!  Try '$$> apt-get \
+	  install valgrind' for installation.  Or use MSYS2 command \
+	  '$$> pacman -S <package>')
+  else
+	$(RUN_ENV) $(VALGRIND_OPT) --leak-check=full ./$(OUTPUT) $(ARGS)
+  endif
 endif
 
 # Using GDB shell:
@@ -124,38 +123,58 @@ endif
 ifneq (,$(LIBNAME))
 debug:
 	$(MAKE) -C ../$(PROJECT_DIRNAME) $@
-# Must have no output until GDB is started
+  # Must have no output until GDB is started
 debug-emacs:
 	@$(MAKE) --no-print-directory -C ../$(PROJECT_DIRNAME) $@
 else
 debug: all
-	$(RUN_ENV) $(DEBUGGER) $(DEBUGGERFLAGS) $(OUTPUT)
-# Must have no output until GDB is started
+  ifeq (,$(DEBUGGER_OPT))
+	$(error $(ERRB) Debugger command not found!  Try '$$> apt-get \
+	  install gdb' for installation.  Or use MSYS2 command \
+	  '$$> pacman -S <package>')
+  else
+	$(RUN_ENV) $(DEBUGGER_OPT) $(DEBUGGERFLAGS) $(OUTPUT)
+  endif
+  # Must have no output until GDB is started
 debug-emacs:
-	@$(RUN_ENV) $(DEBUGGER) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
-endif
+  ifeq (,$(DEBUGGER_OPT))
+	$(error $(ERRB) Debugger command not found!  Try '$$> apt-get \
+	  install gdb' for installation.  Or use MSYS2 command \
+	  '$$> pacman -S <package>')
+  else
+	@$(RUN_ENV) $(DEBUGGER_OPT) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
+  endif
+endif # ifneq (,$(LIBNAME))
 
-.PHONY: ctags etags ebrowse
-ctags: $(CTAGSFILE)
-etags: $(ETAGSFILE)
-ebrowse: $(EBROWSEFILE)
+.PHONY: tags-ctags tags-etags tags-ebrowse
+tags-ctags: $(CTAGSFILE)
+tags-etags: $(ETAGSFILE)
+tags-ebrowse: $(EBROWSEFILE)
 
-.PHONY: all-tags
-all-tags: ctags etags ebrowse
+.PHONY: tags-all
+tags-all: tags-ctags tags-etags tags-ebrowse
 
-.PHONY: clean-deps clean-tags clean clean-all
-clean-deps:
-	rm -f *.$(DEPEXT)
-clean-tags:
-	rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
-clean: clean-deps
-	rm -rf *.$(OEXT) *.$(LOGEXT) *~
+.PHONY: _clean-makecache _clean-deps _clean-tags clean clean-all \
+        _clean-all-recursive
+# _CLEAN_MAKECACHE must be the last one in the dependency list,
+# because it will be regenerated during recursive CLEAN calls
+.PHONY: _clean_makecache
+_clean-makecache:
+	-rm -f ../../.makefile.cache.mk
+_clean-deps:
+	-rm -f *.$(DEPEXT)
+_clean-tags:
+	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
+clean: _clean-deps
+	-rm -rf *.$(OEXT) *.$(LOGEXT) *~
 # Compiling library?
 ifneq (,$(LIBNAME))
 	$(TOUCH) $(MAIN_HEADER)
 endif
-clean-all: clean clean-tags
-	rm -f $(OUTPUT)
+clean-all: clean _clean-tags _clean-makecache
+	-rm -f $(OUTPUT)
+_clean-all-recursive: clean _clean-tags
+	-rm -f $(OUTPUT)
 
 %.$(DEPEXT): %.$(CEXT)
 	@$(MAKEDEP) -MQ $*.$(OEXT) -o $@ $<
@@ -168,11 +187,29 @@ clean-all: clean clean-tags
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(CTAGSFILE): $(TAGEDFILES)
-	$(CTAGS) $(CTAGSFLAGS) -o $@ $^
+ifeq (,$(CTAGS_OPT))
+	$(error $(ERRB) CTAGS command not found!  Try '$$> apt-get \
+	  install emacs-bin-common' for installation.  Or use MSYS2 \
+	  command '$$> pacman -S <package>')
+else
+	$(CTAGS_OPT) $(CTAGSFLAGS) -o $@ $^
+endif
 $(ETAGSFILE): $(TAGEDFILES)
-	$(ETAGS) $(ETAGSFLAGS) -o $@ $^
+ifeq (,$(ETAGS_OPT))
+	$(error $(ERRB) ETAGS command not found!  Try '$$> apt-get \
+	  install emacs-bin-common' for installation.  Or use MSYS2 \
+	  command '$$> pacman -S <package>')
+else
+	$(ETAGS_OPT) $(ETAGSFLAGS) -o $@ $^
+endif
 $(EBROWSEFILE): $(TAGEDFILES)
-	$(EBROWSE) $(EBROWSEFLAGS) -o $@ $^
+ifeq (,$(EBROWSE_OPT))
+	$(error $(ERRB) EBROWSE command not found!  Try '$$> apt-get \
+	  install emacs-bin-common' for installation.  Or use MSYS2 \
+	  command '$$> pacman -S <package>')
+else
+	$(EBROWSE_OPT) $(EBROWSEFLAGS) -o $@ $^
+endif
 
 $(OUTPUT): $(OBJFILES)
 	$(LD) $(LDFLAGS) -o $@ $^ $(addprefix -l,$(LIBS))
@@ -185,5 +222,11 @@ ifneq (,$(LIBNAME))
 	  's/^#error.*$$/$(patsubst %,\n#include "$(LIBNAME)\/%",$^)/' \
 	  $< > $@
 endif
+
+.PHONY: _cache
+_cache:
+../../.makefile.cache.mk: $(MAKEFILEZ)
+	-rm -f $@
+	$(MAKE) _CACHE_FILE=$@ _cache
 
 -include $(DEPFILES)
