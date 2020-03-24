@@ -18,6 +18,14 @@
 # ********************************************************************
 # Variable definitions of all static stuff
 
+ifeq (,$(OS_IS_WIN))
+  SOEXT = so
+  DOT_BINEXT =
+else
+  SOEXT = dll
+  DOT_BINEXT = .exe
+endif
+
 # Debug build?
 ifeq (1,$(DEBUG_BUILD))
   DEBUGFLAGS := -g
@@ -30,12 +38,12 @@ endif
 
 # Compiling library?
 ifneq (,$(LIBNAME))
-  OUTPUT := $(LIBNAME).so
+  OUTPUT := $(LIBNAME).$(SOEXT)
   MAIN_HEADER := $(LIBNAME).hpp
   FPICFLAGS := -fPIC -DPIC
   SHAREDFLAGS := -shared
 else
-  OUTPUT := $(PROJECT_DIRNAME)-client
+  OUTPUT := $(PROJECT_DIRNAME)-client$(DOT_BINEXT)
   MAIN_HEADER :=
   FPICFLAGS :=
   SHAREDFLAGS :=
@@ -67,8 +75,12 @@ LDFLAGS := $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))
 DEBUGGERFLAGS := --quiet -x ../../makeinc/batch.gdbinit
 
 NULLCHAR :=
-RUN_ENV := \
-  LD_LIBRARY_PATH=$(subst $(NULLCHAR) ,:,$(LD_PATHS)):$$LD_LIBRARY_PATH
+ifeq (,$(OS_IS_WIN))
+  RUN_ENV := \
+    LD_LIBRARY_PATH=$(subst $(NULLCHAR) ,:,$(LD_PATHS)):$$LD_LIBRARY_PATH
+else
+  RUN_ENV := PATH=$(subst $(NULLCHAR) ,:,$(LD_PATHS)):$$PATH
+endif
 
 TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 

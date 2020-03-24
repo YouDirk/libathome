@@ -80,6 +80,18 @@ else
   $(shell echo 'TOUCH = $(TOUCH)' >> $(_CACHE_FILE))
 endif
 
+UNAME = $(call _CMD_TEST,uname)
+ifeq (,$(UNAME))
+  $(shell rm -f $(_CACHE_FILE))
+  $(error $(ERRB) UNAME command not found!  Try '$$> apt-get install \
+    coreutils' for installation.  Or use MSYS2 command \
+    '$$> pacman -S <package>')
+else
+  $(shell echo 'UNAME = $(UNAME)' >> $(_CACHE_FILE))
+endif
+
+# --------------------------------------------------------------------
+
 DEBUGGER_OPT = $(call _CMD_TEST,gdb)
 ifeq (,$(DEBUGGER_OPT))
   $(shell echo 'DEBUGGER_OPT =' >> $(_CACHE_FILE))
@@ -115,9 +127,22 @@ else
   $(shell echo 'EBROWSE_OPT = $(EBROWSE_OPT)' >> $(_CACHE_FILE))
 endif
 
+# --------------------------------------------------------------------
+
+OS_IS_WIN = $(shell test \( \
+  -n "`echo $(OS) | $(SED) -n '/^windows/Ip'`" \
+  -o -n "`$(UNAME) -o | $(SED) -n '/^msys/Ip'`" \
+  -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'`" \
+  -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'`" \
+  -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'`" \
+\) && echo -n 1)
+$(shell echo 'OS_IS_WIN = $(OS_IS_WIN)' >> $(_CACHE_FILE))
+
 endif # ifneq (,$(_CACHE_FILE))
+
+# End of Linux/MSYS2 commands, feature check
+# ********************************************************************
 
 MAKEDEP := $(CC) $(CCFLAGS) -M
 
-# End of Linux/MSYS2 commands, feature check
 # ********************************************************************

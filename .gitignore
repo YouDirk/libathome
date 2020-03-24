@@ -17,8 +17,9 @@
 
 # Executables
 /src/*/*.so
+/src/*/*.dll
 /src/*/*-client
-/src/*/*-server
+/src/*/*-client.exe
 
 # Compiling stuff
 /src/**/*.o

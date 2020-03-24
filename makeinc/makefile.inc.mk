@@ -17,10 +17,10 @@
 
 include ../../makefile.config.mk
 
-include ../../makeinc/makefile.variables.mk
-
 include ../../.makefile.cache.mk
 include ../../makeinc/makefile.check.mk
+
+include ../../makeinc/makefile.variables.mk
 
 
 # ********************************************************************
@@ -124,9 +124,9 @@ _clean-all-recursive: clean _clean-tags
 	-rm -f $(OUTPUT)
 
 %.$(DEPEXT): %.$(CEXT)
-	@$(MAKEDEP) -MQ $*.$(OEXT) -o $@ $<
+	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
 %.$(DEPEXT): %.$(SEXT)
-	@$(MAKEDEP) -MQ $*.$(OEXT) -o $@ $<
+	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
 
 %.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
 	$(CC) $(CCFLAGS) -o $@ $<
@@ -173,7 +173,7 @@ endif
 .PHONY: _cache
 _cache:
 ../../.makefile.cache.mk: $(MAKEFILEZ)
-	-rm -f $@
+	echo '' > $@
 	$(MAKE) _CACHE_FILE=$@ _cache
 
 -include $(DEPFILES)
