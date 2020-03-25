@@ -40,8 +40,8 @@ tags-ctags tags-etags tags-ebrowse tags-all:
 	$(MAKE) -C $(LIBCLIENTPATH_ROOT) $@
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 
-.PHONY: doc
-doc:
+.PHONY: doc doc-view
+doc doc-view:
 	$(MAKE) -C $(LIBCOMMONPATH_ROOT) $@
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 

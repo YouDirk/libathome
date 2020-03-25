@@ -19,17 +19,31 @@
 # Set to 1 if debug build (recommended during development)
 #
 # values: [1 0]
+#
 DEBUG_BUILD := 1
+
+# Version format: MAJOR.MINOR.PATCH{-SUFFIX}
+# MAJOR  - Breaking, changing/removing classes, class members, functional
+# MINOR  - Backward compatible (adding) classes, class members
+# PATCH  - Bug fixes only
+# SUFFIX - (optional) -dev/-beta{X}/-rc{X}
+#
+VERSION_MAJOR = 0
+VERSION_MINOR = 1
+VERSION_PATCH = 0
+VERSION_SUFFIX = -dev
 
 # Only used if DEBUG_BUILD = 1, otherwise best opimization level is
 # used.
 #
 # values: [-Og -O0 -O1 -O2 -O3 -Os -Ofast]
+#
 OPTFLAG := -Og
 
 # Warning level of compiler.
 #
 # values: [-Wall -Wextra -Werror]
+#
 WARNFLAGS := -Wextra
 
 # ********************************************************************

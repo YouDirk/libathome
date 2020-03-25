@@ -18,6 +18,7 @@
 # ********************************************************************
 # Variable definitions of all static stuff
 
+# Not Windows! :P
 ifeq (,$(OS_IS_WIN))
   SOEXT = so
   DOT_BINEXT =
@@ -53,6 +54,7 @@ endif
 
 PROJECTPATH := ../project
 DOCPATH := ../../doc
+DOCHTMLPATH := $(DOCPATH)/$(DOC_OUTDIR)/html
 
 EBROWSEFILE := BROWSE
 CTAGSFILE := tags
@@ -95,6 +97,9 @@ TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 CTAGSFLAGS :=
 ETAGSFLAGS :=
 EBROWSEFLAGS :=
+
+VERSION_STR = \
+  $(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)$(VERSION_SUFFIX)
 
 # End of Variable definitions of all static stuff
 # ********************************************************************

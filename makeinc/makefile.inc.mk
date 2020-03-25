@@ -108,9 +108,9 @@ ifeq (,$(DOXYGEN_OPT))
 	  install doxygen' for installation.  Or use MSYS2 command \
 	  '$$> pacman -S <package>')
 else
+	@echo "Generating '$(DOCPATH)/$(DOXYGENFILE)'"
   ifeq (,$(LIBNAME))
-	@echo "Generating '$(DOCPATH)/$(DOXYGENFILE)'"; \
-	printf "##\n## THIS FILE WAS GENERATED!  CHANGES WILL BE$(\
+	@printf "##\n## THIS FILE WAS GENERATED!  CHANGES WILL BE$(\
 	  ) OVERRIDDEN BY BUILD SYSTEM!\n##\n\n" \
 	  > $(DOCPATH)/$(DOXYGENFILE); \
 	$(SED) '$(\
@@ -124,9 +124,22 @@ else
 	  )s~^\(IMAGE_PATH\).*~\1 =~;$(\
 	  )s~^\(USE_MDFILE_AS_MAINPAGE\).*~\1 = $(DOXYGEN_MDFILE)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) >> $(DOCPATH)/$(DOXYGENFILE)
+  else
+	$(SED) -i '$(\
+	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_STR)~;$(\
+	  )' $(DOCPATH)/$(DOXYGENFILE)
   endif
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
 	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
+endif
+.PHONY: doc-view
+doc-view: doc
+ifeq (,$(BROWSER_OPT))
+	$(warning $(WARNB) BROWSER command not found!  Try '$$> apt-get \
+	  install firefox-esr' for installation. \
+	  $(NL)$(NL)      --> $(DOCHTMLPATH)/index.html$(NL))
+else
+	$(BROWSER_OPT) $(DOCHTMLPATH)/index.html
 endif
 
 .PHONY: _clean-makecache _clean-deps _clean-tags clean clean-all \

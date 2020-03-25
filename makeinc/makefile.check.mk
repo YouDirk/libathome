@@ -20,8 +20,8 @@ define NL
 
 $(_BLANK)
 endef
-ERRB = $(NL)$(NL)  ERROR:
-
+ERRB  = $(NL)$(NL)  ERROR:
+WARNB = $(NL)$(NL)  warning:
 
 # ********************************************************************
 # Linux/MSYS2 commands, feature check
@@ -133,6 +133,30 @@ ifeq (,$(DOXYGEN_OPT))
 else
   $(shell echo 'DOXYGEN_OPT = $(DOXYGEN_OPT)' >> $(_CACHE_FILE))
 endif
+
+# --------------------------------------------------------------------
+
+BROWSER_OPT = "$(call _CMD_TEST,/usr/bin/firefox)"
+ifeq ("",$(BROWSER_OPT))
+  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files/Mozilla\ Firefox$(\
+                  )/firefox.exe)"
+endif
+ifeq ("",$(BROWSER_OPT))
+  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files\ \(x86\)/$(\
+                  )Mozilla\ Firefox/firefox.exe)"
+endif
+ifeq ("",$(BROWSER_OPT))
+  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files/Internet\ Explorer$(\
+                  )/iexplore.exe)"
+endif
+ifeq ("",$(BROWSER_OPT))
+  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files\ \(x86\)/$(\
+                  )Internet\ Explorer/iexplore.exe)"
+endif
+ifeq ("",$(BROWSER_OPT))
+  BROWSER_OPT =
+endif
+$(shell echo 'BROWSER_OPT = $(BROWSER_OPT) ' >> $(_CACHE_FILE))
 
 # --------------------------------------------------------------------
 
