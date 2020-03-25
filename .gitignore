@@ -16,10 +16,10 @@
 
 
 # Executables
-/src/*/*.so
-/src/*/*.dll
-/src/*/*-client
-/src/*/*-client.exe
+/src/libathome-*/libathome*.so
+/src/libathome-*/libathome*.dll
+/src/project/*-client
+/src/project/*-client.exe
 
 # Compiling stuff
 /src/**/*.o
