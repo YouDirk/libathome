@@ -18,19 +18,17 @@
 
 #include "Common.hpp"
 
-using namespace libathome_common;
 
-
-Common::
+libathome_common::Common::
 Common(int argc, char** argv)
 {
-  this->hello = strdup("Hello World!");
+  this->hello = new std::string("Hello World!");
 
-  printf("%s: %s\n", argv[0], this->hello);
+  printf("%s: %s\n", argv[0], this->hello->c_str());
 }
 
-Common::
+libathome_common::Common::
 ~Common()
 {
-  free(this->hello);
+  delete this->hello;
 }

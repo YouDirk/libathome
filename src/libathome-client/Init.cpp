@@ -18,17 +18,17 @@
 
 #include "Init.hpp"
 
-using namespace libathome_client;
+using namespace libathome_common;
 
 
-Init::
+libathome_client::Init::
 Init(int argc, char** argv)
-  :libathome_common::Common(argc, argv)
+  :Common(argc, argv)
 {
 
 }
 
-Init::
+libathome_client::Init::
 ~Init()
 {
 

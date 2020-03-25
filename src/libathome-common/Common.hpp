@@ -20,8 +20,7 @@
 #define LIBATHOME_COMMON_COMMON_H__
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <string>
 
 namespace libathome_common
 {
@@ -29,17 +28,13 @@ namespace libathome_common
 class Common
 {
 public:
-  static const unsigned            STRING_LEN = 256;
-
   explicit Common(int argc, char** argv);
   virtual ~Common();
 
 private:
-  char* hello;
+  std::string* hello;
 
 }; /* class Common  */
-
-typedef char                       string_t[Common::STRING_LEN];
 
 } /* namespace libathome_common  */
 #endif /* LIBATHOME_COMMON_COMMON_H__  */

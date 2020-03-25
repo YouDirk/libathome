@@ -42,16 +42,23 @@ ifneq (,$(LIBNAME))
   MAIN_HEADER := $(LIBNAME).hpp
   FPICFLAGS := -fPIC -DPIC
   SHAREDFLAGS := -shared
+  DOC_OUTDIR := libathome
 else
   OUTPUT := $(PROJECT_DIRNAME)-client$(DOT_BINEXT)
   MAIN_HEADER :=
   FPICFLAGS :=
   SHAREDFLAGS :=
+  DOC_OUTDIR := project
 endif
+
+DOCPATH := ../../doc
 
 EBROWSEFILE := BROWSE
 CTAGSFILE := tags
 ETAGSFILE := TAGS
+DOXYGENFILE_LIB := Doxyfile-libathome.conf
+DOXYGENFILE := Doxyfile-$(DOC_OUTDIR).conf
+
 MAKEFILEZ := $(addprefix ../../makeinc/, \
   ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk \
   makefile.check.mk makefile.variables.mk)

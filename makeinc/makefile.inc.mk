@@ -101,6 +101,27 @@ tags-ebrowse: $(EBROWSEFILE)
 .PHONY: tags-all
 tags-all: tags-ctags tags-etags tags-ebrowse
 
+doc:
+ifeq (,$(DOXYGEN_OPT))
+	$(error $(ERRB) DOXYGEN command not found!  Try '$$> apt-get \
+	  install doxygen' for installation.  Or use MSYS2 command \
+	  '$$> pacman -S <package>')
+else
+  ifeq (,$(LIBNAME))
+	echo "# THIS FILE WAS GENERATED!  CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM!"
+	$(SED) '$(\
+	  )s~^\(OUTPUT_DIRECTORY\).*~\1 = $(DOC_OUTDIR)~;$(\
+	  )s~\(src\)/[^ ]\+~\1/$(DOC_OUTDIR)~;$(\
+	  )s~^\(PROJECT_NAME\).*~\1 = "$(PROJECT_NAME)"~;$(\
+	  )s~^\(PROJECT_NUMBER\).*~\1 = $(PROJECT_VERSION)~;$(\
+	  )s~^\(PROJECT_BRIEF\).*~\1 = "$(PROJECT_BRIEF)"~;$(\
+	  )s~^\(PROJECT_LOGO\).*~\1 = $(PROJECT_LOGO)~;$(\
+	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) > $(DOCPATH)/$(DOXYGENFILE)
+  endif
+	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
+	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
+endif
+
 .PHONY: _clean-makecache _clean-deps _clean-tags clean clean-all \
         _clean-all-recursive
 # _CLEAN_MAKECACHE must be the last one in the dependency list,
@@ -113,15 +134,15 @@ _clean-deps:
 _clean-tags:
 	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
 clean: _clean-deps
-	-rm -rf *.$(OEXT) *.$(LOGEXT) *~
+	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(DOCPATH)/*.bak
 # Compiling library?
 ifneq (,$(LIBNAME))
 	$(TOUCH) $(MAIN_HEADER)
 endif
 clean-all: clean _clean-tags _clean-makecache
-	-rm -f $(OUTPUT)
+	-rm -f $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
 _clean-all-recursive: clean _clean-tags
-	-rm -f $(OUTPUT)
+	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
 
 %.$(DEPEXT): %.$(CEXT)
 	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<

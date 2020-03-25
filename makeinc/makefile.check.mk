@@ -127,6 +127,13 @@ else
   $(shell echo 'EBROWSE_OPT = $(EBROWSE_OPT)' >> $(_CACHE_FILE))
 endif
 
+DOXYGEN_OPT = $(call _CMD_TEST,doxygen)
+ifeq (,$(DOXYGEN_OPT))
+  $(shell echo 'DOXYGEN_OPT =' >> $(_CACHE_FILE))
+else
+  $(shell echo 'DOXYGEN_OPT = $(DOXYGEN_OPT)' >> $(_CACHE_FILE))
+endif
+
 # --------------------------------------------------------------------
 
 OS_IS_WIN = $(shell test \( \

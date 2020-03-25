@@ -14,11 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-OBJ = main
+# ********************************************************************
 
-INCLUDE_PATHS = ..
-LD_PATHS = ../libathome-common ../libathome-client
-LIBS = athome-common athome-client
+# Will be the filename of the executables
+PROJECT_EXECNAME = primeathome
 
-include makefile.project.mk
-include ../../makeinc/makefile.inc.mk
+# Human readable name of the project
+PROJECT_NAME = Prime@home
+
+# Version string of the project
+PROJECT_VERSION = 1.0.0-beta
+
+# Short description in one line
+PROJECT_BRIEF = Together creating a prime factor database :)
+
+# Logo for of the project.  Should be not larger than 200px in width
+# and not larger than 55px in height
+PROJECT_LOGO =
+
+# ********************************************************************
