@@ -43,7 +43,7 @@ recompile: clean all
 # Compiling library?
 ifneq (,$(LIBNAME))
 run run-leakcheck:
-	$(MAKE) -C ../$(PROJECT_DIRNAME) $@
+	$(MAKE) -C $(PROJECTPATH) $@
 else
 run: all
 	$(RUN_ENV) ./$(OUTPUT) $(ARGS)
@@ -69,10 +69,10 @@ endif
 # Compiling library?
 ifneq (,$(LIBNAME))
 debug:
-	$(MAKE) -C ../$(PROJECT_DIRNAME) $@
+	$(MAKE) -C $(PROJECTPATH) $@
   # Must have no output until GDB is started
 debug-emacs:
-	@$(MAKE) --no-print-directory -C ../$(PROJECT_DIRNAME) $@
+	@$(MAKE) --no-print-directory -C $(PROJECTPATH) $@
 else
 debug: all
   ifeq (,$(DEBUGGER_OPT))
@@ -101,6 +101,7 @@ tags-ebrowse: $(EBROWSEFILE)
 .PHONY: tags-all
 tags-all: tags-ctags tags-etags tags-ebrowse
 
+.PHONY: doc
 doc:
 ifeq (,$(DOXYGEN_OPT))
 	$(error $(ERRB) DOXYGEN command not found!  Try '$$> apt-get \
@@ -108,15 +109,21 @@ ifeq (,$(DOXYGEN_OPT))
 	  '$$> pacman -S <package>')
 else
   ifeq (,$(LIBNAME))
-	echo "# THIS FILE WAS GENERATED!  CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM!"
+	@echo "Generating '$(DOCPATH)/$(DOXYGENFILE)'"; \
+	printf "##\n## THIS FILE WAS GENERATED!  CHANGES WILL BE$(\
+	  ) OVERRIDDEN BY BUILD SYSTEM!\n##\n\n" \
+	  > $(DOCPATH)/$(DOXYGENFILE); \
 	$(SED) '$(\
 	  )s~^\(OUTPUT_DIRECTORY\).*~\1 = $(DOC_OUTDIR)~;$(\
-	  )s~\(src\)/[^ ]\+~\1/$(DOC_OUTDIR)~;$(\
+	  )s~\(\.\./src\)/[^ ]\+~\1/$(DOC_OUTDIR)~;$(\
+	  )s~^ \+\.\. *$$~~;$(\
 	  )s~^\(PROJECT_NAME\).*~\1 = "$(PROJECT_NAME)"~;$(\
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(PROJECT_VERSION)~;$(\
 	  )s~^\(PROJECT_BRIEF\).*~\1 = "$(PROJECT_BRIEF)"~;$(\
 	  )s~^\(PROJECT_LOGO\).*~\1 = $(PROJECT_LOGO)~;$(\
-	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) > $(DOCPATH)/$(DOXYGENFILE)
+	  )s~^\(IMAGE_PATH\).*~\1 =~;$(\
+	  )s~^\(USE_MDFILE_AS_MAINPAGE\).*~\1 = $(DOXYGEN_MDFILE)~;$(\
+	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) >> $(DOCPATH)/$(DOXYGENFILE)
   endif
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
 	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
@@ -140,7 +147,7 @@ ifneq (,$(LIBNAME))
 	$(TOUCH) $(MAIN_HEADER)
 endif
 clean-all: clean _clean-tags _clean-makecache
-	-rm -f $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
+	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
 _clean-all-recursive: clean _clean-tags
 	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
 

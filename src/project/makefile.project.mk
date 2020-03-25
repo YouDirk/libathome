@@ -26,10 +26,15 @@ PROJECT_NAME = Prime@home
 PROJECT_VERSION = 1.0.0-beta
 
 # Short description in one line
-PROJECT_BRIEF = Together creating a prime factor database :)
+PROJECT_BRIEF = Let us create together a prime-factor database using \
+                lib@home :)
 
 # Logo for of the project.  Should be not larger than 200px in width
 # and not larger than 55px in height
 PROJECT_LOGO =
+
+# *.md file which uses Doxygen as main page, path relativ to /doc/
+# directory
+DOXYGEN_MDFILE = ../src/project/README.md
 
 # ********************************************************************

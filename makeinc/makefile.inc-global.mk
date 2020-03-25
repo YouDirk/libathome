@@ -17,35 +17,42 @@
 
 include $(PREFIX_ROOTDIR)/makefile.config.mk
 
-PROJECT_DIRNAME_ROOT = $(PREFIX_ITERATEDIR)/$(PROJECT_DIRNAME)
+PROJECTPATH_ROOT = $(PREFIX_ITERATEDIR)/project
+LIBCOMMONPATH_ROOT = $(PREFIX_ITERATEDIR)/libathome-common
+LIBCLIENTPATH_ROOT = $(PREFIX_ITERATEDIR)/libathome-client
 
 all:
 
 .PHONY: all run run-leakcheck debug
 all run run-leakcheck debug:
-	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 
 .PHONY: debug-emacs
 debug-emacs:
-	@$(MAKE) --no-print-directory -C $(PROJECT_DIRNAME_ROOT) $@
+	@$(MAKE) --no-print-directory -C $(PROJECTPATH_ROOT) $@
 
 .PHONY: recompile
 recompile: clean all
 
 .PHONY: tags-ctags tags-etags tags-ebrowse tags-all
 tags-ctags tags-etags tags-ebrowse tags-all:
-	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-common $@
-	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-client $@
-	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+	$(MAKE) -C $(LIBCOMMONPATH_ROOT) $@
+	$(MAKE) -C $(LIBCLIENTPATH_ROOT) $@
+	$(MAKE) -C $(PROJECTPATH_ROOT) $@
+
+.PHONY: doc
+doc:
+	$(MAKE) -C $(LIBCOMMONPATH_ROOT) $@
+	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 
 .PHONY: clean clean-all
 clean:
-	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-common $@
-	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-client $@
-	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+	$(MAKE) -C $(LIBCOMMONPATH_ROOT) $@
+	$(MAKE) -C $(LIBCLIENTPATH_ROOT) $@
+	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 	rm -f *.bak *~ $(CLEAN_FILES)
 clean-all:
-	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-common _$@-recursive
-	$(MAKE) -C $(PREFIX_ITERATEDIR)/libathome-client _$@-recursive
-	$(MAKE) -C $(PROJECT_DIRNAME_ROOT) $@
+	$(MAKE) -C $(LIBCOMMONPATH_ROOT) _$@-recursive
+	$(MAKE) -C $(LIBCLIENTPATH_ROOT) _$@-recursive
+	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 	rm -f *.bak *~ $(CLEAN_FILES)

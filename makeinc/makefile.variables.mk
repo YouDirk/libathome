@@ -44,13 +44,14 @@ ifneq (,$(LIBNAME))
   SHAREDFLAGS := -shared
   DOC_OUTDIR := libathome
 else
-  OUTPUT := $(PROJECT_DIRNAME)-client$(DOT_BINEXT)
+  OUTPUT := $(PROJECT_EXECNAME)-client$(DOT_BINEXT)
   MAIN_HEADER :=
   FPICFLAGS :=
   SHAREDFLAGS :=
   DOC_OUTDIR := project
 endif
 
+PROJECTPATH := ../project
 DOCPATH := ../../doc
 
 EBROWSEFILE := BROWSE

@@ -33,6 +33,10 @@
 /src/**/TAGS
 /src/**/BROWSE
 
+# Doc stuff
+/doc/libathome
+/doc/project
+
 # Backup files
 *~
 *.bak

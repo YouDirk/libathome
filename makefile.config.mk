@@ -16,10 +16,6 @@
 
 # ********************************************************************
 
-# The directory name where your project is located in src/.  Will be
-# the filename of the executables.
-PROJECT_DIRNAME = primeathome
-
 # Set to 1 if debug build (recommended during development)
 #
 # values: [1 0]
