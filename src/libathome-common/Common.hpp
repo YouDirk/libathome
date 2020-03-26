@@ -86,6 +86,12 @@ public:
   /**
    * Initialisator which test for API Version compatibility,
    * initializes all singletons, etc.
+   *
+   * @param argc Pass the first parameter of `int main(int argc, char**
+   *             argv)` here
+   *
+   * @param argv Pass the second parameter of `int main(int argc, char**
+   *             argv)` here
    */
   explicit Common(int argc, char** argv);
   /**
