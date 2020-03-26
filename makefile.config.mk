@@ -24,7 +24,7 @@ DEBUG_BUILD := 1
 
 # Version format: MAJOR.MINOR.PATCH{-SUFFIX}
 # MAJOR  - Breaking, changing/removing classes, class members, functional
-# MINOR  - Backward compatible (adding) classes, class members
+# MINOR  - Backward compatible, adding classes, class members
 # PATCH  - Bug fixes only
 # SUFFIX - (optional) -dev/-beta{X}/-rc{X}
 #

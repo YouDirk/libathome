@@ -16,7 +16,7 @@
  */
 
 
-#include "Init.hpp"
+#include "libathome-client/Init.hpp"
 
 using namespace libathome_common;
 

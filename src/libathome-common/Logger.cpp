@@ -16,17 +16,19 @@
  */
 
 
-#ifndef LIBATHOME_COMMON_H__
-#define LIBATHOME_COMMON_H__
-
-/* This file was generated using MAKE during compiling
- * LIBATHOME-COMMON.SO ...
- *
- * CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM !
- */
-
-#include "libathome-common/libathome-common.hpp" 
-#include "libathome-common/Common.hpp" 
 #include "libathome-common/Logger.hpp"
 
-#endif /* LIBATHOME_COMMON_H__  */
+
+libathome_common::Logger::
+Logger(
+  const std::string& logdir_name, const std::string& logfile_fmt,
+  unsigned logcount_delete)
+{
+}
+
+libathome_common::Logger::
+~Logger()
+{
+}
+
+libathome_common::Logger* libathome_common::Log = NULL;

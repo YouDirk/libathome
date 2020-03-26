@@ -21,13 +21,74 @@
 
 #include <libathome-common.hpp>
 
+
+/**
+ * Represents the API of `libathome-client.so` or
+ * `libathome-client.dll`.
+ *
+ * Here is all stuff implemented which is needed and used by the
+ * client-side code.
+ *
+ * You need to `#include` it directly by `#include
+ * <libathome-client.hpp>`.  `libathome-common.hpp` will be implicit
+ * included, and depending on your system you need to tell the
+ * compiler the correct **include path**, typically using the C++
+ * compiler flag `-I/path/to/include`.  Additionally you need to tell
+ * the linker to link to `libathome-client.{so,dll}`, typically using
+ * the **linker flag** `-lathome-client` from **library path**
+ * (optionally) `-L/path/to/lib`.
+ *
+ * Use the compiler flag `-DDEBUG` during development for things such
+ * like force `libathome_common::Log` to output to `/dev/stdout`, etc
+ * ...
+ *
+ * **Example `main.cpp` C++ file**
+ * ```cpp
+ * #include <libathome-client.hpp>
+ *
+ * using namespace libathome_common;
+ * using namespace libathome_client;
+ *
+ * int
+ * main(int argc, char** argv)
+ * {
+ *   Init* init = new Init(argc, argv, ...);
+ *
+ *   delete init;
+ *   return 0;
+ * }
+ * ```
+ *
+ * **Example `g++` compile**
+ * ```shell
+ * $> g++ -c -DDEBUG -I/path/to/include -o main.o main.cpp
+ * ```
+ *
+ * **Example `g++` linking**
+ * ```shell
+ * $> g++ -L/path/to/lib -o myproject-client main.o Class1.o ... \
+ *    -lathome-common -lathome-client
+ * ```
+ */
 namespace libathome_client
 {
 
+/**
+ * Initialisator class, needed for everything :P
+ *
+ * Also implicit includes STL stuff, stdlibs, etc ...
+ */
 class Init: public libathome_common::Common
 {
 public:
+  /**
+   * Initialisator which test for API Version compatibility,
+   * initializes all singletons, etc.
+   */
   explicit Init(int argc, char** argv);
+  /**
+   * Bye bye, free memory and let forget all.
+   */
   virtual ~Init();
 
 }; /* class Init  */

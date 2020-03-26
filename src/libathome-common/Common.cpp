@@ -16,12 +16,15 @@
  */
 
 
-#include "Common.hpp"
+#include "libathome-common/Common.hpp"
+#include "libathome-common/Logger.hpp"
 
 
 libathome_common::Common::
 Common(int argc, char** argv)
 {
+  libathome_common::Log = new Logger("lalala", "lululu", 365);
+
   this->hello = new std::string("Hello World!");
 
   printf("%s: %s\n", argv[0], this->hello->c_str());
@@ -31,4 +34,6 @@ libathome_common::Common::
 ~Common()
 {
   delete this->hello;
+
+  delete libathome_common::Log;
 }

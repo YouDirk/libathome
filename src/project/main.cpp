@@ -18,6 +18,7 @@
 
 #include <libathome-client.hpp>
 
+using namespace libathome_common;
 using namespace libathome_client;
 
 

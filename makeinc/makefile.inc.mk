@@ -116,6 +116,7 @@ else
 	$(SED) '$(\
 	  )s~^\(OUTPUT_DIRECTORY\).*~\1 = $(DOC_OUTDIR)~;$(\
 	  )s~\(\.\./src\)/[^ ]\+~\1/$(DOC_OUTDIR)~;$(\
+	  )s~^\(STRIP_FROM_INC_PATH\).*~\1 =~;$(\
 	  )s~^ \+\.\. *$$~~;$(\
 	  )s~^\(PROJECT_NAME\).*~\1 = "$(PROJECT_NAME)"~;$(\
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(PROJECT_VERSION)~;$(\

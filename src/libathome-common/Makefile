@@ -16,9 +16,9 @@
 
 
 LIBNAME = libathome-common
-OBJ = Common
+OBJ = Common Logger
 
-INCLUDE_PATHS =
+INCLUDE_PATHS = ..
 LD_PATHS =
 LIBS =
 
