@@ -63,14 +63,14 @@ _close(FILE* fs) const
 
 void libathome_common::Logger::
 _printf(
-  Logger::log_level_t level, const std::string& name,
-  const std::string& fmt, va_list ap) const
+  Logger::log_level_t level, const std::string& name, const char* fmt,
+  va_list ap) const
 {
   if (this->loglevel > level) return;
 
   time_t timestamp;
   if (0 > time(&timestamp)) {
-    printf("warning: Logger: Could not get time from RTC!\n");
+    fprintf(stderr, "warning: Logger: Could not get time from RTC!\n");
     timestamp = (time_t) 0;
   }
 
@@ -85,14 +85,16 @@ _printf(
     break;
   }
   if (timestruct_result != &timestruct) {
-    printf("ERROR: Logger: Could not convert unix timestamp to struct!\n");
+    fprintf(stderr, "ERROR: Logger: Could not convert unix timestamp"
+            " to struct!\n");
     return;
   }
 
   string_t timestr;
   if (0 == strftime(timestr, STRING_LEN, strftime_fmt.c_str(),
                     &timestruct)) {
-    printf("ERROR: Logger: Could not convert time struct to string!\n");
+    fprintf(stderr, "ERROR: Logger: Could not convert time struct to"
+            " string!\n");
     return;
   }
 
@@ -100,11 +102,12 @@ _printf(
   if (fs == NULL) return;
 
   std::string out;
-  out.reserve(STRING_LEN + name.size() + fmt.size() + 10);
+  out.reserve(STRING_LEN + name.size() + strlen(fmt) + 10);
   out = timestr + (" " + name + ": " + fmt + "\n");
 
   if (0 == vfprintf(fs, out.c_str(), ap)) {
-    printf("ERROR: Logger: Could not write '%s' message!\n", name);
+    fprintf(stderr, "ERROR: Logger: Could not write '%s' message!\n",
+            name.c_str());
     return;
   }
 
@@ -114,7 +117,7 @@ _printf(
 /* ***************************************************************  */
 
 void libathome_common::Logger::
-debug(const std::string& fmt, ...) const
+debug(const char* fmt, ...) const
 {
   va_list ap;
 
@@ -124,7 +127,7 @@ debug(const std::string& fmt, ...) const
 }
 
 void libathome_common::Logger::
-info(const std::string& fmt, ...) const
+info(const char* fmt, ...) const
 {
   va_list ap;
 
@@ -134,7 +137,7 @@ info(const std::string& fmt, ...) const
 }
 
 void libathome_common::Logger::
-warn(const std::string& fmt, ...) const
+warn(const char* fmt, ...) const
 {
   va_list ap;
 
@@ -144,7 +147,7 @@ warn(const std::string& fmt, ...) const
 }
 
 void libathome_common::Logger::
-error(const std::string& fmt, ...) const
+error(const char* fmt, ...) const
 {
   va_list ap;
 
@@ -154,7 +157,7 @@ error(const std::string& fmt, ...) const
 }
 
 void libathome_common::Logger::
-fatal(int exit_code, const std::string& fmt, ...) const
+fatal(int exit_code, const char* fmt, ...) const
 {
   va_list ap;
 

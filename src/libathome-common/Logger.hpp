@@ -68,11 +68,42 @@ public:
     utc_e = 0, local_e = 1
   } timezone_t;
 
-  void debug(const std::string& fmt, ...) const;
-  void info(const std::string& fmt, ...) const;
-  void warn(const std::string& fmt, ...) const;
-  void error(const std::string& fmt, ...) const;
-  void fatal(int exit_code, const std::string& fmt, ...) const;
+  /** Write debug output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  void debug(const char* fmt, ...)
+    const __attribute__ ((format (printf, 2, 3)));
+  /** Write info output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  void info(const char* fmt, ...)
+    const __attribute__ ((format (printf, 2, 3)));
+  /** Write warning output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  void warn(const char* fmt, ...)
+    const __attribute__ ((format (printf, 2, 3)));
+  /** Write ERROR output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  void error(const char* fmt, ...)
+    const __attribute__ ((format (printf, 2, 3)));
+  /** Write FATAL ERROR output into log file and `exit()`.
+   *
+   * @param exit_code Exit code of the terminated process
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  void fatal(int exit_code, const char* fmt, ...)
+    const __attribute__ ((format (printf, 3, 4)));
 
 private:
   const std::string logdir_name;
@@ -85,8 +116,8 @@ private:
   FILE* fstream;
 
   void _printf(
-    Logger::log_level_t level, const std::string& name,
-    const std::string& fmt, va_list ap) const;
+    Logger::log_level_t level, const std::string& name, const char* fmt,
+    va_list ap) const;
 
   FILE* _open() const;
   void _close(FILE* fs) const;

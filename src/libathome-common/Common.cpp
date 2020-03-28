@@ -27,10 +27,10 @@ Common(int argc, char** argv)
 
   this->hello = new std::string("Hello World!");
 
-  Log->debug(*this->hello);
-  Log->info(*this->hello);
-  Log->warn(*this->hello);
-  Log->error(*this->hello);
+  Log->debug(this->hello->c_str());
+  Log->info(this->hello->c_str());
+  Log->warn(this->hello->c_str());
+  Log->error("Hello %s, how are you (%d)?", "World", -999);
   //Log->fatal(3, *this->hello);
 }
 

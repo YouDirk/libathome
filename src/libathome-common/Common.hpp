@@ -21,7 +21,13 @@
 
 #include <cstdio>   /* Same as <stdio.h>  */
 #include <cstdarg>  /* Same as <stdarg.h>  */
+#include <cstring>
 #include <string>
+
+/* Ignore __ATTRIBUTE__, if not using g++  */
+#ifndef __GNUC__
+#  define  __attribute__(x)
+#endif
 
 
 /**

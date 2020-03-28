@@ -126,7 +126,7 @@ else
 	  )s~^\(USE_MDFILE_AS_MAINPAGE\).*~\1 = $(DOXYGEN_MDFILE)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) >> $(DOCPATH)/$(DOXYGENFILE)
   else
-	$(SED) -i '$(\
+	@$(SED) -i '$(\
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_STR)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE)
   endif
