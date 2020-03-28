@@ -21,7 +21,7 @@
 
 #include <cstdio>   /* Same as <stdio.h>  */
 #include <cstdarg>  /* Same as <stdarg.h>  */
-#include <cstring>
+#include <cstring>  /* Same as <string.h>  */
 #include <string>
 
 /* Ignore __ATTRIBUTE__, if not using g++  */
@@ -82,8 +82,17 @@
 namespace libathome_common
 {
 
-#define STRING_LEN                 256
+/**
+ * Buffer size of static string type libathome_common::string_t.
+ */
+const unsigned STRING_LEN          = 256;
 
+/**
+ * Simple static string type.
+ *
+ * Is very compatible with ANSI C string funcions but has no features
+ * and allocates much memory on stack!
+ */
 typedef char                       string_t[STRING_LEN];
 
 /**

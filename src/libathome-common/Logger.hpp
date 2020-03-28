@@ -59,11 +59,13 @@ public:
    */
   virtual ~Logger();
 
+  // TODO: Getter, Setter, Doc
   typedef enum {
     all_e = 0, debug_e = 10, info_e = 20, warning_e = 30, error_e = 40,
     fatal_e = 50
   } log_level_t;
 
+  // TODO: Getter, Setter, Doc
   typedef enum {
     utc_e = 0, local_e = 1
   } timezone_t;
@@ -106,13 +108,13 @@ public:
     const __attribute__ ((format (printf, 3, 4)));
 
 private:
-  const std::string logdir_name;
-  const std::string logfile_fmt;
-  unsigned logcount_delete;
+  const std::string logdir_name; // TODO: Getter, Setter, Doc
+  const std::string logfile_fmt; // TODO: Getter, Setter, Doc
+  unsigned logcount_delete; // TODO: Getter, Setter, Doc
 
-  Logger::log_level_t loglevel;
-  Logger::timezone_t timezone;
-  std::string strftime_fmt;
+  Logger::log_level_t loglevel; // TODO: Getter, Setter, Doc
+  Logger::timezone_t timezone; // TODO: Getter, Setter, Doc
+  std::string strftime_fmt; // TODO: Getter, Setter, Doc
   FILE* fstream;
 
   void _printf(
