@@ -30,7 +30,7 @@ include ../../makeinc/makefile.variables.mk
 all:
 	@for i in $(LD_PATHS); do \
 	  echo $(MAKE) -C $$i all-this; \
-	  $(MAKE) -C $$i all-this; \
+	  $(MAKE) -C $$i all-this || exit 1; \
 	done;
 	$(MAKE) all-this
 all-this: $(OUTPUT) ../$(MAIN_HEADER)

@@ -44,6 +44,12 @@ OPTFLAG := -Og
 #
 # values: [-Wall -Wextra -Werror]
 #
-WARNFLAGS := -Wextra
+WARNFLAGS := -Wall -Wextra
+
+# C++ standard
+#
+# values: -std=[c++11 c++98 c++0x c++14 c++17]
+#
+CPPSTDFLAG := -std=c++11
 
 # ********************************************************************

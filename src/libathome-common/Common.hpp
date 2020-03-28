@@ -19,7 +19,8 @@
 #ifndef LIBATHOME_COMMON_COMMON_H__
 #define LIBATHOME_COMMON_COMMON_H__
 
-#include <stdio.h>
+#include <cstdio>   /* Same as <stdio.h>  */
+#include <cstdarg>  /* Same as <stdarg.h>  */
 #include <string>
 
 
@@ -74,6 +75,10 @@
  */
 namespace libathome_common
 {
+
+#define STRING_LEN                 256
+
+typedef char                       string_t[STRING_LEN];
 
 /**
  * Initialisator class, needed for everything :P

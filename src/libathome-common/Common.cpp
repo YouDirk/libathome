@@ -23,11 +23,15 @@
 libathome_common::Common::
 Common(int argc, char** argv)
 {
-  libathome_common::Log = new Logger("lalala", "lululu", 365);
+  libathome_common::Log = new Logger("", "%F.log", 365);
 
   this->hello = new std::string("Hello World!");
 
-  printf("%s: %s\n", argv[0], this->hello->c_str());
+  Log->debug(*this->hello);
+  Log->info(*this->hello);
+  Log->warn(*this->hello);
+  Log->error(*this->hello);
+  //Log->fatal(3, *this->hello);
 }
 
 libathome_common::Common::

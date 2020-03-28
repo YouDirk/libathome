@@ -58,7 +58,40 @@ public:
    *Will be called during Common::~Common.
    */
   virtual ~Logger();
-};
+
+  typedef enum {
+    all_e = 0, debug_e = 10, info_e = 20, warning_e = 30, error_e = 40,
+    fatal_e = 50
+  } log_level_t;
+
+  typedef enum {
+    utc_e = 0, local_e = 1
+  } timezone_t;
+
+  void debug(const std::string& fmt, ...) const;
+  void info(const std::string& fmt, ...) const;
+  void warn(const std::string& fmt, ...) const;
+  void error(const std::string& fmt, ...) const;
+  void fatal(int exit_code, const std::string& fmt, ...) const;
+
+private:
+  const std::string logdir_name;
+  const std::string logfile_fmt;
+  unsigned logcount_delete;
+
+  Logger::log_level_t loglevel;
+  Logger::timezone_t timezone;
+  std::string strftime_fmt;
+  FILE* fstream;
+
+  void _printf(
+    Logger::log_level_t level, const std::string& name,
+    const std::string& fmt, va_list ap) const;
+
+  FILE* _open() const;
+  void _close(FILE* fs) const;
+
+}; /* class Logger  */
 
 /**
  * Reference to the singleton class Logger instance.
