@@ -35,7 +35,7 @@ ifeq (,$(CC))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) C++ compiler not found!  Try '$$> apt-get install \
     g++' for installation.  Or use MSYS2 command \
-    '$$> pacman -S <package>')
+    '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
   $(shell echo 'CC = $(CC)' >> $(_CACHE_FILE))
 endif
@@ -45,7 +45,7 @@ ifeq (,$(AS))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) ASM compiler not found!  Try '$$> apt-get install \
     g++' for installation.  Or use MSYS2 command \
-    '$$> pacman -S <package>')
+    '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
   $(shell echo 'AS = $(AS)' >> $(_CACHE_FILE))
 endif
@@ -55,7 +55,7 @@ ifeq (,$(LD))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) Linker command not found!  Try '$$> apt-get install \
     g++' for installation.  Or use MSYS2 command \
-    '$$> pacman -S <package>')
+    '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
   $(shell echo 'LD = $(LD)' >> $(_CACHE_FILE))
 endif
@@ -65,7 +65,7 @@ ifeq (,$(SED))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) SED command not found!  Try '$$> apt-get install \
     sed' for installation.  Or use MSYS2 command \
-    '$$> pacman -S <package>')
+    '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
   $(shell echo 'SED = $(SED)' >> $(_CACHE_FILE))
 endif
@@ -75,7 +75,7 @@ ifeq (,$(TOUCH))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) TOUCH command not found!  Try '$$> apt-get install \
     coreutils' for installation.  Or use MSYS2 command \
-    '$$> pacman -S <package>')
+    '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
   $(shell echo 'TOUCH = $(TOUCH)' >> $(_CACHE_FILE))
 endif
@@ -85,7 +85,7 @@ ifeq (,$(UNAME))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) UNAME command not found!  Try '$$> apt-get install \
     coreutils' for installation.  Or use MSYS2 command \
-    '$$> pacman -S <package>')
+    '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
   $(shell echo 'UNAME = $(UNAME)' >> $(_CACHE_FILE))
 endif

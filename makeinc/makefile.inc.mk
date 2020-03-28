@@ -51,7 +51,8 @@ run-leakcheck: all
   ifeq (,$(VALGRIND_OPT))
 	$(error $(ERRB) VALGRIND command not found!  Try '$$> apt-get \
 	  install valgrind' for installation.  Or use MSYS2 command \
-	  '$$> pacman -S <package>')
+	  '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
   else
 	$(RUN_ENV) $(VALGRIND_OPT) --leak-check=full ./$(OUTPUT) $(ARGS)
   endif
@@ -78,7 +79,8 @@ debug: all
   ifeq (,$(DEBUGGER_OPT))
 	$(error $(ERRB) Debugger command not found!  Try '$$> apt-get \
 	  install gdb' for installation.  Or use MSYS2 command \
-	  '$$> pacman -S <package>')
+	  '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
   else
 	$(RUN_ENV) $(DEBUGGER_OPT) $(DEBUGGERFLAGS) $(OUTPUT)
   endif
@@ -87,7 +89,8 @@ debug-emacs:
   ifeq (,$(DEBUGGER_OPT))
 	$(error $(ERRB) Debugger command not found!  Try '$$> apt-get \
 	  install gdb' for installation.  Or use MSYS2 command \
-	  '$$> pacman -S <package>')
+	  '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
   else
 	@$(RUN_ENV) $(DEBUGGER_OPT) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
   endif
@@ -106,7 +109,8 @@ doc:
 ifeq (,$(DOXYGEN_OPT))
 	$(error $(ERRB) DOXYGEN command not found!  Try '$$> apt-get \
 	  install doxygen' for installation.  Or use MSYS2 command \
-	  '$$> pacman -S <package>')
+	  '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
 else
 	@echo "Generating '$(DOCPATH)/$(DOXYGENFILE)'"
   ifeq (,$(LIBNAME))
@@ -179,7 +183,8 @@ $(CTAGSFILE): $(TAGEDFILES)
 ifeq (,$(CTAGS_OPT))
 	$(error $(ERRB) CTAGS command not found!  Try '$$> apt-get \
 	  install emacs-bin-common' for installation.  Or use MSYS2 \
-	  command '$$> pacman -S <package>')
+	  command '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
 else
 	$(CTAGS_OPT) $(CTAGSFLAGS) -o $@ $^
 endif
@@ -187,7 +192,8 @@ $(ETAGSFILE): $(TAGEDFILES)
 ifeq (,$(ETAGS_OPT))
 	$(error $(ERRB) ETAGS command not found!  Try '$$> apt-get \
 	  install emacs-bin-common' for installation.  Or use MSYS2 \
-	  command '$$> pacman -S <package>')
+	  command '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
 else
 	$(ETAGS_OPT) $(ETAGSFLAGS) -o $@ $^
 endif
@@ -195,7 +201,8 @@ $(EBROWSEFILE): $(TAGEDFILES)
 ifeq (,$(EBROWSE_OPT))
 	$(error $(ERRB) EBROWSE command not found!  Try '$$> apt-get \
 	  install emacs-bin-common' for installation.  Or use MSYS2 \
-	  command '$$> pacman -S <package>')
+	  command '$$> pacman -S <package>'.  After install run \
+	  '$$> make clean-all')
 else
 	$(EBROWSE_OPT) $(EBROWSEFLAGS) -o $@ $^
 endif
