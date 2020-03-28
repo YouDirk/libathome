@@ -26,7 +26,7 @@ Logger(
   unsigned logcount_delete)
   :logdir_name(logdir_name), logfile_fmt(logfile_fmt),
    logcount_delete(logcount_delete), loglevel(log_level_t::all_e),
-   timezone(timezone_t::local_e), strftime_fmt("[%T]")
+   timezone(timezone_t::local_e), strftime_fmt("[%H:%M:%S]")
 {
   if (this->logdir_name.empty()) {
     this->fstream = stdout;
@@ -75,16 +75,16 @@ _printf(
   }
 
   tm timestruct;
-  tm* timestruct_result = NULL;
+  errno_t timestruct_result = 0;
   switch (this->timezone) {
   case utc_e:
-    timestruct_result = gmtime_r(&timestamp, &timestruct);
+    timestruct_result = gmtime_s(&timestruct, &timestamp);
     break;
   case local_e:
-    timestruct_result = localtime_r(&timestamp, &timestruct);
+    timestruct_result = localtime_s(&timestruct, &timestamp);
     break;
   }
-  if (timestruct_result != &timestruct) {
+  if (timestruct_result != 0) {
     fprintf(stderr, "ERROR: Logger: Could not convert unix timestamp"
             " to struct!\n");
     return;

@@ -23,7 +23,7 @@
 libathome_common::Common::
 Common(int argc, char** argv)
 {
-  libathome_common::Log = new Logger("", "%F.log", 365);
+  libathome_common::Log = new Logger("", "%Y-%m-%d.log", 365);
 
   this->hello = new std::string("Hello World!");
 
