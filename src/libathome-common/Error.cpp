@@ -16,37 +16,30 @@
  */
 
 
-#include "libathome-common/Common.hpp"
-#include "libathome-common/Logger.hpp"
+#include "libathome-common/Error.hpp"
+
+#define _PREFIX                    "*( RUNTIME ERROR )* "
 
 
-libathome_common::Common::
-Common(int argc, char** argv)
+libathome_common::Error::
+Error(const std::string& reason)
+  :std::runtime_error(_PREFIX + reason)
 {
-  //libathome_common::Log = new Logger("log", "%Y-%m-%d.log", 365);
-  libathome_common::Log = new Logger();
-
-  this->hello = new std::string("Hello World!");
-
-  try {
-    File x(NULL);
-  } catch (Error& e) {
-    Log->error(e);
-  }
-
-  Log->debug(this->hello->c_str());
-  Log->info(this->hello->c_str());
-  Log->warn(this->hello->c_str());
-  Log->error("Hello %s, how are you (%d)?", "World", -999);
-  //Log->fatal(3, this->hello->c_str());
-
-  //File x(NULL);
 }
 
-libathome_common::Common::
-~Common()
+libathome_common::Error::
+Error(const char* reason)
+  :Error(std::string(reason))
 {
-  delete this->hello;
+}
 
-  delete libathome_common::Log;
+libathome_common::Error::
+~Error()
+{
+}
+
+const char* libathome_common::Error::
+what() const noexcept
+{
+  return runtime_error::what();
 }

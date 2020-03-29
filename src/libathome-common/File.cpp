@@ -16,37 +16,45 @@
  */
 
 
-#include "libathome-common/Common.hpp"
-#include "libathome-common/Logger.hpp"
+#include "libathome-common/File.hpp"
+#include "libathome-common/Error.hpp"
 
 
-libathome_common::Common::
-Common(int argc, char** argv)
+libathome_common::File::
+File(FILE* fstream) noexcept(false)
+  :extern_fstream(fstream), binary(true), path(""), filename("")
 {
-  //libathome_common::Log = new Logger("log", "%Y-%m-%d.log", 365);
-  libathome_common::Log = new Logger();
-
-  this->hello = new std::string("Hello World!");
-
-  try {
-    File x(NULL);
-  } catch (Error& e) {
-    Log->error(e);
-  }
-
-  Log->debug(this->hello->c_str());
-  Log->info(this->hello->c_str());
-  Log->warn(this->hello->c_str());
-  Log->error("Hello %s, how are you (%d)?", "World", -999);
-  //Log->fatal(3, this->hello->c_str());
-
-  //File x(NULL);
+  if (fstream == NULL) throw Error("Argument FSTREAM was set to NULL!");
 }
 
-libathome_common::Common::
-~Common()
+libathome_common::File::
+File(const std::string& path, const std::string& filename, bool binary)
+  noexcept(false)
+  :extern_fstream(NULL), binary(binary), path(path), filename(filename)
 {
-  delete this->hello;
+}
 
-  delete libathome_common::Log;
+libathome_common::File::
+~File()
+{
+}
+
+void libathome_common::File::
+open_write() const noexcept(false)
+{
+}
+
+void libathome_common::File::
+open_append() const noexcept(false)
+{
+}
+
+void libathome_common::File::
+open_read() const noexcept(false)
+{
+}
+
+void libathome_common::File::
+close() const noexcept(false)
+{
 }

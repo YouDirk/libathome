@@ -22,7 +22,9 @@
 #include <cstdio>   /* Same as <stdio.h>  */
 #include <cstdarg>  /* Same as <stdarg.h>  */
 #include <cstring>  /* Same as <string.h>  */
+
 #include <string>
+#include <stdexcept>
 
 /* Ignore __ATTRIBUTE__, if not using g++  */
 #ifndef __GNUC__

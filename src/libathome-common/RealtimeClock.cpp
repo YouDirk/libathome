@@ -16,7 +16,7 @@
  */
 
 
-#include "RealtimeClock.hpp"
+#include "libathome-common/RealtimeClock.hpp"
 
 
 libathome_common::RealtimeClock::

@@ -21,6 +21,9 @@
 
 #include "libathome-common/Common.hpp"
 #include "libathome-common/RealtimeClock.hpp"
+#include "libathome-common/File.hpp"
+#include "libathome-common/Error.hpp"
+
 
 namespace libathome_common
 {
@@ -32,38 +35,35 @@ namespace libathome_common
  * daily log-rotation and deletes old obsolete files from log
  * directory.
  */
-class Logger
+class Logger: protected File
 {
 public:
   /**
-   * DO NOT CONSTRUCT, use libathome_common::Log instead!
+   * Default logger instance here: libathome_common::Log.
    *
    * Logger will log to `stdout`.  Will be called during Common::Common.
    */
   explicit Logger();
 
   /**
-   * DO NOT CONSTRUCT, use libathome_common::Log instead!
+   * Default logger instance here: libathome_common::Log.
    *
    * Will be called during Common::Common.
    *
-   * @param logdir_name Directory where to output log files.
-   *
-   * @param logfile_fmt File name of the log files, use `strftime()`
-   *                    formating patterns for representing date/time
-   *                    stuff.
-   *
-   * @param logcount_delete How many files should be kept in
-   *                        `logdir_name`?
+   * @param path Directory where to output log files.
+   * @param file_fmt %File name of the log files, use `strftime()`
+   *                 formating patterns for representing date/time
+   *                 stuff.
+   * @param file_count How many files should be kept in `logdir_name`?
    */
   explicit Logger(
-    const std::string& logdir_name, const std::string& logfile_fmt,
-    unsigned logcount_delete);
+    const std::string& path, const std::string& file_fmt,
+    unsigned file_count);
 
   /**
-   * DO NOT DESTRUCT, use libathome_common::Log instead!
+   * Default destructor.
    *
-   *Will be called during Common::~Common.
+   * Will be called during Common::~Common.
    */
   virtual ~Logger();
 
@@ -78,37 +78,42 @@ public:
     warning_e = 30,  ///< Log: Warnings, Errors and Fatals
     error_e = 40,    ///< Log: Errors and Fatals
     fatal_e = 50     ///< Log: Fatals only
-  } log_level_t;
+  } loglevel_t;
 
-  /** Write debug output into log file.
+  /**
+   * Write debug output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
   virtual void debug(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
-  /** Write info output into log file.
+  /**
+   * Write info output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
   virtual void info(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
-  /** Write warning output into log file.
+  /**
+   * Write warning output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
   virtual void warn(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
-  /** Write ERROR output into log file.
+  /**
+   * Write ERROR output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
   virtual void error(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
-  /** Write FATAL ERROR output into log file and `exit()`.
+  /**
+   * Write FATAL ERROR output into log file and `exit()`.
    *
    * @param exit_code Exit code of the terminated process
    * @param fmt `printf()`-like format string
@@ -117,22 +122,51 @@ public:
   virtual void fatal(int exit_code, const char* fmt, ...)
     const __attribute__ ((format (printf, 3, 4)));
 
-private:
-  FILE* fstream;
-  std::string logdir_name;
-  std::string logfile_fmt;
-  unsigned logcount_delete;
+  /**
+   * Write runtime error as debug output into log file.
+   *
+   * @param e Runime error (exception) to output
+   */
+  virtual void debug(const Error& e) const;
+  /**
+   * Write runtime error as info output into log file.
+   *
+   * @param e Runime error (exception) to output
+   */
+  virtual void info(const Error& e) const;
+  /**
+   * Write runtime error as warning output into log file.
+   *
+   * @param e Runime error (exception) to output
+   */
+  virtual void warn(const Error& e) const;
+  /**
+   * Write runtime error as ERROR output into log file.
+   *
+   * @param e Runime error (exception) to output
+   */
+  virtual void error(const Error& e) const;
+  /**
+   * Write runtime error as FATAL ERROR output into log file.
+   *
+   * @param exit_code Exit code of the terminated process
+   * @param e Runime error (exception) to output
+   */
+  virtual void fatal(int exit_code, const Error& e) const;
 
-  Logger::log_level_t loglevel;
+private:
+  std::string file_fmt;
+  unsigned file_count;
+
+  Logger::loglevel_t loglevel;
   RealtimeClock::timezone_t timezone;
   std::string strftime_fmt;
 
-  void _printf(
-    Logger::log_level_t level, const std::string& name, const char* fmt,
-    va_list ap) const;
+  void _init();
 
-  FILE* _open() const;
-  void _close(FILE* fs) const;
+  void _printf(
+    Logger::loglevel_t level, const std::string& name, const char* fmt,
+    va_list ap) const;
 
 }; /* class Logger  */
 
