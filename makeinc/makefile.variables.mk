@@ -22,19 +22,21 @@
 ifeq (,$(OS_IS_WIN))
   SOEXT = so
   DOT_BINEXT =
+  CCDEFINES +=
 else
   SOEXT = dll
   DOT_BINEXT = .exe
+  CCDEFINES += -DOSWIN
 endif
 
 # Debug build?
 ifeq (1,$(DEBUG_BUILD))
   DEBUGFLAGS := -g
-  DEBUGMACROS := -DDEBUG
+  CCDEFINES += -DDEBUG
 else
   OPTFLAG := -Ofast
   DEBUGFLAGS := -g  # Provide debugging symbols in productive builds
-  DEBUGMACROS :=
+  CCDEFINES +=
 endif
 
 # Compiling library?
@@ -78,7 +80,7 @@ DEPFILES := $(OBJ:=.$(DEPEXT))
 HFILES := $(OBJ:=.$(HEXT))
 
 FLAGS := $(DEBUGFLAGS) $(WARNFLAGS) $(OPTFLAG) $(CPPSTDFLAG)
-CCFLAGS := $(FLAGS) -c $(FPICFLAGS) $(DEBUGMACROS) \
+CCFLAGS := $(FLAGS) -c $(FPICFLAGS) $(CCDEFINES) \
            $(addprefix -I,$(INCLUDE_PATHS))
 ASFLAGS := $(CCFLAGS)
 LDFLAGS := $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))

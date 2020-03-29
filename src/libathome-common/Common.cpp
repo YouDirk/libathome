@@ -23,7 +23,8 @@
 libathome_common::Common::
 Common(int argc, char** argv)
 {
-  libathome_common::Log = new Logger("", "%Y-%m-%d.log", 365);
+  //libathome_common::Log = new Logger("log", "%Y-%m-%d.log", 365);
+  libathome_common::Log = new Logger();
 
   this->hello = new std::string("Hello World!");
 
@@ -31,7 +32,7 @@ Common(int argc, char** argv)
   Log->info(this->hello->c_str());
   Log->warn(this->hello->c_str());
   Log->error("Hello %s, how are you (%d)?", "World", -999);
-  //Log->fatal(3, *this->hello);
+  //Log->fatal(3, this->hello->c_str());
 }
 
 libathome_common::Common::

@@ -16,10 +16,11 @@
  */
 
 
-#ifndef LIBATHOME_COMMON_LOG_H__
-#define LIBATHOME_COMMON_LOG_H__
+#ifndef LIBATHOME_COMMON_LOGGER_H__
+#define LIBATHOME_COMMON_LOGGER_H__
 
 #include "libathome-common/Common.hpp"
+#include "libathome-common/RealtimeClock.hpp"
 
 namespace libathome_common
 {
@@ -37,10 +38,16 @@ public:
   /**
    * DO NOT CONSTRUCT, use libathome_common::Log instead!
    *
+   * Logger will log to `stdout`.  Will be called during Common::Common.
+   */
+  explicit Logger();
+
+  /**
+   * DO NOT CONSTRUCT, use libathome_common::Log instead!
+   *
    * Will be called during Common::Common.
    *
-   * @param logdir_name If `""` then output to `stdout`, otherwise
-   *                    directory where to output log files.
+   * @param logdir_name Directory where to output log files.
    *
    * @param logfile_fmt File name of the log files, use `strftime()`
    *                    formating patterns for representing date/time
@@ -52,6 +59,7 @@ public:
   explicit Logger(
     const std::string& logdir_name, const std::string& logfile_fmt,
     unsigned logcount_delete);
+
   /**
    * DO NOT DESTRUCT, use libathome_common::Log instead!
    *
@@ -59,44 +67,46 @@ public:
    */
   virtual ~Logger();
 
-  // TODO: Getter, Setter, Doc
+  /**
+   * Only write log messages which have the represented log-level or a
+   * higher priority.
+   */
   typedef enum {
-    all_e = 0, debug_e = 10, info_e = 20, warning_e = 30, error_e = 40,
-    fatal_e = 50
+    all_e = 0,       ///< Log all possible log messages
+    debug_e = 10,    ///< Log: Debug, Infos, Warnings, Errors and Fatals
+    info_e = 20,     ///< Log: Infos, Warnings, Errors and Fatals
+    warning_e = 30,  ///< Log: Warnings, Errors and Fatals
+    error_e = 40,    ///< Log: Errors and Fatals
+    fatal_e = 50     ///< Log: Fatals only
   } log_level_t;
-
-  // TODO: Getter, Setter, Doc
-  typedef enum {
-    utc_e = 0, local_e = 1
-  } timezone_t;
 
   /** Write debug output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  void debug(const char* fmt, ...)
+  virtual void debug(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
   /** Write info output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  void info(const char* fmt, ...)
+  virtual void info(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
   /** Write warning output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  void warn(const char* fmt, ...)
+  virtual void warn(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
   /** Write ERROR output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  void error(const char* fmt, ...)
+  virtual void error(const char* fmt, ...)
     const __attribute__ ((format (printf, 2, 3)));
   /** Write FATAL ERROR output into log file and `exit()`.
    *
@@ -104,18 +114,18 @@ public:
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  void fatal(int exit_code, const char* fmt, ...)
+  virtual void fatal(int exit_code, const char* fmt, ...)
     const __attribute__ ((format (printf, 3, 4)));
 
 private:
-  const std::string logdir_name; // TODO: Getter, Setter, Doc
-  const std::string logfile_fmt; // TODO: Getter, Setter, Doc
-  unsigned logcount_delete; // TODO: Getter, Setter, Doc
-
-  Logger::log_level_t loglevel; // TODO: Getter, Setter, Doc
-  Logger::timezone_t timezone; // TODO: Getter, Setter, Doc
-  std::string strftime_fmt; // TODO: Getter, Setter, Doc
   FILE* fstream;
+  std::string logdir_name;
+  std::string logfile_fmt;
+  unsigned logcount_delete;
+
+  Logger::log_level_t loglevel;
+  RealtimeClock::timezone_t timezone;
+  std::string strftime_fmt;
 
   void _printf(
     Logger::log_level_t level, const std::string& name, const char* fmt,
@@ -135,4 +145,4 @@ private:
 extern Logger* Log;
 
 } /* namespace libathome_common  */
-#endif /* LIBATHOME_COMMON_LOG_H__  */
+#endif /* LIBATHOME_COMMON_LOGGER_H__  */

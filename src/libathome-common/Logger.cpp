@@ -18,21 +18,26 @@
 
 #include "libathome-common/Logger.hpp"
 
-#include <ctime>  /* Same as <stdarg.h>  */
+
+libathome_common::Logger::
+Logger()
+  :fstream(stdout), logdir_name("log"), logfile_fmt("%Y-%m-%d.log"),
+   logcount_delete(365), loglevel(log_level_t::all_e),
+   timezone(RealtimeClock::timezone_t::local_e),
+   strftime_fmt("[%H:%M:%S]")
+{
+}
 
 libathome_common::Logger::
 Logger(
   const std::string& logdir_name, const std::string& logfile_fmt,
   unsigned logcount_delete)
-  :logdir_name(logdir_name), logfile_fmt(logfile_fmt),
-   logcount_delete(logcount_delete), loglevel(log_level_t::all_e),
-   timezone(timezone_t::local_e), strftime_fmt("[%H:%M:%S]")
+  :Logger()
 {
-  if (this->logdir_name.empty()) {
-    this->fstream = stdout;
-  } else {
-    this->fstream = NULL;
-  }
+  this->fstream = NULL;
+  this->logdir_name = logdir_name;
+  this->logfile_fmt = logfile_fmt;
+  this->logcount_delete = logcount_delete;
 }
 
 libathome_common::Logger::
@@ -68,42 +73,17 @@ _printf(
 {
   if (this->loglevel > level) return;
 
-  time_t timestamp;
-  if (0 > time(&timestamp)) {
-    fprintf(stderr, "warning: Logger: Could not get time from RTC!\n");
-    timestamp = (time_t) 0;
-  }
-
-  tm timestruct;
-  errno_t timestruct_result = 0;
-  switch (this->timezone) {
-  case utc_e:
-    timestruct_result = gmtime_s(&timestruct, &timestamp);
-    break;
-  case local_e:
-    timestruct_result = localtime_s(&timestruct, &timestamp);
-    break;
-  }
-  if (timestruct_result != 0) {
-    fprintf(stderr, "ERROR: Logger: Could not convert unix timestamp"
-            " to struct!\n");
-    return;
-  }
-
-  string_t timestr;
-  if (0 == strftime(timestr, STRING_LEN, strftime_fmt.c_str(),
-                    &timestruct)) {
-    fprintf(stderr, "ERROR: Logger: Could not convert time struct to"
-            " string!\n");
-    return;
-  }
+  RealtimeClock rtc(timezone);
 
   FILE* fs = this->_open();
   if (fs == NULL) return;
 
+  std::string timestr;
+  rtc.to_string(timestr, strftime_fmt);
+
   std::string out;
-  out.reserve(STRING_LEN + name.size() + strlen(fmt) + 10);
-  out = timestr + (" " + name + ": " + fmt + "\n");
+  out.reserve(timestr.size() + name.size() + strlen(fmt) + 10);
+  out = timestr + " " + name + ": " + fmt + "\n";
 
   if (0 == vfprintf(fs, out.c_str(), ap)) {
     fprintf(stderr, "ERROR: Logger: Could not write '%s' message!\n",
