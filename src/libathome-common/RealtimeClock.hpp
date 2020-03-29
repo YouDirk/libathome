@@ -47,6 +47,9 @@ public:
   /**
    * Fetch current time with timezone
    * RealtimeClock::timezone_t::local_e.
+   *
+   * But you can change the timezone later, using
+   * RealtimeClock::set_timezone().
    */
   explicit RealtimeClock();
 
