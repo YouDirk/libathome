@@ -31,7 +31,8 @@ RealtimeClock(RealtimeClock::timezone_t timezone)
   if (0 > time(&this->timestamp)) {
     /* LOGGER may not be initialized.  So use FPRINTF for output here.
      */
-    fprintf(stderr, "ERROR: Logger: Could not get time from RTC!\n");
+    fprintf(stderr, "ERROR: RealtimeClock: Could not get time from"
+            " RTC!\n");
     timestamp = (time_t) 0;
   }
 
@@ -51,8 +52,8 @@ to_string(std::string& result, const std::string& fmt) const
   if (0 == strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct)) {
     /* LOGGER may not be initialized.  So use FPRINTF for output here.
      */
-    fprintf(stderr, "ERROR: Logger: Could not convert time struct to"
-            " string!\n");
+    fprintf(stderr, "ERROR: RealtimeClock: Could not convert time"
+            " struct to string!\n");
     return;
   }
 
@@ -97,8 +98,8 @@ set_timezone(RealtimeClock::timezone_t timezone)
   if (iserror) {
     /* LOGGER may not be initialized.  So use FPRINTF for output here.
      */
-    fprintf(stderr, "ERROR: Logger: Could not convert unix timestamp"
-            " to struct!\n");
+    fprintf(stderr, "ERROR: RealtimeClock: Could not convert unix"
+            " timestamp to struct!\n");
     return;
   }
 }
