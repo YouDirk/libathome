@@ -44,11 +44,13 @@ libathome_common::RealtimeClock::
 }
 
 void libathome_common::RealtimeClock::
-to_string(std::string& result, const std::string& fmt)
+to_string(std::string& result, const std::string& fmt) const
 {
   string_t buf;
 
   if (0 == strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct)) {
+    /* LOGGER may not be initialized.  So use FPRINTF for output here.
+     */
     fprintf(stderr, "ERROR: Logger: Could not convert time struct to"
             " string!\n");
     return;
@@ -103,7 +105,7 @@ set_timezone(RealtimeClock::timezone_t timezone)
 
 libathome_common::RealtimeClock::timezone_t
 libathome_common::RealtimeClock::
-get_timezone()
+get_timezone() const
 {
   return this->timezone;
 }

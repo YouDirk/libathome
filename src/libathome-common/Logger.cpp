@@ -43,7 +43,6 @@ Logger(
 libathome_common::Logger::
 ~Logger()
 {
-
 }
 
 libathome_common::Logger* libathome_common::Log = NULL;

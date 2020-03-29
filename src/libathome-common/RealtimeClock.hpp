@@ -40,8 +40,8 @@ public:
    * Represents the possible timezones.
    */
   typedef enum {
-    utc_e = 0,  ///< Coordinated Universal Time.
-    local_e = 1 ///< Use local system settings, such like `LC_ALL`.
+    utc_e = 0,  ///< Coordinated Universal Time
+    local_e = 1 ///< Use local system settings (see environment var `TZ`)
   } timezone_t;
 
   /**
@@ -75,7 +75,7 @@ public:
    *        POSIX compatible and try to avoid other extensions.
    */
   virtual void
-  to_string(std::string& result, const std::string& strftime_fmt);
+  to_string(std::string& result, const std::string& strftime_fmt) const;
 
   /**
    * Set `timezone`.
@@ -89,7 +89,7 @@ public:
    *
    * @return The timezone to get.
    */
-  virtual RealtimeClock::timezone_t get_timezone();
+  virtual RealtimeClock::timezone_t get_timezone() const;
 
 private:
   time_t timestamp;
