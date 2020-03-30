@@ -24,7 +24,7 @@ libathome_common::File::
 File(FILE* fstream) noexcept(false)
   :extern_fstream(fstream), binary(true), path(""), filename("")
 {
-  if (fstream == NULL) throw Error("Argument FSTREAM was set to NULL!");
+  if (fstream == NULL) throw Err("Argument FSTREAM was set to NULL!");
 }
 
 libathome_common::File::

@@ -25,11 +25,27 @@
 
 #include <string>
 #include <stdexcept>
+#include <regex>
 
-/* Ignore __ATTRIBUTE__, if not using g++  */
-#ifndef __GNUC__
-#  define  __attribute__(x)
-#endif
+/* C++ compiler depending stuff
+ */
+#ifdef __GNUC__
+#  /* GNU extension  */
+#  define Err(reason) \
+          libathome_common::Error((__PRETTY_FUNCTION__), (reason))
+#else
+#  /* GNU extension  */
+#  define __attribute__(x)
+#  ifdef OSWIN
+#    /* Microsoft extension  */
+#    define Err(reason) \
+            libathome_common::Error((__FUNCSIG__), (reason))
+#  else
+#    /* C++ standard  */
+#    define Err(reason) \
+            libathome_common::Error((__func__), (reason))
+#  endif
+#endif /* ifdef __GNUC__  */
 
 
 /**

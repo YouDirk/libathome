@@ -18,18 +18,27 @@
 
 #include "libathome-common/Error.hpp"
 
-#define _PREFIX                    "*( RUNTIME ERROR )* "
 
+const std::regex libathome_common::Error::
+REGEX_FUNCNAME("^(.* )?([^ (]*)\\(.*$");
 
 libathome_common::Error::
-Error(const std::string& reason)
-  :std::runtime_error(_PREFIX + reason)
+Error(const char* _pretty_func, const std::string& reason)
+  :std::runtime_error(reason)
 {
+  std::string func = _pretty_func != NULL
+    ? std::regex_replace(_pretty_func, Error::REGEX_FUNCNAME, "$2")
+    : "";
+
+  if (func.empty())
+    func = _pretty_func != NULL? _pretty_func: "???";
+
+  this->what_msg = "*(RUNTIME)* " + func + "(): " + reason;
 }
 
 libathome_common::Error::
-Error(const char* reason)
-  :Error(std::string(reason))
+Error(const char* _pretty_func, const char* reason)
+  :Error(_pretty_func, std::string(reason))
 {
 }
 
@@ -41,5 +50,5 @@ libathome_common::Error::
 const char* libathome_common::Error::
 what() const noexcept
 {
-  return runtime_error::what();
+  return this->what_msg.c_str();
 }

@@ -31,6 +31,10 @@ namespace libathome_common
  * `catch (libathome_common::Error& e) {}` all exceptions in one
  * statement.
  *
+ * To `throw` this class, use the macro `throw Err("error message!");`
+ * defined in libathome-common/Common.hpp.  This makes sure that the
+ * `Class::method()` name is included in the Error::what() message.
+ *
  * **Example**
  * ```cpp
  * try {
@@ -38,7 +42,7 @@ namespace libathome_common
  *   ...
  *
  *   if (error_case)
- *     throw Error("This is an error message!");
+ *     throw Err("This is an error message!");
  *
  *   ...
  *
@@ -51,21 +55,23 @@ class Error: public std::runtime_error
 {
 public:
   /**
-   * Instanciate it via `throw Error("error message!");`
+   * Instance it via `throw Err("error message!");`
    *
    * See libathome_common::Error for an example.
    *
-   * @param reason The error message.
-   */
-  explicit Error(const std::string& reason);
-  /**
-   * Instanciate it via `throw Error("error message!");`
-   *
-   * See libathome_common::Error for an example.
-   *
+   * @param _pretty_func Automatic filled by `Err()` macro
    * @param reason The error message
    */
-  explicit Error(const char* reason);
+  explicit Error(const char* _pretty_func, const std::string& reason);
+  /**
+   * Instance it via `throw Err("error message!");`
+   *
+   * See libathome_common::Error for an example.
+   *
+   * @param _pretty_func Automatic filled by `Err()` macro
+   * @param reason The error message
+   */
+  explicit Error(const char* _pretty_func, const char* reason);
 
   /**
    * Default destructor.
@@ -79,6 +85,10 @@ public:
    * @return The error message
    */
   virtual const char* what() const noexcept override;
+
+private:
+  static const std::regex REGEX_FUNCNAME;
+  std::string what_msg;
 
 }; /* class File  */
 
