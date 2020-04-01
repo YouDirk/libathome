@@ -51,14 +51,15 @@ public:
    * But you can change the timezone later, using
    * RealtimeClock::set_timezone().
    */
-  explicit RealtimeClock();
+  explicit RealtimeClock() noexcept(false);
 
   /**
    * Fetch current time with timezone `timezone`.
    *
    * @param timezone The timezone which should be used.
    */
-  explicit RealtimeClock(RealtimeClock::timezone_t timezone);
+  explicit RealtimeClock(RealtimeClock::timezone_t timezone)
+    noexcept(false);
 
   /**
    * Default destructor.
@@ -78,14 +79,16 @@ public:
    *        POSIX compatible and try to avoid other extensions.
    */
   virtual void
-  to_string(std::string& result, const std::string& strftime_fmt) const;
+  to_string(std::string& result, const std::string& strftime_fmt)
+    const noexcept(false);
 
   /**
    * Set `timezone`.
    *
    * @param timezone The timezone to set.
    */
-  virtual void set_timezone(RealtimeClock::timezone_t timezone);
+  virtual void set_timezone(RealtimeClock::timezone_t timezone)
+    noexcept(false);
 
   /**
    * Get `timezone`.

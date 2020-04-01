@@ -17,24 +17,20 @@
 
 
 #include "libathome-common/RealtimeClock.hpp"
+#include "libathome-common/Error.hpp"
 
 
 libathome_common::RealtimeClock::
-RealtimeClock()
+RealtimeClock() noexcept(false)
   :RealtimeClock(RealtimeClock::timezone_t::local_e)
 {
 }
 
 libathome_common::RealtimeClock::
-RealtimeClock(RealtimeClock::timezone_t timezone)
+RealtimeClock(RealtimeClock::timezone_t timezone) noexcept(false)
 {
-  if (0 > time(&this->timestamp)) {
-    /* LOGGER may not be initialized.  So use FPRINTF for output here.
-     */
-    fprintf(stderr, "ERROR: RealtimeClock: Could not get time from"
-            " RTC!\n");
-    timestamp = (time_t) 0;
-  }
+  if (0 > time(&this->timestamp))
+    throw Err("Could not fetch time from RTC!");
 
   this->set_timezone(timezone);
 }
@@ -45,23 +41,20 @@ libathome_common::RealtimeClock::
 }
 
 void libathome_common::RealtimeClock::
-to_string(std::string& result, const std::string& fmt) const
+to_string(std::string& result, const std::string& fmt)
+  const noexcept(false)
 {
   string_t buf;
 
-  if (0 == strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct)) {
-    /* LOGGER may not be initialized.  So use FPRINTF for output here.
-     */
-    fprintf(stderr, "ERROR: RealtimeClock: Could not convert time"
-            " struct to string!\n");
-    return;
-  }
+  if (0 == strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct))
+    throw Err("Could not convert time struct to string from format '%s'!",
+              fmt.c_str());
 
   result = buf;
 }
 
 void libathome_common::RealtimeClock::
-set_timezone(RealtimeClock::timezone_t timezone)
+set_timezone(RealtimeClock::timezone_t timezone) noexcept(false)
 {
   this->timezone = timezone;
 
@@ -95,13 +88,8 @@ set_timezone(RealtimeClock::timezone_t timezone)
   bool iserror = timestruct_result != 0;
 #endif /* #ifndef OSWIN  */
 
-  if (iserror) {
-    /* LOGGER may not be initialized.  So use FPRINTF for output here.
-     */
-    fprintf(stderr, "ERROR: RealtimeClock: Could not convert unix"
-            " timestamp to struct!\n");
-    return;
-  }
+  if (iserror)
+    throw Err("Could not convert unix timestamp to struct!");
 }
 
 libathome_common::RealtimeClock::timezone_t

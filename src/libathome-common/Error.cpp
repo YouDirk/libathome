@@ -22,9 +22,9 @@
 const std::regex libathome_common::Error::
 REGEX_FUNCNAME("^(.* )?([^ (]*)\\(.*$");
 
-libathome_common::Error::
-Error(const char* _pretty_func, const std::string& reason)
-  :std::runtime_error(reason)
+void libathome_common::Error::
+_init(const char* _pretty_func, const std::string& reason_fmt,
+      va_list ap)
 {
   std::string func = _pretty_func != NULL
     ? std::regex_replace(_pretty_func, Error::REGEX_FUNCNAME, "$2")
@@ -33,13 +33,39 @@ Error(const char* _pretty_func, const std::string& reason)
   if (func.empty())
     func = _pretty_func != NULL? _pretty_func: "???";
 
-  this->what_msg = "*(RUNTIME)* " + func + "(): " + reason;
+  string_t reason_filled;
+  if (0 ==
+      vsnprintf(reason_filled, STRING_LEN, reason_fmt.c_str(), ap)) {
+    /* Throwing Error in Error is a bad idea.  So we are making the
+       best what is possible.
+     */
+    strncpy(reason_filled, reason_fmt.c_str(), STRING_LEN);
+  }
+
+  this->what_msg.reserve(func.size() + strlen(reason_filled) + 40);
+  this->what_msg = "*(RUNTIME)* " + func + "(): " + reason_filled;
 }
 
 libathome_common::Error::
-Error(const char* _pretty_func, const char* reason)
-  :Error(_pretty_func, std::string(reason))
+Error(const char* _pretty_func, const std::string& reason_fmt, ...)
+  :std::runtime_error(reason_fmt)
 {
+  va_list ap;
+
+  va_start(ap, reason_fmt);
+  this->_init(_pretty_func, reason_fmt, ap);
+  va_end(ap);
+}
+
+libathome_common::Error::
+Error(const char* _pretty_func, const char* reason_fmt, ...)
+  :std::runtime_error(std::string(reason_fmt))
+{
+  va_list ap;
+
+  va_start(ap, reason_fmt);
+  this->_init(_pretty_func, std::string(reason_fmt), ap);
+  va_end(ap);
 }
 
 libathome_common::Error::

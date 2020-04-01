@@ -55,33 +55,37 @@ libathome_common::Logger* libathome_common::Log = NULL;
 
 void libathome_common::Logger::
 _printf(
-  Logger::loglevel_t level, const std::string& name, const char* fmt,
+  Logger::loglevel_t level, const std::string& lvlname, const char* fmt,
   va_list ap) const
 {
   if (this->loglevel > level) return;
 
-  RealtimeClock rtc(timezone);
+  try {
+    RealtimeClock rtc(timezone);
 
-  /*
-  FILE* fs = this->_open();
-  if (fs == NULL) return;
-  */
-  FILE* fs = stdout;
+    /*
+      FILE* fs = this->_open();
+      if (fs == NULL) return;
+    */
+    FILE* fs = stdout;
 
-  std::string timestr;
-  rtc.to_string(timestr, strftime_fmt);
+    std::string timestr;
+    rtc.to_string(timestr, strftime_fmt);
 
-  std::string out;
-  out.reserve(timestr.size() + name.size() + strlen(fmt) + 10);
-  out = timestr + " " + name + ": " + fmt + "\n";
+    std::string out;
+    out.reserve(timestr.size() + lvlname.size() + strlen(fmt) + 10);
+    out = timestr + " " + lvlname + ": " + fmt + "\n";
 
-  if (0 == vfprintf(fs, out.c_str(), ap)) {
-    fprintf(stderr, "ERROR: Logger: Could not write '%s' message!\n",
-            name.c_str());
-    return;
+    if (0 == vfprintf(fs, out.c_str(), ap))
+      throw Err("Could not write '%s' message!", lvlname.c_str());
+
+    //this->_close(fs);
+  } catch (Error& e) {
+    /* LOGGER not working here.  So we are using FPRINTF to STDERR for
+     * output.
+     */
+    fprintf(stderr, "ERROR: %s\n", e.what());
   }
-
-  //this->_close(fs);
 }
 
 /* ***************************************************************  */
@@ -138,7 +142,61 @@ fatal(int exit_code, const char* fmt, ...) const
   exit(exit_code);
 }
 
-/* ***************************************************************  */
+/* ---------------------------------------------------------------  */
+
+void libathome_common::Logger::
+debug(const std::string& fmt, ...) const
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->_printf(loglevel_t::debug_e, "debug", fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+info(const std::string& fmt, ...) const
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->_printf(loglevel_t::info_e, "info", fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+warn(const std::string& fmt, ...) const
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->_printf(loglevel_t::warning_e, "warning", fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+error(const std::string& fmt, ...) const
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->_printf(loglevel_t::error_e, "ERROR", fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+fatal(int exit_code, const std::string& fmt, ...) const
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->_printf(loglevel_t::fatal_e, "FATAL", fmt.c_str(), ap);
+  va_end(ap);
+
+  exit(exit_code);
+}
+
+/* ---------------------------------------------------------------  */
 
 void libathome_common::Logger::
 debug(const Error& e) const

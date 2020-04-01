@@ -21,6 +21,25 @@
 
 #include "libathome-common/Common.hpp"
 
+#include <regex>
+
+/* C++ compiler depending stuff
+ */
+#ifdef __GNUC__
+#  /* GNU extension  */
+#  define Err(reason ...) \
+          libathome_common::Error((__PRETTY_FUNCTION__), reason)
+#elif defined OSWIN
+#  /* Microsoft extension  */
+#  define Err(reason ...) \
+          libathome_common::Error((__FUNCSIG__), reason)
+#else
+#  /* C++ standard  */
+#  define Err(reason ...) \
+          libathome_common::Error((__func__), reason)
+#endif /* ifdef __GNUC__  */
+
+
 namespace libathome_common
 {
 
@@ -32,7 +51,7 @@ namespace libathome_common
  * statement.
  *
  * To `throw` this class, use the macro `throw Err("error message!");`
- * defined in libathome-common/Common.hpp.  This makes sure that the
+ * defined in libathome-common/Error.hpp.  This makes sure that the
  * `Class::method()` name is included in the Error::what() message.
  *
  * **Example**
@@ -60,18 +79,20 @@ public:
    * See libathome_common::Error for an example.
    *
    * @param _pretty_func Automatic filled by `Err()` macro
-   * @param reason The error message
+   * @param reason_fmt `printf()`-like error message
    */
-  explicit Error(const char* _pretty_func, const std::string& reason);
+  explicit Error(
+    const char* _pretty_func, const std::string& reason_fmt, ...);
   /**
    * Instance it via `throw Err("error message!");`
    *
    * See libathome_common::Error for an example.
    *
    * @param _pretty_func Automatic filled by `Err()` macro
-   * @param reason The error message
+   * @param reason_fmt `printf()`-like error message
    */
-  explicit Error(const char* _pretty_func, const char* reason);
+  explicit Error(const char* _pretty_func, const char* reason_fmt, ...)
+    __attribute__ ((format (printf, 3, 4)));
 
   /**
    * Default destructor.
@@ -89,6 +110,9 @@ public:
 private:
   static const std::regex REGEX_FUNCNAME;
   std::string what_msg;
+
+  void _init(
+    const char* _pretty_func, const std::string& reason_fmt, va_list ap);
 
 }; /* class File  */
 

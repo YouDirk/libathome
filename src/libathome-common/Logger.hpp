@@ -80,6 +80,8 @@ public:
     fatal_e = 50     ///< Log: Fatals only
   } loglevel_t;
 
+  /* -------------------------------------------------------------  */
+
   /**
    * Write debug output into log file.
    *
@@ -122,6 +124,47 @@ public:
   virtual void fatal(int exit_code, const char* fmt, ...)
     const __attribute__ ((format (printf, 3, 4)));
 
+  /* -------------------------------------------------------------  */
+
+  /**
+   * Write debug output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  virtual void debug(const std::string& fmt, ...) const;
+  /**
+   * Write info output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  virtual void info(const std::string& fmt, ...) const;
+  /**
+   * Write warning output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  virtual void warn(const std::string& fmt, ...) const;
+  /**
+   * Write ERROR output into log file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  virtual void error(const std::string& fmt, ...) const;
+  /**
+   * Write FATAL ERROR output into log file and `exit()`.
+   *
+   * @param exit_code Exit code of the terminated process
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   */
+  virtual void fatal(int exit_code, const std::string& fmt, ...) const;
+
+  /* -------------------------------------------------------------  */
+
   /**
    * Write runtime error as debug output into log file.
    *
@@ -154,6 +197,8 @@ public:
    */
   virtual void fatal(int exit_code, const Error& e) const;
 
+  /* -------------------------------------------------------------  */
+
 private:
   std::string file_fmt;
   unsigned file_count;
@@ -165,7 +210,7 @@ private:
   void _init();
 
   void _printf(
-    Logger::loglevel_t level, const std::string& name, const char* fmt,
+    Logger::loglevel_t level, const std::string& lvlname, const char* fmt,
     va_list ap) const;
 
 }; /* class Logger  */

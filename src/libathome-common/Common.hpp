@@ -25,26 +25,12 @@
 
 #include <string>
 #include <stdexcept>
-#include <regex>
 
 /* C++ compiler depending stuff
  */
-#ifdef __GNUC__
-#  /* GNU extension  */
-#  define Err(reason) \
-          libathome_common::Error((__PRETTY_FUNCTION__), (reason))
-#else
+#ifndef __GNUC__
 #  /* GNU extension  */
 #  define __attribute__(x)
-#  ifdef OSWIN
-#    /* Microsoft extension  */
-#    define Err(reason) \
-            libathome_common::Error((__FUNCSIG__), (reason))
-#  else
-#    /* C++ standard  */
-#    define Err(reason) \
-            libathome_common::Error((__func__), (reason))
-#  endif
 #endif /* ifdef __GNUC__  */
 
 
