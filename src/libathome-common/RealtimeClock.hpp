@@ -45,6 +45,15 @@ public:
   } timezone_t;
 
   /**
+   * Convert a RealtimeClock::timezone_t to string.
+   *
+   * @param timezone The timezone to convert
+   * @return The string which names the timezone. `static` allocated,
+   *         need NOT to be `free()`d.
+   */
+  static const char* to_string(RealtimeClock::timezone_t timezone);
+
+  /**
    * Fetch current time with timezone
    * RealtimeClock::timezone_t::local_e.
    *

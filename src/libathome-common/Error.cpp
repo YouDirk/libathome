@@ -54,7 +54,7 @@ _init(bool _backtrace_append,
     func = _pretty_func != NULL? _pretty_func: "???";
 
   string_t buf;
-  if (0 ==
+  if (0 >=
       vsnprintf(buf, STRING_LEN, reason_fmt.c_str(), ap)) {
     /* Throwing Error in Error is a bad idea.  So we are making the
      * best what is possible.
@@ -119,7 +119,7 @@ bt() noexcept
   string_t buf;
   int output_size = this->get_backtrace_size();
   for (int i=0; i<output_size; i++) {
-    if (0 == snprintf(buf, STRING_LEN, "\n  %s",
+    if (0 >= snprintf(buf, STRING_LEN, "\n  %s",
                       backtrace_symbolz[i + Error::BACKTRACE_OFFSET])) {
       /* Throwing Error in Error is a bad idea.  So we are making the
        * best what is possible.
@@ -130,8 +130,7 @@ bt() noexcept
   }
 
   this->what_msg += this->is_backtrace_more()
-    ? "\n      (...)\n"
-    : "\n";
+    ? "\n      (...)\n": "\n";
 }
 
 const char* libathome_common::Error::

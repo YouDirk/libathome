@@ -20,6 +20,17 @@
 #include "libathome-common/Error.hpp"
 
 
+const char* libathome_common::RealtimeClock::
+to_string(RealtimeClock::timezone_t timezone)
+{
+  switch (timezone) {
+  case utc_e: return "UTC";
+  case local_e: return "local-time";
+  }
+
+  return "<not implemented!>";
+}
+
 libathome_common::RealtimeClock::
 RealtimeClock() noexcept(false)
   :RealtimeClock(RealtimeClock::timezone_t::local_e)
@@ -46,7 +57,7 @@ to_string(std::string& result, const std::string& fmt)
 {
   string_t buf;
 
-  if (0 == strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct))
+  if (0 >= strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct))
     throw Err("Could not convert time struct to string from format '%s'!",
               fmt.c_str());
 

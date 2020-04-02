@@ -181,7 +181,7 @@ private:
   void _init(bool _backtrace_append,
     const char* _pretty_func, const std::string& reason_fmt, va_list ap);
 
-}; /* class File  */
+}; /* class Error  */
 
 } /* namespace libathome_common  */
 #endif /* LIBATHOME_COMMON_ERROR_H__  */

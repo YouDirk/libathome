@@ -22,24 +22,27 @@
 void libathome_common::Logger::
 _init()
 {
-  this->loglevel = loglevel_t::all_e;
-  this->timezone = RealtimeClock::timezone_t::local_e;
   this->strftime_fmt = "[%H:%M:%S]";
+
+  this->info("*** Log session initialized; log-level=%s; timezone=%s",
+             Logger::to_string(this->loglevel),
+             RealtimeClock::to_string(this->timezone));
 }
 
 libathome_common::Logger::
-Logger()
-  :File(stdout), file_fmt("%Y-%m-%d.log"), file_count(365)
+Logger(Logger::loglevel_t loglevel, RealtimeClock::timezone_t timezone)
+  :File(stdout), loglevel(loglevel), timezone(timezone),
+   file_fmt("%Y-%m-%d.log"), file_count(365)
 {
   this->_init();
 }
 
 libathome_common::Logger::
-Logger(
+Logger(Logger::loglevel_t loglevel, RealtimeClock::timezone_t timezone,
   const std::string& path, const std::string& file_fmt,
   unsigned file_count)
-  :File(path, "tmp.log", false), file_fmt(file_fmt),
-   file_count(file_count)
+  :File(path, "tmp.log", false), loglevel(loglevel), timezone(timezone),
+   file_fmt(file_fmt), file_count(file_count)
 {
   this->_init();
 }
@@ -47,21 +50,72 @@ Logger(
 libathome_common::Logger::
 ~Logger()
 {
+  this->info("*** Log session closed, bye *zzz* ...");
 }
 
 libathome_common::Logger* libathome_common::Log = NULL;
 
 /* ***************************************************************  */
 
+const char* libathome_common::Logger::
+to_string(Logger::loglevel_t loglevel)
+{
+  switch (loglevel) {
+  case all_e: return "all";
+  case debug_e: return "debug";
+  case info_e: return "info";
+  case warning_e: return "warning";
+  case error_e: return "ERROR";
+  case fatal_e: return "FATAL";
+  case none_e: return "none";
+  }
+
+  return "<not implemented!>";
+}
+
+void libathome_common::Logger::
+set_loglevel(Logger::loglevel_t loglevel)
+{
+  this->loglevel = loglevel;
+
+  this->info("*** Log session set; log-level=%s",
+    Logger::to_string(this->loglevel));
+}
+
+void libathome_common::Logger::
+set_timezone(RealtimeClock::timezone_t timezone)
+{
+  this->debug("<-- Log session; timezone=%s",
+    RealtimeClock::to_string(this->timezone));
+
+  this->timezone = timezone;
+
+  this->info("*** Log session set; timezone=%s",
+    RealtimeClock::to_string(this->timezone));
+}
+
+libathome_common::Logger::loglevel_t libathome_common::Logger::
+get_loglevel() const
+{
+  return this->loglevel;
+}
+
+libathome_common::RealtimeClock::timezone_t libathome_common::Logger::
+get_timezone() const
+{
+  return this->timezone;
+}
+
+/* ***************************************************************  */
+
 void libathome_common::Logger::
 _printf(
-  Logger::loglevel_t level, const std::string& lvlname, const char* fmt,
-  va_list ap) const
+  Logger::loglevel_t level, const char* fmt, va_list ap) const
 {
   if (this->loglevel > level) return;
 
   try {
-    RealtimeClock rtc(timezone);
+    RealtimeClock rtc(this->timezone);
 
     /*
       FILE* fs = this->_open();
@@ -72,12 +126,14 @@ _printf(
     std::string timestr;
     rtc.to_string(timestr, strftime_fmt);
 
+    const char* lvlname = Logger::to_string(level);
+
     std::string out;
-    out.reserve(timestr.size() + lvlname.size() + strlen(fmt) + 10);
+    out.reserve(timestr.size() + strlen(lvlname) + strlen(fmt) + 10);
     out = timestr + " " + lvlname + ": " + fmt + "\n";
 
-    if (0 == vfprintf(fs, out.c_str(), ap))
-      throw Err("Could not write '%s' message!", lvlname.c_str());
+    if (0 >= vfprintf(fs, out.c_str(), ap))
+      throw Err("Could not write '%s' message!", lvlname);
 
     //this->_close(fs);
   } catch (Error& e) {
@@ -96,7 +152,7 @@ debug(const char* fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::debug_e, "debug", fmt, ap);
+  this->_printf(loglevel_t::debug_e, fmt, ap);
   va_end(ap);
 }
 
@@ -106,7 +162,7 @@ info(const char* fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::info_e, "info", fmt, ap);
+  this->_printf(loglevel_t::info_e, fmt, ap);
   va_end(ap);
 }
 
@@ -116,7 +172,7 @@ warn(const char* fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::warning_e, "warning", fmt, ap);
+  this->_printf(loglevel_t::warning_e, fmt, ap);
   va_end(ap);
 }
 
@@ -126,7 +182,7 @@ error(const char* fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::error_e, "ERROR", fmt, ap);
+  this->_printf(loglevel_t::error_e, fmt, ap);
   va_end(ap);
 }
 
@@ -136,7 +192,7 @@ fatal(int exit_code, const char* fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::fatal_e, "FATAL", fmt, ap);
+  this->_printf(loglevel_t::fatal_e, fmt, ap);
   va_end(ap);
 
   exit(exit_code);
@@ -150,7 +206,7 @@ debug(const std::string& fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::debug_e, "debug", fmt.c_str(), ap);
+  this->_printf(loglevel_t::debug_e, fmt.c_str(), ap);
   va_end(ap);
 }
 
@@ -160,7 +216,7 @@ info(const std::string& fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::info_e, "info", fmt.c_str(), ap);
+  this->_printf(loglevel_t::info_e, fmt.c_str(), ap);
   va_end(ap);
 }
 
@@ -170,7 +226,7 @@ warn(const std::string& fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::warning_e, "warning", fmt.c_str(), ap);
+  this->_printf(loglevel_t::warning_e, fmt.c_str(), ap);
   va_end(ap);
 }
 
@@ -180,7 +236,7 @@ error(const std::string& fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::error_e, "ERROR", fmt.c_str(), ap);
+  this->_printf(loglevel_t::error_e, fmt.c_str(), ap);
   va_end(ap);
 }
 
@@ -190,7 +246,7 @@ fatal(int exit_code, const std::string& fmt, ...) const
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::fatal_e, "FATAL", fmt.c_str(), ap);
+  this->_printf(loglevel_t::fatal_e, fmt.c_str(), ap);
   va_end(ap);
 
   exit(exit_code);

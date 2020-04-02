@@ -25,6 +25,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <map>
 
 /* C++ compiler depending stuff
  */

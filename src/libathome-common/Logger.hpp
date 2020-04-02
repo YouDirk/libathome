@@ -38,34 +38,6 @@ namespace libathome_common
 class Logger: protected File
 {
 public:
-  /**
-   * Default logger instance here: libathome_common::Log.
-   *
-   * Logger will log to `stdout`.  Will be called during Common::Common.
-   */
-  explicit Logger();
-
-  /**
-   * Default logger instance here: libathome_common::Log.
-   *
-   * Will be called during Common::Common.
-   *
-   * @param path Directory where to output log files.
-   * @param file_fmt %File name of the log files, use `strftime()`
-   *                 formating patterns for representing date/time
-   *                 stuff.
-   * @param file_count How many files should be kept in `logdir_name`?
-   */
-  explicit Logger(
-    const std::string& path, const std::string& file_fmt,
-    unsigned file_count);
-
-  /**
-   * Default destructor.
-   *
-   * Will be called during Common::~Common.
-   */
-  virtual ~Logger();
 
   /**
    * Only write log messages which have the represented log-level or a
@@ -77,8 +49,93 @@ public:
     info_e = 20,     ///< Log: Infos, Warnings, Errors and Fatals
     warning_e = 30,  ///< Log: Warnings, Errors and Fatals
     error_e = 40,    ///< Log: Errors and Fatals
-    fatal_e = 50     ///< Log: Fatals only
+    fatal_e = 50,    ///< Log: Fatals only
+    none_e = 60      ///< Log: Nothing, prevent logging
   } loglevel_t;
+
+  /**
+   * Convert a Logger::loglevel_t to string.
+   *
+   * @param loglevel The loglevel to convert
+   * @return The string which names the loglevel. `static` allocated,
+   *         need NOT to be `free()`d.
+   */
+  static const char* to_string(Logger::loglevel_t loglevel);
+
+  /**
+   * Default logger instance here: libathome_common::Log.
+   *
+   * Logger will log to `stdout`.  Will be called during
+   * Common::Common().
+   *
+   * @param loglevel Log-level to filter by priority
+   * @param timezone Timezone which is used for messages
+   */
+  explicit Logger(
+    Logger::loglevel_t loglevel, RealtimeClock::timezone_t timezone);
+
+  /**
+   * Default logger instance here: libathome_common::Log.
+   *
+   * Will be called during Common::Common().
+   *
+   * @param loglevel Log-level to filter by priority
+   * @param timezone Timezone which is used for messages
+   * @param path Directory where to output log files.
+   * @param file_fmt %File name of the log files, use `strftime()`
+   *                 formating patterns for representing date/time
+   *                 stuff.
+   * @param file_count How many files should be kept in `logdir_name`?
+   */
+  explicit Logger(
+    Logger::loglevel_t loglevel, RealtimeClock::timezone_t timezone,
+    const std::string& path, const std::string& file_fmt,
+    unsigned file_count);
+
+  /**
+   * Default destructor.
+   *
+   * Will be called during Common::~Common.
+   */
+  virtual ~Logger();
+
+  /**
+   * Set the Logger::loglevel_t of the Logger.
+   *
+   * Set the log-level to filter out messages which we don't want to
+   * see.
+   *
+   * @param loglevel The log-level to set
+   */
+  virtual void set_loglevel(Logger::loglevel_t loglevel);
+  /**
+   * Set the RealtimeClock::timezone_t of the Logger.
+   *
+   * Set the timezone of the timestamps for the log messages.
+   * RealtimeClock::utc_e is usefull for server-side parts.  On client
+   * side it's better to use the local system time
+   * RealtimeClock::local_e.
+   *
+   * @param timezone The timezone to set
+   */
+  virtual void set_timezone(RealtimeClock::timezone_t timezone);
+
+  /**
+   * Returns the Logger::loglevel_t of the Logger.
+   *
+   * See Logger::set_loglevel for more details.
+   *
+   * @return The current log-level
+   */
+  virtual Logger::loglevel_t get_loglevel() const;
+  /**
+   * Returns the RealtimeClock::timezone_t of the Logger.
+   *
+   * See Logger::set_timezone for more details.
+   *
+   * @return The current timezone
+   */
+  virtual RealtimeClock::timezone_t get_timezone() const;
 
   /* -------------------------------------------------------------  */
 
@@ -200,18 +257,18 @@ public:
   /* -------------------------------------------------------------  */
 
 private:
+  Logger::loglevel_t loglevel;
+  RealtimeClock::timezone_t timezone;
+
   std::string file_fmt;
   unsigned file_count;
 
-  Logger::loglevel_t loglevel;
-  RealtimeClock::timezone_t timezone;
   std::string strftime_fmt;
 
   void _init();
 
   void _printf(
-    Logger::loglevel_t level, const std::string& lvlname, const char* fmt,
-    va_list ap) const;
+    Logger::loglevel_t level, const char* fmt, va_list ap) const;
 
 }; /* class Logger  */
 

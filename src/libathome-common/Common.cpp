@@ -24,7 +24,9 @@ libathome_common::Common::
 Common(int argc, char** argv)
 {
   //libathome_common::Log = new Logger("log", "%Y-%m-%d.log", 365);
-  libathome_common::Log = new Logger();
+  libathome_common::Log = new Logger(
+    Logger::loglevel_t::all_e, RealtimeClock::timezone_t::local_e);
+  Log->set_timezone(RealtimeClock::utc_e);
 
   this->hello = new std::string("Hello World!");
 
@@ -35,8 +37,7 @@ Common(int argc, char** argv)
   }
 
   Log->debug(this->hello->c_str());
-  Log->info(this->hello->c_str());
-  Log->warn(this->hello->c_str());
+  Log->warn(*this->hello);
   Log->error("Hello %s, how are you (%d)?", "World", -999);
   //Log->fatal(3, this->hello->c_str());
 
