@@ -18,8 +18,8 @@
 
 #include "libathome-common/Error.hpp"
 
-#ifdef __GNUC__
-#  /* For backtrace stuff  */
+#if defined __GNUC__ && !defined OSWIN
+#  /* For backtrace stuff, GNU extension && Linux  */
 #  include <execinfo.h>
 #endif /* ifdef __GNUC__  */
 
@@ -33,12 +33,12 @@ void libathome_common::Error::
 _init(bool _backtrace_append,
   const char* _pretty_func, const std::string& reason_fmt, va_list ap)
 {
-#ifdef __GNUC__
+#if defined __GNUC__ && !defined OSWIN
   this->backtrace_size
     = backtrace(this->backtrace_frames, Error::BACKTRACE_MAX);
   this->backtrace_symbolz
     = backtrace_symbols(this->backtrace_frames, this->backtrace_size);
-#else /* ifdef __GNUC__  */
+#else
   this->backtrace_size = 0;
   this->backtrace_frames[0] = NULL;
   this->backtrace_symbolz = NULL;

@@ -170,9 +170,9 @@ _clean-all-recursive: clean _clean-tags
 	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
 
 %.$(DEPEXT): %.$(CEXT)
-	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
+	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
 %.$(DEPEXT): %.$(SEXT)
-	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
+	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
 
 %.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
 	$(CC) $(CCFLAGS) -o $@ $<
