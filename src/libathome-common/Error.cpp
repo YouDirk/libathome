@@ -145,7 +145,8 @@ const void* libathome_common::Error::
 get_backtrace_frame(int i)
 {
   /* Don't THROW, because an Error in Error is a bad idea o.o  */
-  if (i < 0 || i >= this->backtrace_size) return NULL;
+  if (i < 0 || i >= (this->backtrace_size - Error::BACKTRACE_OFFSET))
+    return NULL;
 
   return backtrace_frames[i + Error::BACKTRACE_OFFSET];
 }
@@ -153,7 +154,8 @@ const char* libathome_common::Error::
 get_backtrace_symbol(int i)
 {
   /* Don't THROW, because an Error in Error is a bad idea o.o  */
-  if (i < 0 || i >= this->backtrace_size) return NULL;
+  if (i < 0 || i >= (this->backtrace_size - Error::BACKTRACE_OFFSET))
+    return NULL;
 
   return backtrace_symbolz[i + Error::BACKTRACE_OFFSET];
 }

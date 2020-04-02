@@ -149,12 +149,12 @@ private:
 
   std::string what_msg;
 
-  static const unsigned BACKTRACE_MAX = 22;
+  static const int BACKTRACE_MAX = 22;
   /**
    * The first 2 frames are `Error::_init()` and `Error::Error()`
    * which we don´t want in backtrace.
    */
-  static const unsigned BACKTRACE_OFFSET = 2;
+  static const int BACKTRACE_OFFSET = 2;
   void* backtrace_frames[BACKTRACE_MAX];
   char** backtrace_symbolz;
   int backtrace_size;
