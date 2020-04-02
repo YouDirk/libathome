@@ -59,6 +59,9 @@ public:
    *
    * But you can change the timezone later, using
    * RealtimeClock::set_timezone().
+   *
+   * @exception Error will be thrown if `timestamp` could not be
+   *            fetched from system RTC
    */
   explicit RealtimeClock() noexcept(false);
 
@@ -66,6 +69,8 @@ public:
    * Fetch current time with timezone `timezone`.
    *
    * @param timezone The timezone which should be used.
+   * @exception Error will be thrown if `timestamp` could not be
+   *            fetched from system RTC
    */
   explicit RealtimeClock(RealtimeClock::timezone_t timezone)
     noexcept(false);
@@ -86,6 +91,8 @@ public:
    * @param result The resulting formated string.
    * @param strftime_fmt The format string.  Make sure to hold it
    *        POSIX compatible and try to avoid other extensions.
+   * @exception Error will be thrown if some formatting of
+   *            `strftime_fmt` is going wrong
    */
   virtual void
   to_string(std::string& result, const std::string& strftime_fmt)
@@ -95,6 +102,8 @@ public:
    * Set `timezone`.
    *
    * @param timezone The timezone to set.
+   * @exception Error will be thrown if `timestamp` could not be
+   *            converted to localized `timestruct`
    */
   virtual void set_timezone(RealtimeClock::timezone_t timezone)
     noexcept(false);
