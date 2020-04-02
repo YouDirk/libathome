@@ -54,6 +54,11 @@ namespace libathome_common
  * defined in libathome-common/Error.hpp.  This makes sure that the
  * `Class::method()` name is included in the Error::what() message.
  *
+ * This class does also provides a `backtrace` functionality.  The
+ * backtrace will be automatically added to Error::what(), if debug
+ * build is enabled by defining the preprocessor constant `DEBUG`,
+ * i.e. passing the flag `-DDEBUG` through the C++ compiler.
+ *
  * **Example**
  * ```cpp
  * try {
@@ -61,7 +66,7 @@ namespace libathome_common
  *   ...
  *
  *   if (error_case)
- *     throw Err("This is an error message!");
+ *     throw Err("This is an %s message!", "error");
  *
  *   ...
  *
@@ -107,9 +112,52 @@ public:
    */
   virtual const char* what() const noexcept override;
 
+  /**
+   * Use this size to iterate through the backtrace.
+   *
+   * @return Size of backtrace or `0` if not generated
+   */
+  virtual int get_backtrace_size();
+  /**
+   * Returns if the real stack was bigger than
+   * Error::get_backtrace_size().
+   *
+   * @return `true` if real stack was bigger than
+   *         Error::get_backtrace_size()
+   */
+  virtual bool is_backtrace_more();
+  /**
+   * Returns a pointer to the `i`-th stack frame of the backtrace.
+   *
+   * @param i Index of the stack frame you want to get
+   * @return Pointer of the `i`-th stack frame.  Or `NULL` if `i` is
+   *         out of range.
+   */
+  virtual const void* get_backtrace_frame(int i);
+  /**
+   * Returns a symbolic representation of the `i`-th stack frame of
+   * the backtrace.
+   *
+   * @param i Index of the stack frame you want to get
+   * @return Symbolic representation of the `i`-th stack frame.  Or
+   *         `NULL` if `i` is out of range.
+   */
+  virtual const char* get_backtrace_symbol(int i);
+
 private:
   static const std::regex REGEX_FUNCNAME;
+
   std::string what_msg;
+
+  static const unsigned BACKTRACE_MAX = 22;
+  /**
+   * The first 2 frames are `Error::_init()` and `Error::Error()`
+   * which we don´t want in backtrace.
+   */
+  static const unsigned BACKTRACE_OFFSET = 2;
+  void* backtrace_frames[BACKTRACE_MAX];
+  char** backtrace_symbolz;
+  int backtrace_size;
 
   void _init(
     const char* _pretty_func, const std::string& reason_fmt, va_list ap);
