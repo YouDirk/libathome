@@ -89,7 +89,7 @@ _init(const char* _pretty_func, const std::string& reason_fmt,
   this->what_msg += this->is_backtrace_more()
     ? "\n      (...)\n"
     : "\n";
-#endif
+#endif /* ifdef DEBUG  */
 
 }
 
@@ -132,7 +132,9 @@ what() const noexcept
 int libathome_common::Error::
 get_backtrace_size()
 {
-  return this->backtrace_size - Error::BACKTRACE_OFFSET;
+  int result = this->backtrace_size - Error::BACKTRACE_OFFSET;
+
+  return result < 0? 0: result;
 }
 bool libathome_common::Error::
 is_backtrace_more()
