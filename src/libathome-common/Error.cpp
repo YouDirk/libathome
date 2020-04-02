@@ -30,8 +30,8 @@ REGEX_FUNCNAME("^(.* )?([^ (]*)\\(.*$");
 /* ---------------------------------------------------------------  */
 
 void libathome_common::Error::
-_init(const char* _pretty_func, const std::string& reason_fmt,
-      va_list ap)
+_init(bool _backtrace_append,
+  const char* _pretty_func, const std::string& reason_fmt, va_list ap)
 {
 #ifdef __GNUC__
   this->backtrace_size
@@ -59,21 +59,64 @@ _init(const char* _pretty_func, const std::string& reason_fmt,
     /* Throwing Error in Error is a bad idea.  So we are making the
      * best what is possible.
      */
-    strncpy(buf, reason_fmt.c_str(), STRING_LEN);
+    strncpy(buf, reason_fmt.c_str(), STRING_LEN-1);
   }
 
   this->what_msg.reserve(func.size() + strlen(buf) + 40);
   this->what_msg = "*(RUNTIME)* " + func + "(): " + buf;
 
   /* ---  */
-  /* Only in DEBUG build output backtrace in WHAT()  */
 
-#ifdef DEBUG
+  this->backtrace_appended = false;
+  if (_backtrace_append) this->bt();
+}
+
+libathome_common::Error::
+Error(bool _backtrace_append,
+  const char* _pretty_func, const std::string& reason_fmt, ...)
+  :std::runtime_error(reason_fmt)
+{
+  va_list ap;
+
+  va_start(ap, reason_fmt);
+  this->_init(_backtrace_append, _pretty_func, reason_fmt, ap);
+  va_end(ap);
+}
+
+libathome_common::Error::
+Error(bool _backtrace_append,
+  const char* _pretty_func, const char* reason_fmt, ...)
+  :std::runtime_error(std::string(reason_fmt))
+{
+  va_list ap;
+
+  va_start(ap, reason_fmt);
+  this->_init(
+    _backtrace_append, _pretty_func, std::string(reason_fmt), ap);
+  va_end(ap);
+}
+
+libathome_common::Error::
+~Error()
+{
+  if (this->backtrace_symbolz) free(this->backtrace_symbolz);
+}
+
+/* ---------------------------------------------------------------  */
+
+void libathome_common::Error::
+bt()
+{
+  /* Only one time plz  */
+  if (this->backtrace_appended) return;
+  this->backtrace_appended = true;
+
   this->what_msg += "\n\nbacktrace:";
 
   if (this->backtrace_size == 0)
     this->what_msg += "\n  <Not implemented for your compiler or OS>";
 
+  string_t buf;
   int output_size = this->get_backtrace_size();
   for (int i=0; i<output_size; i++) {
     if (0 == snprintf(buf, STRING_LEN, "\n  %s",
@@ -89,39 +132,7 @@ _init(const char* _pretty_func, const std::string& reason_fmt,
   this->what_msg += this->is_backtrace_more()
     ? "\n      (...)\n"
     : "\n";
-#endif /* ifdef DEBUG  */
-
 }
-
-libathome_common::Error::
-Error(const char* _pretty_func, const std::string& reason_fmt, ...)
-  :std::runtime_error(reason_fmt)
-{
-  va_list ap;
-
-  va_start(ap, reason_fmt);
-  this->_init(_pretty_func, reason_fmt, ap);
-  va_end(ap);
-}
-
-libathome_common::Error::
-Error(const char* _pretty_func, const char* reason_fmt, ...)
-  :std::runtime_error(std::string(reason_fmt))
-{
-  va_list ap;
-
-  va_start(ap, reason_fmt);
-  this->_init(_pretty_func, std::string(reason_fmt), ap);
-  va_end(ap);
-}
-
-libathome_common::Error::
-~Error()
-{
-  if (this->backtrace_symbolz) free(this->backtrace_symbolz);
-}
-
-/* ---------------------------------------------------------------  */
 
 const char* libathome_common::Error::
 what() const noexcept

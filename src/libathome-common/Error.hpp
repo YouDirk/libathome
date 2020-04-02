@@ -23,20 +23,28 @@
 
 #include <regex>
 
+/* Debugging stuff
+ */
+#ifdef DEBUG
+#define _ERROR_BT                  true
+#else
+#define _ERROR_BT                  false
+#endif /* ifdef DEBUG  */
+
 /* C++ compiler depending stuff
  */
 #ifdef __GNUC__
 #  /* GNU extension  */
-#  define Err(reason ...) \
-          libathome_common::Error((__PRETTY_FUNCTION__), reason)
+#  define Err(reason ...) libathome_common::Error( \
+          _ERROR_BT, (__PRETTY_FUNCTION__), reason)
 #elif defined OSWIN
 #  /* Microsoft extension  */
-#  define Err(reason ...) \
-          libathome_common::Error((__FUNCSIG__), reason)
+#  define Err(reason ...) libathome_common::Error( \
+          _ERROR_BT, (__FUNCSIG__), reason)
 #else
 #  /* C++ standard  */
-#  define Err(reason ...) \
-          libathome_common::Error((__func__), reason)
+#  define Err(reason ...) libathome_common::Error( \
+          _ERROR_BT, (__func__), reason)
 #endif /* ifdef __GNUC__  */
 
 
@@ -83,26 +91,36 @@ public:
    *
    * See libathome_common::Error for an example.
    *
+   * @param _backtrace_append Automatic filled by `Err()` macro
    * @param _pretty_func Automatic filled by `Err()` macro
    * @param reason_fmt `printf()`-like error message
    */
-  explicit Error(
-    const char* _pretty_func, const std::string& reason_fmt, ...);
+  explicit Error(bool _backtrace_append, const char* _pretty_func,
+    const std::string& reason_fmt, ...);
   /**
    * Instance it via `throw Err("error message!");`
    *
    * See libathome_common::Error for an example.
    *
+   * @param _backtrace_append Automatic filled by `Err()` macro
    * @param _pretty_func Automatic filled by `Err()` macro
    * @param reason_fmt `printf()`-like error message
    */
-  explicit Error(const char* _pretty_func, const char* reason_fmt, ...)
-    __attribute__ ((format (printf, 3, 4)));
+  explicit Error(bool _backtrace_append, const char* _pretty_func,
+    const char* reason_fmt, ...) __attribute__ ((format (printf, 4, 5)));
 
   /**
    * Default destructor.
    */
   virtual ~Error();
+
+  /**
+   * Append backtrace to Error::what().
+   *
+   * Also append backtrace to Error::what() if `-DDEBUG` was not set.
+   * Double calls will be ignored.
+   */
+  virtual void bt();
 
   /**
    * Returns the error message which describes the issue which
@@ -148,6 +166,7 @@ private:
   static const std::regex REGEX_FUNCNAME;
 
   std::string what_msg;
+  bool backtrace_appended;
 
   static const int BACKTRACE_MAX = 22;
   /**
@@ -159,7 +178,7 @@ private:
   char** backtrace_symbolz;
   int backtrace_size;
 
-  void _init(
+  void _init(bool _backtrace_append,
     const char* _pretty_func, const std::string& reason_fmt, va_list ap);
 
 }; /* class File  */
