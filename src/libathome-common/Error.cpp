@@ -105,7 +105,7 @@ libathome_common::Error::
 /* ---------------------------------------------------------------  */
 
 void libathome_common::Error::
-bt()
+bt() noexcept
 {
   /* Only one time plz  */
   if (this->backtrace_appended) return;
@@ -141,19 +141,19 @@ what() const noexcept
 }
 
 int libathome_common::Error::
-get_backtrace_size()
+get_backtrace_size() const noexcept
 {
   int result = this->backtrace_size - Error::BACKTRACE_OFFSET;
 
   return result < 0? 0: result;
 }
 bool libathome_common::Error::
-is_backtrace_more()
+is_backtrace_more() const noexcept
 {
   return this->backtrace_size == Error::BACKTRACE_MAX;
 }
 const void* libathome_common::Error::
-get_backtrace_frame(int i)
+get_backtrace_frame(int i) const noexcept
 {
   /* Don't THROW, because an Error in Error is a bad idea o.o  */
   if (i < 0 || i >= (this->backtrace_size - Error::BACKTRACE_OFFSET))
@@ -162,7 +162,7 @@ get_backtrace_frame(int i)
   return backtrace_frames[i + Error::BACKTRACE_OFFSET];
 }
 const char* libathome_common::Error::
-get_backtrace_symbol(int i)
+get_backtrace_symbol(int i) const noexcept
 {
   /* Don't THROW, because an Error in Error is a bad idea o.o  */
   if (i < 0 || i >= (this->backtrace_size - Error::BACKTRACE_OFFSET))

@@ -120,7 +120,7 @@ public:
    * Also append backtrace to Error::what() if `-DDEBUG` was not set.
    * Double calls will be ignored.
    */
-  virtual void bt();
+  virtual void bt() noexcept;
 
   /**
    * Returns the error message which describes the issue which
@@ -135,7 +135,7 @@ public:
    *
    * @return Size of backtrace or `0` if not generated
    */
-  virtual int get_backtrace_size();
+  virtual int get_backtrace_size() const noexcept;
   /**
    * Returns if the real stack was bigger than
    * Error::get_backtrace_size().
@@ -143,7 +143,7 @@ public:
    * @return `true` if real stack was bigger than
    *         Error::get_backtrace_size()
    */
-  virtual bool is_backtrace_more();
+  virtual bool is_backtrace_more() const noexcept;
   /**
    * Returns a pointer to the `i`-th stack frame of the backtrace.
    *
@@ -151,7 +151,7 @@ public:
    * @return Pointer of the `i`-th stack frame.  Or `NULL` if `i` is
    *         out of range.
    */
-  virtual const void* get_backtrace_frame(int i);
+  virtual const void* get_backtrace_frame(int i) const noexcept;
   /**
    * Returns a symbolic representation of the `i`-th stack frame of
    * the backtrace.
@@ -160,7 +160,7 @@ public:
    * @return Symbolic representation of the `i`-th stack frame.  Or
    *         `NULL` if `i` is out of range.
    */
-  virtual const char* get_backtrace_symbol(int i);
+  virtual const char* get_backtrace_symbol(int i) const noexcept;
 
 private:
   static const std::regex REGEX_FUNCNAME;
