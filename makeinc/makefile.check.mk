@@ -190,14 +190,21 @@ $(shell echo 'BROWSER_OPT = $(BROWSER_OPT) ' >> $(_CACHE_FILE))
 
 # --------------------------------------------------------------------
 
-OS_IS_WIN = $(shell test \( \
+OS_IS_WIN := := $(call _CMD_TEST,loooool,operating system)
+OS_IS_WIN := $(shell test \( \
   -n "`echo $(OS) | $(SED) -n '/^windows/Ip'`" \
   -o -n "`$(UNAME) -o | $(SED) -n '/^msys/Ip'`" \
   -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'`" \
   -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'`" \
   -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'`" \
 \) && echo -n 1)
-$(shell echo 'OS_IS_WIN = $(OS_IS_WIN)' >> $(_CACHE_FILE))
+ifeq (,$(OS_IS_WIN))
+  $(call _CMD_TEST_RESULT,Linux/Unix-like)
+  $(shell echo 'OS_IS_WIN =' >> $(_CACHE_FILE))
+else
+  $(call _CMD_TEST_RESULT,MSYS2/MinGW/Windows)
+  $(shell echo 'OS_IS_WIN = $(OS_IS_WIN)' >> $(_CACHE_FILE))
+endif
 
 endif # ifneq (,$(_CACHE_FILE))
 
