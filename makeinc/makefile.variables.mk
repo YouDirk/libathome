@@ -66,7 +66,8 @@ DOXYGENFILE := Doxyfile-$(DOC_OUTDIR).conf
 
 MAKEFILEZ := $(addprefix ../../makeinc/, \
   ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk \
-  makefile.check.mk makefile.variables.mk)
+  makefile.check.mk makefile.variables.mk) Makefile ../Makefile \
+  ../../Makefile
 
 CEXT := cpp
 HEXT := hpp
