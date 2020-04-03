@@ -22,6 +22,7 @@
 #include <cstdio>   /* Same as <stdio.h>  */
 #include <cstdarg>  /* Same as <stdarg.h>  */
 #include <cstring>  /* Same as <string.h>  */
+#include <cstdint>  /* Same as <stdint.h>  */
 
 #include <string>
 #include <stdexcept>

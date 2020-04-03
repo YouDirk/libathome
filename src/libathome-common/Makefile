@@ -20,6 +20,10 @@ OBJ = Common Error RealtimeClock File Logger
 
 INCLUDE_PATHS = ..
 LD_PATHS =
-LIBS =
 
 include ../../makeinc/makefile.inc.mk
+
+# Windows?
+ifneq (,$(OS_IS_WIN))
+LIBS := dbghelp
+endif

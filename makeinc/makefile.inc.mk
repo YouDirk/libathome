@@ -170,9 +170,9 @@ _clean-all-recursive: clean _clean-tags
 	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
 
 %.$(DEPEXT): %.$(CEXT)
-	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
+	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
 %.$(DEPEXT): %.$(SEXT)
-	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
+	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
 
 %.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
 	$(CC) $(CCFLAGS) -o $@ $<
@@ -225,7 +225,11 @@ _cache:
 	echo '' > $@
 	$(MAKE) _CACHE_FILE=$@ _cache
 
+# Make sure that $(CC) was set by makefile.check.mk before generating
+# $(DEPFILES)
+ifneq (,$(SED))
 -include $(DEPFILES)
+endif
 
 # End of Targets for library dirs and project dirs
 # ********************************************************************

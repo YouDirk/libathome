@@ -21,6 +21,10 @@
 #if defined __GNUC__ && !defined OSWIN
 #  /* For backtrace stuff, GNU extension && Linux  */
 #  include <execinfo.h>
+#elif defined OSWIN
+#  /* For backtrace stuff, Windows using StackWalk64 API  */
+#  include <windows.h>
+#  include <dbghelp.h>
 #endif /* ifdef __GNUC__  */
 
 
@@ -38,7 +42,107 @@ _init(bool _backtrace_append,
     = backtrace(this->backtrace_frames, Error::BACKTRACE_MAX);
   this->backtrace_symbolz
     = backtrace_symbols(this->backtrace_frames, this->backtrace_size);
+#elif defined OSWIN
+  HANDLE process = GetCurrentProcess();
+  HANDLE thread = GetCurrentThread();
+
+  CONTEXT context;
+  memset(&context, 0, sizeof(CONTEXT));
+  context.ContextFlags = CONTEXT_FULL;
+  RtlCaptureContext(&context);
+
+  DWORD image;
+  STACKFRAME64 stackframe;
+  memset(&stackframe, 0, sizeof(STACKFRAME64));
+#ifdef _M_IX86
+  image = IMAGE_FILE_MACHINE_I386;
+  stackframe.AddrPC.Offset = context.Eip;
+  stackframe.AddrPC.Mode = AddrModeFlat;
+  stackframe.AddrFrame.Offset = context.Ebp;
+  stackframe.AddrFrame.Mode = AddrModeFlat;
+  stackframe.AddrStack.Offset = context.Esp;
+  stackframe.AddrStack.Mode = AddrModeFlat;
+#elif _M_X64
+  image = IMAGE_FILE_MACHINE_AMD64;
+  stackframe.AddrPC.Offset = context.Rip;
+  stackframe.AddrPC.Mode = AddrModeFlat;
+  stackframe.AddrFrame.Offset = context.Rsp;
+  stackframe.AddrFrame.Mode = AddrModeFlat;
+  stackframe.AddrStack.Offset = context.Rsp;
+  stackframe.AddrStack.Mode = AddrModeFlat;
+#elif _M_IA64
+  image = IMAGE_FILE_MACHINE_IA64;
+  stackframe.AddrPC.Offset = context.StIIP;
+  stackframe.AddrPC.Mode = AddrModeFlat;
+  stackframe.AddrFrame.Offset = context.IntSp;
+  stackframe.AddrFrame.Mode = AddrModeFlat;
+  stackframe.AddrBStore.Offset = context.RsBSP;
+  stackframe.AddrBStore.Mode = AddrModeFlat;
+  stackframe.AddrStack.Offset = context.IntSp;
+  stackframe.AddrStack.Mode = AddrModeFlat;
 #else
+  // TODO
+  fprintf(stderr, "ERROR: Machine Type not supported!");
+#endif
+
+  IMAGEHLP_MODULE64 module;
+  module.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
+  char symbol_buf[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
+
+  PSYMBOL_INFO symbol = (PSYMBOL_INFO) symbol_buf;
+  symbol->MaxNameLen = MAX_SYM_NAME;
+  symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+  if (!SymInitialize(process, NULL, true)) {
+    // TODO
+    fprintf(stderr, "Could not initialize debug symbols!");
+  }
+
+  typedef struct {
+    char* pointer[Error::BACKTRACE_MAX];
+    string_t strings[Error::BACKTRACE_MAX];
+  } backtrace_symbolz_t;
+  backtrace_symbolz_t* backtrace_symbolz
+    = (backtrace_symbolz_t*) malloc(sizeof(backtrace_symbolz_t));
+
+  /* Iterate through `stackframe` via `StackWalk64()`  */
+  int i=0;
+  for (; i<Error::BACKTRACE_MAX; i++) {
+    /* The StackWalk64 API reference you can find here:
+     *
+     * https://docs.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-stackwalk64
+     */
+    if (!StackWalk64(image, process, thread, &stackframe, &context,
+         NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL)) {
+      break;
+    }
+
+    if (!SymGetModuleInfo64(process, stackframe.AddrPC.Offset, &module))
+      strncpy(module.ModuleName, "<unknown>", 32);
+
+    DWORD64 displacement = 0;
+    if (SymFromAddr(
+        process, stackframe.AddrPC.Offset, &displacement, symbol)) {
+      snprintf(backtrace_symbolz->strings[i], STRING_LEN,
+               "%s(%s+0x%02x) [0x%01x%07x]", module.ModuleName,
+               symbol->Name, (uint32_t) displacement,
+               (uint32_t) (stackframe.AddrPC.Offset >> 32),
+               (uint32_t) stackframe.AddrPC.Offset);
+    } else {
+      snprintf(backtrace_symbolz->strings[i], STRING_LEN,
+               "%s [0x%01x%07x]", module.ModuleName,
+               (uint32_t) (stackframe.AddrPC.Offset >> 32),
+               (uint32_t) stackframe.AddrPC.Offset);
+    }
+    backtrace_symbolz->pointer[i] = backtrace_symbolz->strings[i];
+
+    this->backtrace_frames[i] = (void*) stackframe.AddrPC.Offset;
+  }
+  this->backtrace_size = i;
+  this->backtrace_symbolz = (char**) backtrace_symbolz;
+
+  SymCleanup(process);
+#else /* elif defined OSWIN  */
   this->backtrace_size = 0;
   this->backtrace_frames[0] = NULL;
   this->backtrace_symbolz = NULL;
