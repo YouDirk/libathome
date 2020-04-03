@@ -28,133 +28,163 @@ WARNB = $(NL)$(NL)  warning:
 
 ifneq (,$(_CACHE_FILE))
 
-_CMD_TEST = $(shell which $(1) 2> /dev/null)
+_CMD_TEST = \
+  $(eval _CMD_TEST_BUF:=checking for $(2)... )$(\
+  )$(shell which $(1) 2> /dev/null)
+_CMD_TEST_NOOUT = $(shell which $(1) 2> /dev/null)
+_CMD_TEST_RESULT = $(info $(_CMD_TEST_BUF)$(1))
 
-CC = $(call _CMD_TEST,g++)
+CC := $(call _CMD_TEST,g++,C++ compiler)
 ifeq (,$(CC))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) C++ compiler not found!  Try '$$> apt-get install \
     g++' for installation.  Or use MSYS2 command \
     '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
+  $(call _CMD_TEST_RESULT,$(CC))
   $(shell echo 'CC = $(CC)' >> $(_CACHE_FILE))
 endif
 
-AS = $(call _CMD_TEST,g++)
+AS := $(call _CMD_TEST,g++,ASM compiler)
 ifeq (,$(AS))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) ASM compiler not found!  Try '$$> apt-get install \
     g++' for installation.  Or use MSYS2 command \
     '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
+  $(call _CMD_TEST_RESULT,$(AS))
   $(shell echo 'AS = $(AS)' >> $(_CACHE_FILE))
 endif
 
-LD = $(call _CMD_TEST,g++)
+LD := $(call _CMD_TEST,g++,linker)
 ifeq (,$(LD))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) Linker command not found!  Try '$$> apt-get install \
     g++' for installation.  Or use MSYS2 command \
     '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
+  $(call _CMD_TEST_RESULT,$(LD))
   $(shell echo 'LD = $(LD)' >> $(_CACHE_FILE))
 endif
 
-SED = $(call _CMD_TEST,sed)
+SED := $(call _CMD_TEST,sed,sed)
 ifeq (,$(SED))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) SED command not found!  Try '$$> apt-get install \
     sed' for installation.  Or use MSYS2 command \
     '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
+  $(call _CMD_TEST_RESULT,$(SED))
   $(shell echo 'SED = $(SED)' >> $(_CACHE_FILE))
 endif
 
-TOUCH = $(call _CMD_TEST,touch)
+TOUCH := $(call _CMD_TEST,touch,touch)
 ifeq (,$(TOUCH))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) TOUCH command not found!  Try '$$> apt-get install \
     coreutils' for installation.  Or use MSYS2 command \
     '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
+  $(call _CMD_TEST_RESULT,$(TOUCH))
   $(shell echo 'TOUCH = $(TOUCH)' >> $(_CACHE_FILE))
 endif
 
-UNAME = $(call _CMD_TEST,uname)
+UNAME := $(call _CMD_TEST,uname,uname)
 ifeq (,$(UNAME))
   $(shell rm -f $(_CACHE_FILE))
   $(error $(ERRB) UNAME command not found!  Try '$$> apt-get install \
     coreutils' for installation.  Or use MSYS2 command \
     '$$> pacman -S <package>'.  After install run '$$> make clean-all')
 else
+  $(call _CMD_TEST_RESULT,$(UNAME))
   $(shell echo 'UNAME = $(UNAME)' >> $(_CACHE_FILE))
 endif
 
 # --------------------------------------------------------------------
 
-DEBUGGER_OPT = $(call _CMD_TEST,gdb)
+DEBUGGER_OPT := $(call _CMD_TEST,gdb,debugger (optional))
 ifeq (,$(DEBUGGER_OPT))
+  $(call _CMD_TEST_RESULT,no)
   $(shell echo 'DEBUGGER_OPT =' >> $(_CACHE_FILE))
 else
+  $(call _CMD_TEST_RESULT,$(DEBUGGER_OPT))
   $(shell echo 'DEBUGGER_OPT = $(DEBUGGER_OPT)' >> $(_CACHE_FILE))
 endif
 
-VALGRIND_OPT = $(call _CMD_TEST,valgrind)
+VALGRIND_OPT := $(call _CMD_TEST,valgrind,Valgrind (optional))
 ifeq (,$(VALGRIND_OPT))
+  $(call _CMD_TEST_RESULT,no)
   $(shell echo 'VALGRIND_OPT =' >> $(_CACHE_FILE))
 else
+  $(call _CMD_TEST_RESULT,$(VALGRIND_OPT))
   $(shell echo 'VALGRIND_OPT = $(VALGRIND_OPT)' >> $(_CACHE_FILE))
 endif
 
-CTAGS_OPT = $(call _CMD_TEST,ctags)
+CTAGS_OPT := $(call _CMD_TEST,ctags,ctags (optional))
 ifeq (,$(CTAGS_OPT))
+  $(call _CMD_TEST_RESULT,no)
   $(shell echo 'CTAGS_OPT =' >> $(_CACHE_FILE))
 else
+  $(call _CMD_TEST_RESULT,$(CTAGS_OPT))
   $(shell echo 'CTAGS_OPT = $(CTAGS_OPT)' >> $(_CACHE_FILE))
 endif
 
-ETAGS_OPT = $(call _CMD_TEST,etags)
+ETAGS_OPT := $(call _CMD_TEST,etags,etags (optional))
 ifeq (,$(ETAGS_OPT))
+  $(call _CMD_TEST_RESULT,no)
   $(shell echo 'ETAGS_OPT =' >> $(_CACHE_FILE))
 else
+  $(call _CMD_TEST_RESULT,$(ETAGS_OPT))
   $(shell echo 'ETAGS_OPT = $(ETAGS_OPT)' >> $(_CACHE_FILE))
 endif
 
-EBROWSE_OPT = $(call _CMD_TEST,ebrowse)
+EBROWSE_OPT := $(call _CMD_TEST,ebrowse,ebrowse (optional))
 ifeq (,$(EBROWSE_OPT))
+  $(call _CMD_TEST_RESULT,no)
   $(shell echo 'EBROWSE_OPT =' >> $(_CACHE_FILE))
 else
+  $(call _CMD_TEST_RESULT,$(EBROWSE_OPT))
   $(shell echo 'EBROWSE_OPT = $(EBROWSE_OPT)' >> $(_CACHE_FILE))
 endif
 
-DOXYGEN_OPT = $(call _CMD_TEST,doxygen)
+DOXYGEN_OPT := $(call _CMD_TEST,doxygen,Doxygen (optional))
 ifeq (,$(DOXYGEN_OPT))
+  $(call _CMD_TEST_RESULT,no)
   $(shell echo 'DOXYGEN_OPT =' >> $(_CACHE_FILE))
 else
+  $(call _CMD_TEST_RESULT,$(DOXYGEN_OPT))
   $(shell echo 'DOXYGEN_OPT = $(DOXYGEN_OPT)' >> $(_CACHE_FILE))
 endif
 
 # --------------------------------------------------------------------
 
-BROWSER_OPT = "$(call _CMD_TEST,/usr/bin/firefox)"
+BROWSER_OPT := \
+  "$(call _CMD_TEST,/usr/bin/firefox,web browser (optional))"
 ifeq ("",$(BROWSER_OPT))
-  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files/Mozilla\ Firefox$(\
-                  )/firefox.exe)"
+  BROWSER_OPT := \
+    "$(call _CMD_TEST_NOOUT,/c/Program\ Files/Mozilla\ Firefox$(\
+      )/firefox.exe)"
 endif
 ifeq ("",$(BROWSER_OPT))
-  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files\ \(x86\)/$(\
-                  )Mozilla\ Firefox/firefox.exe)"
+  BROWSER_OPT := \
+    "$(call _CMD_TEST_NOOUT,/c/Program\ Files\ \(x86\)/$(\
+      )Mozilla\ Firefox/firefox.exe)"
 endif
 ifeq ("",$(BROWSER_OPT))
-  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files/Internet\ Explorer$(\
-                  )/iexplore.exe)"
+  BROWSER_OPT := \
+    "$(call _CMD_TEST_NOOUT,/c/Program\ Files/Internet\ Explorer$(\
+      )/iexplore.exe)"
 endif
 ifeq ("",$(BROWSER_OPT))
-  BROWSER_OPT = "$(call _CMD_TEST,/c/Program\ Files\ \(x86\)/$(\
-                  )Internet\ Explorer/iexplore.exe)"
+  BROWSER_OPT := \
+    "$(call _CMD_TEST_NOOUT,/c/Program\ Files\ \(x86\)/$(\
+      )Internet\ Explorer/iexplore.exe)"
 endif
 ifeq ("",$(BROWSER_OPT))
+  $(call _CMD_TEST_RESULT,no)
   BROWSER_OPT =
+else
+  $(call _CMD_TEST_RESULT,$(BROWSER_OPT))
 endif
 $(shell echo 'BROWSER_OPT = $(BROWSER_OPT) ' >> $(_CACHE_FILE))
 

@@ -226,12 +226,10 @@ _cache:
 	$(MAKE) _CACHE_FILE=$@ _cache
 
 # Make sure that $(CC) was set by makefile.check.mk && _CACHE_FILE
-# will not generated in current MAKE instance, before generating
-# $(DEPFILES)
-ifneq (,$(SED))
-ifeq (,$(_CACHE_FILE))
+# will not generated (empty string) in the current MAKE instance,
+# before generating $(DEPFILES)
+ifeq (,$(if $(SED),$(_CACHE_FILE),1))
 -include $(DEPFILES)
-endif
 endif
 
 # End of Targets for library dirs and project dirs
