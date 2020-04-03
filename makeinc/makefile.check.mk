@@ -33,6 +33,7 @@ _CMD_TEST = \
   )$(shell which $(1) 2> /dev/null)
 _CMD_TEST_NOOUT = $(shell which $(1) 2> /dev/null)
 _CMD_TEST_RESULT = $(info $(_CMD_TEST_BUF)$(1))
+_CMD_TEST_RESNO = $(info $(_CMD_TEST_BUF)no - Debian package $(1))
 
 CC := $(call _CMD_TEST,g++,C++ compiler)
 ifeq (,$(CC))
@@ -104,7 +105,7 @@ endif
 
 DEBUGGER_OPT := $(call _CMD_TEST,gdb,debugger (optional))
 ifeq (,$(DEBUGGER_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,gdb)
   $(shell echo 'DEBUGGER_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(DEBUGGER_OPT))
@@ -113,7 +114,7 @@ endif
 
 VALGRIND_OPT := $(call _CMD_TEST,valgrind,Valgrind (optional))
 ifeq (,$(VALGRIND_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,valgrind)
   $(shell echo 'VALGRIND_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(VALGRIND_OPT))
@@ -122,7 +123,7 @@ endif
 
 CTAGS_OPT := $(call _CMD_TEST,ctags,ctags (optional))
 ifeq (,$(CTAGS_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,emacs-bin-common)
   $(shell echo 'CTAGS_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(CTAGS_OPT))
@@ -131,7 +132,7 @@ endif
 
 ETAGS_OPT := $(call _CMD_TEST,etags,etags (optional))
 ifeq (,$(ETAGS_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,emacs-bin-common)
   $(shell echo 'ETAGS_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(ETAGS_OPT))
@@ -140,7 +141,7 @@ endif
 
 EBROWSE_OPT := $(call _CMD_TEST,ebrowse,ebrowse (optional))
 ifeq (,$(EBROWSE_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,emacs-bin-common)
   $(shell echo 'EBROWSE_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(EBROWSE_OPT))
@@ -149,7 +150,7 @@ endif
 
 DOXYGEN_OPT := $(call _CMD_TEST,doxygen,Doxygen (optional))
 ifeq (,$(DOXYGEN_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,doxygen)
   $(shell echo 'DOXYGEN_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(DOXYGEN_OPT))
@@ -181,7 +182,7 @@ ifeq ("",$(BROWSER_OPT))
       )Internet\ Explorer/iexplore.exe)"
 endif
 ifeq ("",$(BROWSER_OPT))
-  $(call _CMD_TEST_RESULT,no)
+  $(call _CMD_TEST_RESNO,firefox-esr)
   BROWSER_OPT =
 else
   $(call _CMD_TEST_RESULT,$(BROWSER_OPT))
