@@ -54,8 +54,16 @@ else
   DOC_OUTDIR := project
 endif
 
+CV2PDB := cv2pdb.exe
+CV2PDB_URL := https://ci.appveyor.com/api/projects/rainers/visuald$(\
+  )/artifacts/cv2pdb.exe?job=Environment%3A%20os%3DVisual%20Studio$(\
+  )%202015%2C%20VS%3D14%2C%20APPVEYOR_BUILD_WORKER_IMAGE%3DVisual$(\
+  )%20Studio%202015
+
 PROJECTPATH := ../project
 DOCPATH := ../../doc
+TOOLSPATH := ../../tools
+
 DOCHTMLPATH := $(DOCPATH)/$(DOC_OUTDIR)/html
 
 EBROWSEFILE := BROWSE
@@ -75,6 +83,7 @@ SEXT := S
 OEXT := o
 DEPEXT := d
 LOGEXT := log
+PDBEXT := pdb
 
 OBJFILES := $(OBJ:=.$(OEXT))
 DEPFILES := $(OBJ:=.$(DEPEXT))

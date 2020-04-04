@@ -15,8 +15,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-PREFIX_ITERATEDIR = .
-PREFIX_ROOTDIR = ..
-CLEAN_FILES =
+PREFIX_ITERATEDIR := .
+PREFIX_ROOTDIR := ..
+CLEAN_FILES :=
+CLEAN_ALL_FILES :=
 
 include ../makeinc/makefile.inc-global.mk

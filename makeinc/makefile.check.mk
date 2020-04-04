@@ -103,6 +103,35 @@ endif
 
 # --------------------------------------------------------------------
 
+OS_IS_WIN := $(call _CMD_TEST,loooool,operating system)
+OS_IS_WIN := $(shell test \( \
+  -n "`echo $(OS) | $(SED) -n '/^windows/Ip'`" \
+  -o -n "`$(UNAME) -o | $(SED) -n '/^msys/Ip'`" \
+  -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'`" \
+  -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'`" \
+  -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'`" \
+\) && echo -n 1)
+ifeq (,$(OS_IS_WIN))
+  $(call _CMD_TEST_RESULT,Linux/Unix-like)
+  $(shell echo 'OS_IS_WIN =' >> $(_CACHE_FILE))
+else
+  $(call _CMD_TEST_RESULT,MSYS2/MinGW/Windows)
+  $(shell echo 'OS_IS_WIN = $(OS_IS_WIN)' >> $(_CACHE_FILE))
+endif
+
+# --------------------------------------------------------------------
+
+WGET_REC := $(call _CMD_TEST,wget,wget (recommended))
+ifeq (,$(WGET_REC))
+  $(call _CMD_TEST_RESNO,wget)
+  $(shell echo 'WGET_REC =' >> $(_CACHE_FILE))
+else
+  $(call _CMD_TEST_RESULT,$(WGET_REC))
+  $(shell echo 'WGET_REC = $(WGET_REC)' >> $(_CACHE_FILE))
+endif
+
+# --------------------------------------------------------------------
+
 DEBUGGER_OPT := $(call _CMD_TEST,gdb,debugger (optional))
 ifeq (,$(DEBUGGER_OPT))
   $(call _CMD_TEST_RESNO,gdb)
@@ -188,24 +217,6 @@ else
   $(call _CMD_TEST_RESULT,$(BROWSER_OPT))
 endif
 $(shell echo 'BROWSER_OPT = $(BROWSER_OPT) ' >> $(_CACHE_FILE))
-
-# --------------------------------------------------------------------
-
-OS_IS_WIN := := $(call _CMD_TEST,loooool,operating system)
-OS_IS_WIN := $(shell test \( \
-  -n "`echo $(OS) | $(SED) -n '/^windows/Ip'`" \
-  -o -n "`$(UNAME) -o | $(SED) -n '/^msys/Ip'`" \
-  -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'`" \
-  -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'`" \
-  -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'`" \
-\) && echo -n 1)
-ifeq (,$(OS_IS_WIN))
-  $(call _CMD_TEST_RESULT,Linux/Unix-like)
-  $(shell echo 'OS_IS_WIN =' >> $(_CACHE_FILE))
-else
-  $(call _CMD_TEST_RESULT,MSYS2/MinGW/Windows)
-  $(shell echo 'OS_IS_WIN = $(OS_IS_WIN)' >> $(_CACHE_FILE))
-endif
 
 endif # ifneq (,$(_CACHE_FILE))
 

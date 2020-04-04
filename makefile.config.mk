@@ -28,10 +28,22 @@ DEBUG_BUILD := 1
 # PATCH  - Bug fixes only
 # SUFFIX - (optional) -dev/-beta{X}/-rc{X}
 #
-VERSION_MAJOR = 0
-VERSION_MINOR = 1
-VERSION_PATCH = 0
-VERSION_SUFFIX = -dev
+VERSION_MAJOR := 0
+VERSION_MINOR := 1
+VERSION_PATCH := 0
+VERSION_SUFFIX := -dev
+
+# Set to 1 if you are developing on a Windows platfrom and want to
+# generate PDB files.  This produces better readable backtraces in
+# class Error on Windows.  (recommended)
+#
+# Negative side-effect: GDB (`$> make debug`) cannot load symbol
+# tables anymore.  Set this variable to 0 before reompiling and
+# running GDB.
+#
+# values: [1 0]
+#
+IFWIN_GENPDB := 1
 
 # Only used if DEBUG_BUILD = 1, otherwise best opimization level is
 # used.

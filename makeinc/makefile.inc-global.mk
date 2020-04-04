@@ -50,9 +50,9 @@ clean:
 	$(MAKE) -C $(LIBCOMMONPATH_ROOT) $@
 	$(MAKE) -C $(LIBCLIENTPATH_ROOT) $@
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
-	rm -f *.bak *~ $(CLEAN_FILES)
+	rm -rf *.bak *~ $(CLEAN_FILES)
 clean-all:
 	$(MAKE) -C $(LIBCOMMONPATH_ROOT) _$@-recursive
 	$(MAKE) -C $(LIBCLIENTPATH_ROOT) _$@-recursive
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
-	rm -f *.bak *~ $(CLEAN_FILES)
+	rm -rf *.bak *~ $(CLEAN_FILES) $(CLEAN_ALL_FILES)

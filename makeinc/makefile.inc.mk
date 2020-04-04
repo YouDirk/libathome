@@ -81,6 +81,10 @@ debug: all
 	  install gdb' for installation.  Or use MSYS2 command \
 	  '$$> pacman -S <package>'.  After install run \
 	  '$$> make clean-all')
+  else ifeq (1,$(if $(OS_IS_WIN),$(IFWIN_GENPDB),0))
+	$(error $(ERRB) GDB will not be able to load symbol tables, \
+	  because PDB conversation is enabled!  Set 'IFWIN_GENPDB := 0' \
+	  in makefile.config.mk and try again)
   else
 	$(RUN_ENV) $(DEBUGGER_OPT) $(DEBUGGERFLAGS) $(OUTPUT)
   endif
@@ -91,6 +95,10 @@ debug-emacs:
 	  install gdb' for installation.  Or use MSYS2 command \
 	  '$$> pacman -S <package>'.  After install run \
 	  '$$> make clean-all')
+  else ifeq (1,$(if $(OS_IS_WIN),$(IFWIN_GENPDB),0))
+	$(error $(ERRB) GDB will not be able to load symbol tables, \
+	  because PDB conversation is enabled!  Set 'IFWIN_GENPDB := 0' \
+	  in makefile.config.mk, then run '$$> make' and then try again)
   else
 	@$(RUN_ENV) $(DEBUGGER_OPT) -i=mi $(DEBUGGERFLAGS) $(OUTPUT)
   endif
@@ -159,15 +167,18 @@ _clean-deps:
 _clean-tags:
 	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
 clean: _clean-deps
-	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(DOCPATH)/*.bak
+	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(addprefix $(DOCPATH)/,*.bak *~) \
+	  $(addprefix $(TOOLSPATH)/,*.bak *~)
 # Compiling library?
 ifneq (,$(LIBNAME))
 	$(TOUCH) $(MAIN_HEADER)
 endif
 clean-all: clean _clean-tags _clean-makecache
-	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
+	-rm -rf *.$(PDBEXT) $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR) \
+	  $(TOOLSPATH)
 _clean-all-recursive: clean _clean-tags
-	-rm -rf $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR)
+	-rm -rf *.$(PDBEXT) $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR) \
+	  $(TOOLSPATH)
 
 %.$(DEPEXT): %.$(CEXT)
 	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
@@ -207,8 +218,26 @@ else
 	$(EBROWSE_OPT) $(EBROWSEFLAGS) -o $@ $^
 endif
 
+ifeq (1,$(if $(OS_IS_WIN),$(IFWIN_GENPDB),0))
+$(OUTPUT): $(OBJFILES) $(TOOLSPATH)/$(CV2PDB)
+	$(LD) $(LDFLAGS) -o $@ $(OBJFILES) $(addprefix -l,$(LIBS))
+	$(TOOLSPATH)/$(CV2PDB) $@ 2> /dev/null || true
+else
 $(OUTPUT): $(OBJFILES)
-	$(LD) $(LDFLAGS) -o $@ $^ $(addprefix -l,$(LIBS))
+	$(LD) $(LDFLAGS) -o $@ $(OBJFILES) $(addprefix -l,$(LIBS))
+endif
+
+$(TOOLSPATH)/$(CV2PDB):
+ifeq (,$(WGET_REC))
+	$(warning warning: PDB files will not be generated!  It´s \
+	  recommended to install '$$> apt-get install wget'.  Otherwise \
+	  you can disable this warning by setting 'IFWIN_GENPDB := 0' \
+	  in makefile.config.mk ...)
+else
+	mkdir -p $(TOOLSPATH)
+	@$(WGET_REC) -nv --show-progress --progress=bar:force -O $@ \
+	  $(CV2PDB_URL)
+endif
 
 # Compiling library?
 ifneq (,$(LIBNAME))

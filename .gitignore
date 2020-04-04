@@ -18,8 +18,10 @@
 # Executables
 /src/libathome-*/libathome*.so
 /src/libathome-*/libathome*.dll
+/src/libathome-*/libathome*.pdb
 /src/project/*-client
 /src/project/*-client.exe
+/src/project/*-client.pdb
 
 # Compiling stuff
 /src/**/*.o
@@ -36,6 +38,9 @@
 # Doc stuff
 /doc/libathome
 /doc/project
+
+# Tools stuff
+/tools
 
 # Backup files
 *~
