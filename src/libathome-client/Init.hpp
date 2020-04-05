@@ -39,8 +39,8 @@
  * (optionally) `-L/path/to/lib`.
  *
  * Use the compiler flag `-DDEBUG` during development for things such
- * like force `libathome_common::Log` to output to `/dev/stdout`,
- * enable logging backtrace on runtime error, etc ...
+ * like to force `libathome_common::Log` output to `/dev/stdout`,
+ * enable logging backtrace at runtime error, etc ...
  *
  * **Example `main.cpp` C++ file**
  * ```cpp

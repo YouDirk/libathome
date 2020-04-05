@@ -14,9 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 # ********************************************************************
 
-# Set to 1 if debug build (recommended during development)
+# Set to 1 for debug build (recommended during development)
+#
+# For things such like to force `libathome_common::Log` output to
+# `/dev/stdout`, enable logging backtrace at runtime error, etc ...
 #
 # values: [1 0]
 #
@@ -47,8 +51,8 @@ VERSION_SUFFIX := -dev
 #
 IFWIN_GENPDB := 1
 
-# Only used if DEBUG_BUILD = 1, otherwise best opimization level is
-# used.
+# Only used if DEBUG_BUILD = 1, otherwise the best opimization level
+# will be used.
 #
 # values: [-Og -O0 -O1 -O2 -O3 -Os -Ofast]
 #

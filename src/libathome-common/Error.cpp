@@ -146,14 +146,13 @@ _backtrace(void** buffer, int size)
 #endif /* ifdef __GNUC__  */
 } /* _backtrace()  */
 
-const char** libathome_common::Error::
+char** libathome_common::Error::
 _backtrace_symbols(void* const* buffer, int size)
 {
   if (size <= 0) return NULL;
 
 #if defined __GNUC__ && !defined OSWIN
-  return
-    backtrace_symbols(this->backtrace_frames, this->backtrace_size);
+  return backtrace_symbols(buffer, size);
 #elif defined OSWIN
   /* The StackWalk64 API reference you can find here:
    *

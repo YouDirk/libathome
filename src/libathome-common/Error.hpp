@@ -175,7 +175,7 @@ private:
    */
   static const int BACKTRACE_OFFSET = 3;
   void* backtrace_frames[BACKTRACE_MAX];
-  const char** backtrace_symbolz;
+  char** backtrace_symbolz;
   int backtrace_size;
 
   void _init(bool _backtrace_append,
@@ -189,7 +189,7 @@ private:
    * @return Is allocated with `malloc()` and mus be `free()` by
    *         caller.  Or NULL if not implemented.
    */
-  const char** _backtrace_symbols(void* const* buffer, int size);
+  char** _backtrace_symbols(void* const* buffer, int size);
 
 }; /* class Error  */
 
