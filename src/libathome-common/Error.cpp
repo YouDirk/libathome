@@ -21,6 +21,8 @@
 #if defined __GNUC__ && !defined OSWIN
 #  /* For backtrace stuff, GNU extension && Linux  */
 #  include <execinfo.h>
+#  include <dlfcn.h>
+#  include <cxxabi.h>
 #elif defined OSWIN
 #  /* For backtrace stuff, Windows using StackWalk64 API  */
 #  include <windows.h>
@@ -30,6 +32,9 @@
 
 const std::regex libathome_common::Error::
 REGEX_FUNCNAME("^(.* )?([^ (]*)\\(.*$");
+
+const std::regex libathome_common::Error::
+REGEX_LIBNAME("^(.*[/\\\\])?([^/\\\\].*)$");
 
 /* ---------------------------------------------------------------  */
 
@@ -151,8 +156,52 @@ _backtrace_symbols(void* const* buffer, int size)
 {
   if (size <= 0) return NULL;
 
+  typedef struct {
+    char* ptr[Error::BACKTRACE_MAX];
+    string_t strings[Error::BACKTRACE_MAX];
+  } symbols_t;
+
+
 #if defined __GNUC__ && !defined OSWIN
-  return backtrace_symbols(buffer, size);
+  char** symbols_fallback = backtrace_symbols(buffer, size);
+  symbols_t* result = (symbols_t*) malloc(sizeof(symbols_t));
+
+  Dl_info dlinfo;
+  char* demangle_cur = NULL;
+  size_t demangle_length = 0;
+  int demangle_status;
+  for (int i=0; i<size; i++) {
+    result->ptr[i] = result->strings[i];
+
+    if (!dladdr(buffer[i], &dlinfo) || dlinfo.dli_sname == NULL) {
+      snprintf(
+        result->strings[i], STRING_LEN, "%s", symbols_fallback[i]);
+
+      continue;
+    }
+
+    std::string libname =
+      std::regex_replace(dlinfo.dli_fname, Error::REGEX_LIBNAME, "$2");
+    unsigned long offset
+      = (unsigned long) buffer[i] - (unsigned long) dlinfo.dli_saddr;
+
+    char* dem_result = abi::__cxa_demangle(dlinfo.dli_sname,
+      demangle_cur, &demangle_length, &demangle_status);
+    if (dem_result == NULL) {
+      snprintf(result->strings[i], STRING_LEN, "%20s::%s()+0x%02lx [%p]",
+        libname.c_str(), dlinfo.dli_sname, offset, buffer[i]);
+
+      continue;
+    }
+    demangle_cur = dem_result;
+
+    snprintf(result->strings[i], STRING_LEN, "%20s::%s+0x%02lx [%p]",
+      libname.c_str(), demangle_cur, offset, buffer[i]);
+  } /* for (int i=0; i<size; i++)  */
+
+  free(demangle_cur);
+  free(symbols_fallback);
+  return result->ptr;
 #elif defined OSWIN
   /* The StackWalk64 API reference you can find here:
    *
@@ -171,11 +220,6 @@ _backtrace_symbols(void* const* buffer, int size)
 
   IMAGEHLP_LINE64 fileline;
   fileline.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
-
-  typedef struct {
-    char* ptr[Error::BACKTRACE_MAX];
-    string_t strings[Error::BACKTRACE_MAX];
-  } symbols_t;
 
   symbols_t* result = (symbols_t*) malloc(sizeof(symbols_t));
 

@@ -164,6 +164,7 @@ public:
 
 private:
   static const std::regex REGEX_FUNCNAME;
+  static const std::regex REGEX_LIBNAME;
 
   std::string what_msg;
   bool backtrace_appended;

@@ -42,6 +42,10 @@
  * like to force `libathome_common::Log` output to `/dev/stdout`,
  * enable logging backtrace at runtime error, etc ...
  *
+ * Use the linker flag `-rdynamic` optionally on Linux or Unix-like
+ * systems to make backtraces of libathome_common::Error more readable
+ * for humans.
+ *
  * **Example `main.cpp` C++ file**
  * ```cpp
  * #include <libathome-client.hpp>
@@ -66,8 +70,8 @@
  *
  * **Example `g++` linking**
  * ```shell
- * $> g++ -L/path/to/lib -o myproject-client main.o Class1.o ... \
- *    -lathome-common -lathome-client
+ * $> g++ -rdynamic -L/path/to/lib -o myproject-client main.o \
+ *    Class1.o ... -lathome-common -lathome-client
  * ```
  */
 namespace libathome_client

@@ -20,13 +20,15 @@
 
 # Not Windows! :P
 ifeq (,$(OS_IS_WIN))
-  SOEXT = so
-  DOT_BINEXT =
+  SOEXT := so
+  DOT_BINEXT :=
   CCDEFINES +=
+  SHAREDFLAGS += -rdynamic
 else
-  SOEXT = dll
-  DOT_BINEXT = .exe
+  SOEXT := dll
+  DOT_BINEXT := .exe
   CCDEFINES += -DOSWIN
+  SHAREDFLAGS +=
 endif
 
 # Debug build?
@@ -44,13 +46,13 @@ ifneq (,$(LIBNAME))
   OUTPUT := $(LIBNAME).$(SOEXT)
   MAIN_HEADER := $(LIBNAME).hpp
   FPICFLAGS := -fPIC -DPIC
-  SHAREDFLAGS := -shared
+  SHAREDFLAGS += -shared
   DOC_OUTDIR := libathome
 else
   OUTPUT := $(PROJECT_EXECNAME)-client$(DOT_BINEXT)
   MAIN_HEADER :=
   FPICFLAGS :=
-  SHAREDFLAGS :=
+  SHAREDFLAGS +=
   DOC_OUTDIR := project
 endif
 

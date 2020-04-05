@@ -27,4 +27,6 @@ include ../../makeinc/makefile.inc.mk
 # Compiling on Windows?
 ifneq (,$(OS_IS_WIN))
 LIBS += dbghelp
+else
+LIBS += dl
 endif
