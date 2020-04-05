@@ -168,18 +168,28 @@ private:
   std::string what_msg;
   bool backtrace_appended;
 
-  static const int BACKTRACE_MAX = 22;
+  static const int BACKTRACE_MAX = 23;
   /**
    * The first 2 frames are `Error::_init()` and `Error::Error()`
    * which we don´t want in backtrace.
    */
-  static const int BACKTRACE_OFFSET = 2;
+  static const int BACKTRACE_OFFSET = 3;
   void* backtrace_frames[BACKTRACE_MAX];
-  char** backtrace_symbolz;
+  const char** backtrace_symbolz;
   int backtrace_size;
 
   void _init(bool _backtrace_append,
     const char* _pretty_func, const std::string& reason_fmt, va_list ap);
+
+  int _backtrace(void** buffer, int size);
+
+  /**
+   * The result must be `free()`, usally in destructor `~Error()`!
+   *
+   * @return Is allocated with `malloc()` and mus be `free()` by
+   *         caller.  Or NULL if not implemented.
+   */
+  const char** _backtrace_symbols(void* const* buffer, int size);
 
 }; /* class Error  */
 

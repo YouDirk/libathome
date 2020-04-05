@@ -224,6 +224,9 @@ $(OUTPUT): $(OBJFILES) $(TOOLSPATH)/$(CV2PDB)
 	$(TOOLSPATH)/$(CV2PDB) $@ 2> /dev/null || true
 else
 $(OUTPUT): $(OBJFILES)
+ifneq (,$(OS_IS_WIN))
+	-rm -f *.$(PDBEXT)
+endif
 	$(LD) $(LDFLAGS) -o $@ $(OBJFILES) $(addprefix -l,$(LIBS))
 endif
 
