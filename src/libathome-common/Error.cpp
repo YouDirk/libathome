@@ -173,7 +173,7 @@ _backtrace_symbols(void* const* buffer, int size)
   fileline.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
 
   typedef struct {
-    const char* ptr[Error::BACKTRACE_MAX];
+    char* ptr[Error::BACKTRACE_MAX];
     string_t strings[Error::BACKTRACE_MAX];
   } symbols_t;
 
