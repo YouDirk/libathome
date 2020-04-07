@@ -31,14 +31,14 @@ const char* libathome_common::Filesystem::PATH_SEPERATOR = "\\";
 
 const char* libathome_common::Filesystem::PATH_DOT = ".";
 const char* libathome_common::Filesystem::PATH_DOTDOT = "..";
-const unsigned libathome_common::Filesystem::_UMODE_DEFAUL = 0777;
+const unsigned libathome_common::Filesystem::_UMODE_DEFAULT = 0777;
 
 
 bool libathome_common::Filesystem::
 mkdir(const std::string& path) noexcept(false)
 {
 #ifndef OSWIN
-  int mkdir_res = ::mkdir(path.c_str(), Filesystem::_UMODE_DEFAUL);
+  int mkdir_res = ::mkdir(path.c_str(), Filesystem::_UMODE_DEFAULT);
 #else /* ifndef OSWIN  */
   int mkdir_res = ::mkdir(path.c_str());
 #endif /* ifndef OSWIN  */

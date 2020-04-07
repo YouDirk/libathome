@@ -78,7 +78,7 @@ private:
    * `umode == 0777` then the system default file access will be set.
    * `umask` is set by user or administrator.
    */
-  static const unsigned _UMODE_DEFAUL;
+  static const unsigned _UMODE_DEFAULT;
 
   virtual void _abstract_class() = 0;
 }; /* class Filesystem  */

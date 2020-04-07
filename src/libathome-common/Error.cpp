@@ -83,22 +83,22 @@ _backtrace(void** buffer, int size)
    *
    * https://docs.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-stackwalk64
    */
-  HANDLE process = GetCurrentProcess();
-  if (!SymInitialize(process, NULL, true)) {
+  ::HANDLE process = ::GetCurrentProcess();
+  if (!::SymInitialize(process, NULL, true)) {
     buffer[0] = NULL;
     return 0;
   }
-  HANDLE thread = GetCurrentThread();
+  ::HANDLE thread = ::GetCurrentThread();
 
-  CONTEXT context;
-  memset(&context, 0, sizeof(CONTEXT));
+  ::CONTEXT context;
+  ::memset(&context, 0, sizeof(::CONTEXT));
   context.ContextFlags = CONTEXT_FULL;
-  RtlCaptureContext(&context);
+  ::RtlCaptureContext(&context);
 
-  DWORD image;
+  ::DWORD image;
 
-  STACKFRAME64 stackframe;
-  memset(&stackframe, 0, sizeof(STACKFRAME64));
+  ::STACKFRAME64 stackframe;
+  ::memset(&stackframe, 0, sizeof(::STACKFRAME64));
 #ifdef _M_IX86
   image = IMAGE_FILE_MACHINE_I386;
   stackframe.AddrPC.Offset = context.Eip;
@@ -134,14 +134,14 @@ _backtrace(void** buffer, int size)
   /* Iterate through `stackframe` via `StackWalk64()`  */
   int i=0;
   for (; i<size; i++) {
-    if (!StackWalk64(image, process, thread, &stackframe, &context,
-         NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL))
+    if (!::StackWalk64(image, process, thread, &stackframe, &context,
+         NULL, ::SymFunctionTableAccess64, ::SymGetModuleBase64, NULL))
       break;
 
     buffer[i] = (void*) stackframe.AddrPC.Offset;
   }
 
-  SymCleanup(process);
+  ::SymCleanup(process);
   return i;
 #else /* elif defined OSWIN  */
 #warning "Backtraces are not implemented for your compiler or OS!"
@@ -206,56 +206,57 @@ _backtrace_symbols(void* const* buffer, int size)
    *
    * https://docs.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-stackwalk64
    */
-  HANDLE process = GetCurrentProcess();
-  if (!SymInitialize(process, NULL, true)) return NULL;
+  ::HANDLE process = ::GetCurrentProcess();
+  if (!::SymInitialize(process, NULL, true)) return NULL;
 
-  IMAGEHLP_MODULE64 module;
-  module.SizeOfStruct = sizeof(IMAGEHLP_MODULE64);
+  ::IMAGEHLP_MODULE64 module;
+  module.SizeOfStruct = sizeof(::IMAGEHLP_MODULE64);
 
-  char symbol_buf[sizeof(IMAGEHLP_SYMBOL64) + MAX_SYM_NAME*sizeof(TCHAR)];
-  PIMAGEHLP_SYMBOL64 symbol = (IMAGEHLP_SYMBOL64*) symbol_buf;
-  symbol->SizeOfStruct = sizeof(IMAGEHLP_SYMBOL64);
+  char symbol_buf[
+    sizeof(::IMAGEHLP_SYMBOL64) + MAX_SYM_NAME*sizeof(::TCHAR)];
+  ::PIMAGEHLP_SYMBOL64 symbol = (::IMAGEHLP_SYMBOL64*) symbol_buf;
+  symbol->SizeOfStruct = sizeof(::IMAGEHLP_SYMBOL64);
   symbol->MaxNameLength = MAX_SYM_NAME;
 
-  IMAGEHLP_LINE64 fileline;
-  fileline.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+  ::IMAGEHLP_LINE64 fileline;
+  fileline.SizeOfStruct = sizeof(::IMAGEHLP_LINE64);
 
-  symbols_t* result = (symbols_t*) malloc(sizeof(symbols_t));
+  symbols_t* result = (symbols_t*) ::malloc(sizeof(symbols_t));
 
   for (int i=0; i<size; i++) {
     result->ptr[i] = result->strings[i];
-    DWORD64 cur_stackframe = (DWORD64) buffer[i];
+    ::DWORD64 cur_stackframe = (::DWORD64) buffer[i];
 
-    if (!SymGetModuleInfo64(process, cur_stackframe, &module))
-      strncpy(module.ModuleName, "<unknown module>", 32-1);
+    if (!::SymGetModuleInfo64(process, cur_stackframe, &module))
+      ::strncpy(module.ModuleName, "<unknown module>", 32-1);
 
-    DWORD64 displacement = 0;
-    if (!SymGetSymFromAddr64(
-         process, cur_stackframe, &displacement, symbol)) {
-      snprintf(result->strings[i], STRING_LEN,
-       "%s [0x%01x%07x]", module.ModuleName,
-       (uint32_t) (cur_stackframe >> 32), (uint32_t) cur_stackframe);
-
-      continue;
-    }
-
-    if (!SymGetLineFromAddr64(
-         process, cur_stackframe, (PDWORD) &displacement, &fileline)) {
-      snprintf(result->strings[i], STRING_LEN,
-       "%s::%s()+0x%02x [0x%01x%07x]", module.ModuleName, symbol->Name,
-       (uint32_t) displacement, (uint32_t) (cur_stackframe >> 32),
-       (uint32_t) cur_stackframe);
+    ::DWORD64 displacement = 0;
+    if (!::SymGetSymFromAddr64(
+           process, cur_stackframe, &displacement, symbol)) {
+      ::snprintf(result->strings[i], STRING_LEN,
+        "%s [0x%01x%07x]", module.ModuleName,
+        (uint32_t) (cur_stackframe >> 32), (uint32_t) cur_stackframe);
 
       continue;
     }
 
-    snprintf(result->strings[i], STRING_LEN,
+    if (!::SymGetLineFromAddr64(
+         process, cur_stackframe, (::PDWORD) &displacement, &fileline)) {
+      ::snprintf(result->strings[i], STRING_LEN,
+        "%s::%s()+0x%02x [0x%01x%07x]", module.ModuleName, symbol->Name,
+        (uint32_t) displacement, (uint32_t) (cur_stackframe >> 32),
+        (uint32_t) cur_stackframe);
+
+      continue;
+    }
+
+    ::snprintf(result->strings[i], STRING_LEN,
       "%20s:%03lu: %s::%s() [0x%01x%07x]", fileline.FileName,
       fileline.LineNumber, module.ModuleName, symbol->Name,
       (uint32_t) (cur_stackframe >> 32), (uint32_t) cur_stackframe);
   } /* for (int i=0; i<size; i++)  */
 
-  SymCleanup(process);
+  ::SymCleanup(process);
   return result->ptr;
 #else /* elif defined OSWIN  */
   return NULL;

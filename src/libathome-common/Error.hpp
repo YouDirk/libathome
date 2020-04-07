@@ -171,18 +171,27 @@ private:
 
   static const int BACKTRACE_MAX = 23;
   /**
-   * The first 2 frames are `Error::_init()` and `Error::Error()`
-   * which we don´t want in backtrace.
+   * The first 3 frames are Error::_backtrace(), Error::_init() and
+   * Error::Error() which we don´t want to see in backtrace.
    */
   static const int BACKTRACE_OFFSET = 3;
   void* backtrace_frames[BACKTRACE_MAX];
   char** backtrace_symbolz;
   int backtrace_size;
 
+  /**
+   * `__attribute__ ((noinline))` makes sure that
+   * Error::BACKTRACE_OFFSET is set correct.
+   */
   void _init(bool _backtrace_append,
-    const char* _pretty_func, const std::string& reason_fmt, va_list ap);
+    const char* _pretty_func, const std::string& reason_fmt, va_list ap)
+    __attribute__ ((noinline));
 
-  int _backtrace(void** buffer, int size);
+  /**
+   * `__attribute__ ((noinline))` makes sure that
+   * Error::BACKTRACE_OFFSET is set correct.
+   */
+  int _backtrace(void** buffer, int size) __attribute__ ((noinline));
 
   /**
    * The result must be `free()`, usally in destructor `~Error()`!

@@ -25,7 +25,7 @@ Common(int argc, char** argv)
 {
 #ifndef DEBUG
   libathome_common::Log = new Logger(
-    Logger::loglevel_t::all_e, RealtimeClock::timezone_t::local_e,
+    Logger::loglevel_t::info_e, RealtimeClock::timezone_t::local_e,
     "log", "%Y-%m-%d.log", 365);
 #else /* ifndef DEBUG  */
   libathome_common::Log = new Logger(
