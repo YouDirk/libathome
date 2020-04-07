@@ -40,8 +40,8 @@ RealtimeClock() noexcept(false)
 libathome_common::RealtimeClock::
 RealtimeClock(RealtimeClock::timezone_t timezone) noexcept(false)
 {
-  if (0 > time(&this->timestamp))
-    throw Err("Could not fetch time from RTC!");
+  if (0 > ::time(&this->timestamp))
+    throw Err("Could not fetch time from system RTC!");
 
   this->set_timezone(timezone);
 }
@@ -56,7 +56,7 @@ to_string(const std::string& strftime_fmt) const noexcept(false)
 {
   string_t buf;
 
-  if (0 >= strftime(
+  if (0 >= ::strftime(
       buf, STRING_LEN, strftime_fmt.c_str(), &this->timestruct))
     throw Err("Could not convert time struct to string from format '%s'!",
               strftime_fmt.c_str());
@@ -72,27 +72,27 @@ set_timezone(RealtimeClock::timezone_t timezone) noexcept(false)
   /* Set this->timestruct
    */
 #ifndef OSWIN /* Default case  */
-  tm* timestruct_result = NULL;
+  ::tm* timestruct_result = NULL;
 
   switch (this->timezone) {
   case timezone_t::utc_e:
-    timestruct_result = gmtime_r(&timestamp, &this->timestruct);
+    timestruct_result = ::gmtime_r(&timestamp, &this->timestruct);
     break;
   case timezone_t::local_e:
-    timestruct_result = localtime_r(&timestamp, &this->timestruct);
+    timestruct_result = ::localtime_r(&timestamp, &this->timestruct);
     break;
   }
 
   bool iserror = timestruct_result != &this->timestruct;
 #else /* Windows  */
-  errno_t timestruct_result = 0;
+  ::errno_t timestruct_result = 0;
 
   switch (this->timezone) {
   case timezone_t::utc_e:
-    timestruct_result = gmtime_s(&this->timestruct, &timestamp);
+    timestruct_result = ::gmtime_s(&this->timestruct, &timestamp);
     break;
   case timezone_t::local_e:
-    timestruct_result = localtime_s(&this->timestruct, &timestamp);
+    timestruct_result = ::localtime_s(&this->timestruct, &timestamp);
     break;
   }
 

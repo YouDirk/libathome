@@ -58,11 +58,11 @@ _init(bool _backtrace_append,
 
   string_t buf;
   if (0 >=
-      vsnprintf(buf, STRING_LEN, reason_fmt.c_str(), ap)) {
+      ::vsnprintf(buf, STRING_LEN, reason_fmt.c_str(), ap)) {
     /* Throwing Error in Error is a bad idea.  So we are making the
      * best what is possible.
      */
-    strncpy(buf, reason_fmt.c_str(), STRING_LEN-1);
+    ::strncpy(buf, reason_fmt.c_str(), STRING_LEN-1);
   }
 
   this->what_msg = "*(RUNTIME)* " + func + "(): " + buf;
@@ -77,7 +77,7 @@ int libathome_common::Error::
 _backtrace(void** buffer, int size)
 {
 #if defined __GNUC__ && !defined OSWIN
-  return backtrace(buffer, size);
+  return ::backtrace(buffer, size);
 #elif defined OSWIN
   /* The StackWalk64 API reference you can find here:
    *
@@ -162,18 +162,18 @@ _backtrace_symbols(void* const* buffer, int size)
 
 
 #if defined __GNUC__ && !defined OSWIN
-  char** symbols_fallback = backtrace_symbols(buffer, size);
-  symbols_t* result = (symbols_t*) malloc(sizeof(symbols_t));
+  char** symbols_fallback = ::backtrace_symbols(buffer, size);
+  symbols_t* result = (symbols_t*) ::malloc(sizeof(symbols_t));
 
-  Dl_info dlinfo;
+  ::Dl_info dlinfo;
   char* demangle_cur = NULL;
   size_t demangle_length = 0;
   int demangle_status;
   for (int i=0; i<size; i++) {
     result->ptr[i] = result->strings[i];
 
-    if (!dladdr(buffer[i], &dlinfo) || dlinfo.dli_sname == NULL) {
-      snprintf(
+    if (!::dladdr(buffer[i], &dlinfo) || dlinfo.dli_sname == NULL) {
+      ::snprintf(
         result->strings[i], STRING_LEN, "%s", symbols_fallback[i]);
 
       continue;
@@ -187,19 +187,19 @@ _backtrace_symbols(void* const* buffer, int size)
     char* dem_result = abi::__cxa_demangle(dlinfo.dli_sname,
       demangle_cur, &demangle_length, &demangle_status);
     if (dem_result == NULL) {
-      snprintf(result->strings[i], STRING_LEN, "%20s::%s()+0x%02lx [%p]",
+      ::snprintf(result->strings[i], STRING_LEN, "%20s::%s()+0x%02lx [%p]",
         libname.c_str(), dlinfo.dli_sname, offset, buffer[i]);
 
       continue;
     }
     demangle_cur = dem_result;
 
-    snprintf(result->strings[i], STRING_LEN, "%20s::%s+0x%02lx [%p]",
+    ::snprintf(result->strings[i], STRING_LEN, "%20s::%s+0x%02lx [%p]",
       libname.c_str(), demangle_cur, offset, buffer[i]);
   } /* for (int i=0; i<size; i++)  */
 
-  free(demangle_cur);
-  free(symbols_fallback);
+  ::free(demangle_cur);
+  ::free(symbols_fallback);
   return result->ptr;
 #elif defined OSWIN
   /* The StackWalk64 API reference you can find here:
@@ -269,11 +269,11 @@ Error(bool _backtrace_append,
   const char* _pretty_func, const std::string& reason_fmt, ...)
   :std::runtime_error(reason_fmt)
 {
-  va_list ap;
+  ::va_list ap;
 
-  va_start(ap, reason_fmt);
+  ::va_start(ap, reason_fmt);
   this->_init(_backtrace_append, _pretty_func, reason_fmt, ap);
-  va_end(ap);
+  ::va_end(ap);
 }
 
 libathome_common::Error::
@@ -281,18 +281,18 @@ Error(bool _backtrace_append,
   const char* _pretty_func, const char* reason_fmt, ...)
   :std::runtime_error(std::string(reason_fmt))
 {
-  va_list ap;
+  ::va_list ap;
 
-  va_start(ap, reason_fmt);
+  ::va_start(ap, reason_fmt);
   this->_init(
     _backtrace_append, _pretty_func, std::string(reason_fmt), ap);
-  va_end(ap);
+  ::va_end(ap);
 }
 
 libathome_common::Error::
 ~Error()
 {
-  if (this->backtrace_symbolz) free(this->backtrace_symbolz);
+  if (this->backtrace_symbolz) ::free(this->backtrace_symbolz);
 }
 
 /* ---------------------------------------------------------------  */
@@ -312,8 +312,8 @@ bt() noexcept
   string_t buf;
   int output_size = this->get_backtrace_size();
   for (int i=0; i<output_size; i++) {
-    if (0 >= snprintf(buf, STRING_LEN, "\n  %s",
-                      backtrace_symbolz[i + Error::BACKTRACE_OFFSET])) {
+    if (0 >= ::snprintf(buf, STRING_LEN, "\n  %s",
+               this->backtrace_symbolz[i + Error::BACKTRACE_OFFSET])) {
       /* Throwing Error in Error is a bad idea.  So we are making the
        * best what is possible.
        */
@@ -351,7 +351,7 @@ get_backtrace_frame(int i) const noexcept
   if (i < 0 || i >= (this->backtrace_size - Error::BACKTRACE_OFFSET))
     return NULL;
 
-  return backtrace_frames[i + Error::BACKTRACE_OFFSET];
+  return this->backtrace_frames[i + Error::BACKTRACE_OFFSET];
 }
 const char* libathome_common::Error::
 get_backtrace_symbol(int i) const noexcept
@@ -360,5 +360,5 @@ get_backtrace_symbol(int i) const noexcept
   if (i < 0 || i >= (this->backtrace_size - Error::BACKTRACE_OFFSET))
     return NULL;
 
-  return backtrace_symbolz[i + Error::BACKTRACE_OFFSET];
+  return this->backtrace_symbolz[i + Error::BACKTRACE_OFFSET];
 }

@@ -18,21 +18,11 @@
 
 #include "libathome-common/File.hpp"
 #include "libathome-common/Error.hpp"
-
-
-#ifndef OSWIN
-const char* libathome_common::File::PATH_SEPERATOR = "/";
-const char* libathome_common::File::PATH_DOT = ".";
-const char* libathome_common::File::PATH_DOTDOT = "..";
-#else /* ifndef OSWIN  */
-const char* libathome_common::File::PATH_SEPERATOR = "\\";
-const char* libathome_common::File::PATH_DOT = ".";
-const char* libathome_common::File::PATH_DOTDOT = "..";
-#endif /* ifndef OSWIN  */
+#include "libathome-common/Filesystem.hpp"
 
 
 libathome_common::File::
-File(FILE* fstream, const std::string& stream_name) noexcept(false)
+File(::FILE* fstream, const std::string& stream_name) noexcept(false)
   :extern_fstream(fstream), binary(true), path("<no path>"),
    filename("<extern fstream>"), fstream(NULL),
    mode(File::access_t::read_e)
@@ -42,7 +32,7 @@ File(FILE* fstream, const std::string& stream_name) noexcept(false)
       Err("Argument FSTREAM '%s' was set to NULL!", stream_name.c_str());
   }
 
-  filename_full = stream_name;
+  this->filename_full = stream_name;
 }
 
 libathome_common::File::
@@ -50,7 +40,8 @@ File(const std::string& path, const std::string& filename, bool binary)
   :extern_fstream(NULL), binary(binary), path(path), filename(filename),
    fstream(NULL), mode(File::access_t::read_e)
 {
-  filename_full = this->path + File::PATH_SEPERATOR + this->filename;
+  this->filename_full
+    = this->path + Filesystem::PATH_SEPERATOR + this->filename;
 }
 
 libathome_common::File::
@@ -60,7 +51,7 @@ libathome_common::File::
 }
 
 void libathome_common::File::
-open(File::access_t mode)
+open(File::access_t mode) noexcept(false)
 {
   this->mode = mode;
 
@@ -69,7 +60,9 @@ open(File::access_t mode)
     return;
   }
 
-  
+  /* Don't Log here, only throw exceptions.  It's part of writing log!
+   */
+  Filesystem::mkdir(this->path);
 }
 
 void libathome_common::File::
@@ -87,7 +80,7 @@ close()
 }
 
 void libathome_common::File::
-vprintf(const std::string& fmt, va_list ap) const
+vprintf(const std::string& fmt, ::va_list ap) const noexcept(false)
 {
   if (this->fstream == NULL
       || (this->mode != File::access_t::write_e &&
@@ -96,6 +89,6 @@ vprintf(const std::string& fmt, va_list ap) const
               this->filename_full.c_str());
   }
 
-  if (0 >= vfprintf(this->fstream, fmt.c_str(), ap))
+  if (0 >= ::vfprintf(this->fstream, fmt.c_str(), ap))
     throw Err("Could not write to '%s'!", this->filename_full.c_str());
 }

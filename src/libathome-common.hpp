@@ -29,6 +29,7 @@
 #include "libathome-common/Common.hpp" 
 #include "libathome-common/Error.hpp" 
 #include "libathome-common/RealtimeClock.hpp" 
+#include "libathome-common/Filesystem.hpp" 
 #include "libathome-common/File.hpp" 
 #include "libathome-common/Logger.hpp"
 

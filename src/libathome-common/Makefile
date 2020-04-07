@@ -16,7 +16,7 @@
 
 
 LIBNAME = libathome-common
-OBJ = Common Error RealtimeClock File Logger
+OBJ = Common Error RealtimeClock Filesystem File Logger
 
 INCLUDE_PATHS = ..
 LD_PATHS =

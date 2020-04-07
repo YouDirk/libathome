@@ -264,7 +264,7 @@ protected:
    * @param fmt `printf()`-like format string
    * @param ap Arguments of `fmt` string as `va_list`
    */
-  void vprintf(Logger::loglevel_t level, const char* fmt, va_list ap);
+  void vprintf(Logger::loglevel_t level, const char* fmt, ::va_list ap);
 
 private:
   Logger::loglevel_t loglevel;

@@ -23,12 +23,18 @@
 libathome_common::Common::
 Common(int argc, char** argv)
 {
-  //libathome_common::Log = new Logger("log", "%Y-%m-%d.log", 365);
+#ifndef DEBUG
+  libathome_common::Log = new Logger(
+    Logger::loglevel_t::all_e, RealtimeClock::timezone_t::local_e,
+    "log", "%Y-%m-%d.log", 365);
+#else /* ifndef DEBUG  */
   libathome_common::Log = new Logger(
     Logger::loglevel_t::all_e, RealtimeClock::timezone_t::local_e);
-  Log->set_timezone(RealtimeClock::utc_e);
+#endif /* ifndef DEBUG  */
 
   this->hello = new std::string("Hello World!");
+  /* Prevent unsued warning for now  */
+  if (argc || argv) {};
 
   try {
     File x(NULL, "<nullstream>");
@@ -40,8 +46,6 @@ Common(int argc, char** argv)
   Log->warn(*this->hello);
   Log->error("Hello %s, how are you (%d)?", "World", -999);
   //Log->fatal(3, this->hello->c_str());
-
-  //File x(NULL, "<nullstream>");
 }
 
 libathome_common::Common::

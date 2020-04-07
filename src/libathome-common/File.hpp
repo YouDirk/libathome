@@ -35,9 +35,6 @@ namespace libathome_common
 class File
 {
 public:
-  static const char* PATH_SEPERATOR;
-  static const char* PATH_DOT;
-  static const char* PATH_DOTDOT;
 
   typedef enum {
     read_e = 0,
@@ -45,20 +42,21 @@ public:
     append_e = 2
   } access_t;
 
-  explicit File(FILE* fstream, const std::string& stream_name)
+  explicit File(::FILE* fstream, const std::string& stream_name)
     noexcept(false);
   explicit File(
     const std::string& path, const std::string& filename, bool binary);
   virtual ~File();
 
-  virtual void open(File::access_t mode);
+  virtual void open(File::access_t mode) noexcept(false);
   virtual void close();
 
 protected:
-  virtual void vprintf(const std::string& fmt, va_list ap) const;
+  virtual void vprintf(const std::string& fmt, ::va_list ap)
+    const noexcept(false);
 
 private:
-  FILE* extern_fstream;
+  ::FILE* extern_fstream;
 
   bool binary;
   std::string path;
@@ -75,7 +73,7 @@ private:
   /**
    * If file is closed then `File::fstream == NULL`.
    */
-  FILE* fstream;
+  ::FILE* fstream;
   /**
    * Undefined if `File::fstream == NULL` (file closed).
    */

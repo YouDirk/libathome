@@ -88,9 +88,9 @@ public:
    * hold your format strings POSIX compatible and try to avoid other
    * extensions.
    *
-   * @param result The resulting formated string.
    * @param strftime_fmt The format string.  Make sure to hold it
    *        POSIX compatible and try to avoid other extensions.
+   * @return The resulting formatted string.
    * @exception Error will be thrown if some formatting of
    *            `strftime_fmt` is going wrong
    */
@@ -115,10 +115,10 @@ public:
   virtual RealtimeClock::timezone_t get_timezone() const;
 
 private:
-  time_t timestamp;
+  ::time_t timestamp;
 
   RealtimeClock::timezone_t timezone;
-  tm timestruct;
+  ::tm timestruct;
 
 }; /* class RealtimeClock  */
 
