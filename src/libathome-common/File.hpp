@@ -28,31 +28,122 @@ namespace libathome_common
  * Base class for file I/O.
  *
  * Inherit from this class to implement special cases, such like
- * libathome_common::Logger or libathome_common::FileConfig.  The
- * `path` of the file and the `fie` itself will be created during
- * File::open_write() or File::open_append().
+ * libathome_common::Logger or libathome_common::ConfigFile.  After
+ * construction no file access operation will be done.  So you can
+ * safe use instances of this class as member variables.
+ *
+ * After constructed you need to open the file with File::open().
+ * Then you can write to it with File::printf() or read with
+ * File::scanf().  If you finished then File::close() the file.
  */
 class File
 {
 public:
 
+  /**
+   * The access mode of the opened file.
+   *
+   * Pass it via File::open().
+   */
   typedef enum {
-    read_e = 0,
-    write_e = 1,
-    append_e = 2
+    read_e = 0,    ///< Open file for read
+    write_e = 1,   ///< Open file for write; will be created if not exist.
+    append_e = 2   ///< Append to file; will be created if not exist.
   } access_t;
 
+  /**
+   * Convert a File::access_t to string.
+   *
+   * @param access The access mode to convert
+   * @return The string which names the access mode. `static`
+   *         allocated, need NOT to be `free()`d.
+   */
+  static const char* to_string(File::access_t access);
+
+  /**
+   * Construct a file with an externally opened `fstream`.
+   *
+   * The calls of File::open() and File::close() will be ignored.  Can
+   * be safe used with `stdout`, `stdin` and `stderr`.
+   *
+   * @param fstream The externally managed filestream, such like
+   *                `stdout`, `stdin` and `stderr`
+   * @param stream_name A human readable name of the `fstream`, such
+   *                    like `"<stdout>"`
+   * @exception Error will be thrown if `fstream` was set to `NULL`
+   */
   explicit File(::FILE* fstream, const std::string& stream_name)
     noexcept(false);
+  /**
+   * Construct a file with real filename on filesystem.
+   *
+   * It just setup all needed information for file operations but
+   * nothing will be done until File::open() was called.  The
+   * directory of `path` will be created on File::open().  Parameter
+   * `binary` can be set to `false` to translate automatically `"\n"`
+   * characters to Windows newlines `"\r\n"` on such systems.
+   *
+   * @param path The path to the file.  The directory will be created
+   *             on File::open()
+   * @param filename The filename of the file
+   * @param binary Set to `false` to translate automatically `"\n"`
+   *               characters to Windows newlines `"\r\n"` on such
+   *               systems
+   */
   explicit File(
     const std::string& path, const std::string& filename, bool binary);
+  /**
+   * Default destructor.
+   */
   virtual ~File();
 
+  /**
+   * Open file for File::read_e, File::write_e or File::append_e.
+   *
+   * Call this before writing or reading from file.  Depending on
+   * `mode` the file will be created.  See File::access_t for more
+   * details.
+   *
+   * @param mode Mode for opening, likes read/write/append
+   * @exception Error will be thrown if file could not be opened
+   */
   virtual void open(File::access_t mode) noexcept(false);
+  /**
+   * Close the file and write to disk or unlock to write.
+   *
+   * If opened for File::write_e or File::append_e then on close the
+   * file will be written to disk.  If File::read_e then closing will
+   * make other file descriptors available to write to the file.
+   */
   virtual void close();
 
+  /**
+   * Write string to file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   * @exception Error will be thrown if writing to file has failed
+   */
+  virtual void printf(const char* fmt, ...) const noexcept(false)
+    __attribute__ ((format (printf, 2, 3)));
+  /**
+   * Write string to file.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ... Arguments of `fmt` string
+   * @exception Error will be thrown if writing to file has failed
+   */
+  virtual void printf(const std::string& fmt, ...) const noexcept(false);
+
 protected:
-  virtual void vprintf(const std::string& fmt, ::va_list ap)
+  /**
+   * Use this method to output to file if you inherit from this class
+   * and implement your own File class.
+   *
+   * @param fmt `printf()`-like format string
+   * @param ap Arguments of `fmt` string as `va_list`
+   */
+  virtual void vprintf(const char* fmt, ::va_list ap)
     const noexcept(false);
 
 private:

@@ -121,7 +121,8 @@ vprintf(Logger::loglevel_t level, const char* fmt, ::va_list ap)
     std::string timestr = rtc.to_string(this->strftime_fmt);
     const char* lvlname = Logger::to_string(level);
 
-    File::vprintf(timestr + " " + lvlname + ": " + fmt + "\n", ap);
+    std::string out = timestr + " " + lvlname + ": " + fmt + "\n";
+    File::vprintf(out.c_str(), ap);
   } catch (Error& e) {
     /* LOGGER not working here.  So we are using FPRINTF to STDERR for
      * output.

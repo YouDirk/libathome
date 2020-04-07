@@ -25,15 +25,13 @@
 
 #ifndef OSWIN
 const char* libathome_common::Filesystem::PATH_SEPERATOR = "/";
-const char* libathome_common::Filesystem::PATH_DOT = ".";
-const char* libathome_common::Filesystem::PATH_DOTDOT = "..";
-const unsigned libathome_common::Filesystem::_UMODE_DEFAUL = 0777;
 #else /* ifndef OSWIN  */
 const char* libathome_common::Filesystem::PATH_SEPERATOR = "\\";
+#endif /* ifndef OSWIN  */
+
 const char* libathome_common::Filesystem::PATH_DOT = ".";
 const char* libathome_common::Filesystem::PATH_DOTDOT = "..";
 const unsigned libathome_common::Filesystem::_UMODE_DEFAUL = 0777;
-#endif /* ifndef OSWIN  */
 
 
 bool libathome_common::Filesystem::
@@ -48,7 +46,7 @@ mkdir(const std::string& path) noexcept(false)
   if (0 != mkdir_res) {
     if (errno == EEXIST) return false;
 
-    throw Err("Could not create directory '%s': %s", path.c_str(),
+    throw Err("Could not create directory '%s': %s!", path.c_str(),
               ::strerror(errno));
   }
 
