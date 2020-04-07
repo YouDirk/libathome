@@ -39,8 +39,13 @@ const unsigned libathome_common::Filesystem::_UMODE_DEFAUL = 0777;
 bool libathome_common::Filesystem::
 mkdir(const std::string& path) noexcept(false)
 {
-  if (0 != ::mkdir(path.c_str(), Filesystem::_UMODE_DEFAUL)) {
+#ifndef OSWIN
+  int mkdir_res = ::mkdir(path.c_str(), Filesystem::_UMODE_DEFAUL);
+#else /* ifndef OSWIN  */
+  int mkdir_res = ::mkdir(path.c_str());
+#endif /* ifndef OSWIN  */
 
+  if (0 != mkdir_res) {
     if (errno == EEXIST) return false;
 
     throw Err("Could not create directory '%s': %s", path.c_str(),
