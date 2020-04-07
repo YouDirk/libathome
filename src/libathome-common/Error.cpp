@@ -65,7 +65,6 @@ _init(bool _backtrace_append,
     strncpy(buf, reason_fmt.c_str(), STRING_LEN-1);
   }
 
-  this->what_msg.reserve(func.size() + strlen(buf) + 40);
   this->what_msg = "*(RUNTIME)* " + func + "(): " + buf;
 
   /* ---  */
@@ -228,7 +227,7 @@ _backtrace_symbols(void* const* buffer, int size)
     DWORD64 cur_stackframe = (DWORD64) buffer[i];
 
     if (!SymGetModuleInfo64(process, cur_stackframe, &module))
-      strncpy(module.ModuleName, "<unknown module>", 32);
+      strncpy(module.ModuleName, "<unknown module>", 32-1);
 
     DWORD64 displacement = 0;
     if (!SymGetSymFromAddr64(

@@ -94,9 +94,8 @@ public:
    * @exception Error will be thrown if some formatting of
    *            `strftime_fmt` is going wrong
    */
-  virtual void
-  to_string(std::string& result, const std::string& strftime_fmt)
-    const noexcept(false);
+  virtual std::string
+  to_string(const std::string& strftime_fmt) const noexcept(false);
 
   /**
    * Set `timezone`.

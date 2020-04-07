@@ -31,7 +31,7 @@ _init()
 
 libathome_common::Logger::
 Logger(Logger::loglevel_t loglevel, RealtimeClock::timezone_t timezone)
-  :File(stdout), loglevel(loglevel), timezone(timezone),
+  :File(stdout, "<stdout>"), loglevel(loglevel), timezone(timezone),
    file_fmt("%Y-%m-%d.log"), file_count(365)
 {
   this->_init();
@@ -109,144 +109,78 @@ get_timezone() const
 /* ***************************************************************  */
 
 void libathome_common::Logger::
-_printf(
-  Logger::loglevel_t level, const char* fmt, va_list ap) const
+vprintf(Logger::loglevel_t level, const char* fmt, va_list ap)
 {
   if (this->loglevel > level) return;
 
   try {
     RealtimeClock rtc(this->timezone);
 
-    /*
-      FILE* fs = this->_open();
-      if (fs == NULL) return;
-    */
-    FILE* fs = stdout;
+    File::open(File::access_t::append_e);
 
-    std::string timestr;
-    rtc.to_string(timestr, strftime_fmt);
-
+    std::string timestr = rtc.to_string(this->strftime_fmt);
     const char* lvlname = Logger::to_string(level);
 
-    std::string out;
-    out.reserve(timestr.size() + strlen(lvlname) + strlen(fmt) + 10);
-    out = timestr + " " + lvlname + ": " + fmt + "\n";
-
-    if (0 >= vfprintf(fs, out.c_str(), ap))
-      throw Err("Could not write '%s' message!", lvlname);
-
-    //this->_close(fs);
+    File::vprintf(timestr + " " + lvlname + ": " + fmt + "\n", ap);
   } catch (Error& e) {
     /* LOGGER not working here.  So we are using FPRINTF to STDERR for
      * output.
      */
     fprintf(stderr, "ERROR: %s\n", e.what());
   }
+
+  File::close();
 }
 
 /* ***************************************************************  */
 
 void libathome_common::Logger::
-debug(const char* fmt, ...) const
+debug(const char* fmt, ...)
 {
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::debug_e, fmt, ap);
+  this->vprintf(loglevel_t::debug_e, fmt, ap);
   va_end(ap);
 }
 
 void libathome_common::Logger::
-info(const char* fmt, ...) const
+info(const char* fmt, ...)
 {
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::info_e, fmt, ap);
+  this->vprintf(loglevel_t::info_e, fmt, ap);
   va_end(ap);
 }
 
 void libathome_common::Logger::
-warn(const char* fmt, ...) const
+warn(const char* fmt, ...)
 {
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::warning_e, fmt, ap);
+  this->vprintf(loglevel_t::warning_e, fmt, ap);
   va_end(ap);
 }
 
 void libathome_common::Logger::
-error(const char* fmt, ...) const
+error(const char* fmt, ...)
 {
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::error_e, fmt, ap);
+  this->vprintf(loglevel_t::error_e, fmt, ap);
   va_end(ap);
 }
 
 void libathome_common::Logger::
-fatal(int exit_code, const char* fmt, ...) const
+fatal(int exit_code, const char* fmt, ...)
 {
   va_list ap;
 
   va_start(ap, fmt);
-  this->_printf(loglevel_t::fatal_e, fmt, ap);
-  va_end(ap);
-
-  exit(exit_code);
-}
-
-/* ---------------------------------------------------------------  */
-
-void libathome_common::Logger::
-debug(const std::string& fmt, ...) const
-{
-  va_list ap;
-
-  va_start(ap, fmt);
-  this->_printf(loglevel_t::debug_e, fmt.c_str(), ap);
-  va_end(ap);
-}
-
-void libathome_common::Logger::
-info(const std::string& fmt, ...) const
-{
-  va_list ap;
-
-  va_start(ap, fmt);
-  this->_printf(loglevel_t::info_e, fmt.c_str(), ap);
-  va_end(ap);
-}
-
-void libathome_common::Logger::
-warn(const std::string& fmt, ...) const
-{
-  va_list ap;
-
-  va_start(ap, fmt);
-  this->_printf(loglevel_t::warning_e, fmt.c_str(), ap);
-  va_end(ap);
-}
-
-void libathome_common::Logger::
-error(const std::string& fmt, ...) const
-{
-  va_list ap;
-
-  va_start(ap, fmt);
-  this->_printf(loglevel_t::error_e, fmt.c_str(), ap);
-  va_end(ap);
-}
-
-void libathome_common::Logger::
-fatal(int exit_code, const std::string& fmt, ...) const
-{
-  va_list ap;
-
-  va_start(ap, fmt);
-  this->_printf(loglevel_t::fatal_e, fmt.c_str(), ap);
+  this->vprintf(loglevel_t::fatal_e, fmt, ap);
   va_end(ap);
 
   exit(exit_code);
@@ -255,31 +189,85 @@ fatal(int exit_code, const std::string& fmt, ...) const
 /* ---------------------------------------------------------------  */
 
 void libathome_common::Logger::
-debug(const Error& e) const
+debug(const std::string& fmt, ...)
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->vprintf(loglevel_t::debug_e, fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+info(const std::string& fmt, ...)
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->vprintf(loglevel_t::info_e, fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+warn(const std::string& fmt, ...)
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->vprintf(loglevel_t::warning_e, fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+error(const std::string& fmt, ...)
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->vprintf(loglevel_t::error_e, fmt.c_str(), ap);
+  va_end(ap);
+}
+
+void libathome_common::Logger::
+fatal(int exit_code, const std::string& fmt, ...)
+{
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->vprintf(loglevel_t::fatal_e, fmt.c_str(), ap);
+  va_end(ap);
+
+  exit(exit_code);
+}
+
+/* ---------------------------------------------------------------  */
+
+void libathome_common::Logger::
+debug(const Error& e)
 {
   this->debug(e.what());
 }
 
 void libathome_common::Logger::
-info(const Error& e) const
+info(const Error& e)
 {
   this->info(e.what());
 }
 
 void libathome_common::Logger::
-warn(const Error& e) const
+warn(const Error& e)
 {
   this->warn(e.what());
 }
 
 void libathome_common::Logger::
-error(const Error& e) const
+error(const Error& e)
 {
   this->error(e.what());
 }
 
 void libathome_common::Logger::
-fatal(int exit_code, const Error& e) const
+fatal(int exit_code, const Error& e)
 {
   this->fatal(exit_code, e.what());
 }

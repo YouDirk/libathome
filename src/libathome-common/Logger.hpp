@@ -146,7 +146,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void debug(const char* fmt, ...)
-    const __attribute__ ((format (printf, 2, 3)));
+    __attribute__ ((format (printf, 2, 3)));
   /**
    * Write info output into log file.
    *
@@ -154,7 +154,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void info(const char* fmt, ...)
-    const __attribute__ ((format (printf, 2, 3)));
+    __attribute__ ((format (printf, 2, 3)));
   /**
    * Write warning output into log file.
    *
@@ -162,7 +162,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void warn(const char* fmt, ...)
-    const __attribute__ ((format (printf, 2, 3)));
+    __attribute__ ((format (printf, 2, 3)));
   /**
    * Write ERROR output into log file.
    *
@@ -170,7 +170,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void error(const char* fmt, ...)
-    const __attribute__ ((format (printf, 2, 3)));
+    __attribute__ ((format (printf, 2, 3)));
   /**
    * Write FATAL ERROR output into log file and `exit()`.
    *
@@ -179,7 +179,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void fatal(int exit_code, const char* fmt, ...)
-    const __attribute__ ((format (printf, 3, 4)));
+    __attribute__ ((format (printf, 3, 4)));
 
   /* -------------------------------------------------------------  */
 
@@ -189,28 +189,28 @@ public:
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  virtual void debug(const std::string& fmt, ...) const;
+  virtual void debug(const std::string& fmt, ...);
   /**
    * Write info output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  virtual void info(const std::string& fmt, ...) const;
+  virtual void info(const std::string& fmt, ...);
   /**
    * Write warning output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  virtual void warn(const std::string& fmt, ...) const;
+  virtual void warn(const std::string& fmt, ...);
   /**
    * Write ERROR output into log file.
    *
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  virtual void error(const std::string& fmt, ...) const;
+  virtual void error(const std::string& fmt, ...);
   /**
    * Write FATAL ERROR output into log file and `exit()`.
    *
@@ -218,7 +218,7 @@ public:
    * @param fmt `printf()`-like format string
    * @param ... Arguments of `fmt` string
    */
-  virtual void fatal(int exit_code, const std::string& fmt, ...) const;
+  virtual void fatal(int exit_code, const std::string& fmt, ...);
 
   /* -------------------------------------------------------------  */
 
@@ -227,34 +227,44 @@ public:
    *
    * @param e Runime error (exception) to output
    */
-  virtual void debug(const Error& e) const;
+  virtual void debug(const Error& e);
   /**
    * Write runtime error as info output into log file.
    *
    * @param e Runime error (exception) to output
    */
-  virtual void info(const Error& e) const;
+  virtual void info(const Error& e);
   /**
    * Write runtime error as warning output into log file.
    *
    * @param e Runime error (exception) to output
    */
-  virtual void warn(const Error& e) const;
+  virtual void warn(const Error& e);
   /**
    * Write runtime error as ERROR output into log file.
    *
    * @param e Runime error (exception) to output
    */
-  virtual void error(const Error& e) const;
+  virtual void error(const Error& e);
   /**
    * Write runtime error as FATAL ERROR output into log file.
    *
    * @param exit_code Exit code of the terminated process
    * @param e Runime error (exception) to output
    */
-  virtual void fatal(int exit_code, const Error& e) const;
+  virtual void fatal(int exit_code, const Error& e);
 
   /* -------------------------------------------------------------  */
+protected:
+  /**
+   * Use this method to output to log-file if you inherit from this
+   * class and implement your own Logger class.
+   *
+   * @param level The loglevel which will be used.
+   * @param fmt `printf()`-like format string
+   * @param ap Arguments of `fmt` string as `va_list`
+   */
+  void vprintf(Logger::loglevel_t level, const char* fmt, va_list ap);
 
 private:
   Logger::loglevel_t loglevel;
@@ -266,10 +276,6 @@ private:
   std::string strftime_fmt;
 
   void _init();
-
-  void _printf(
-    Logger::loglevel_t level, const char* fmt, va_list ap) const;
-
 }; /* class Logger  */
 
 /**

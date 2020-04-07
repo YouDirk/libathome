@@ -51,17 +51,17 @@ libathome_common::RealtimeClock::
 {
 }
 
-void libathome_common::RealtimeClock::
-to_string(std::string& result, const std::string& fmt)
-  const noexcept(false)
+std::string libathome_common::RealtimeClock::
+to_string(const std::string& strftime_fmt) const noexcept(false)
 {
   string_t buf;
 
-  if (0 >= strftime(buf, STRING_LEN, fmt.c_str(), &this->timestruct))
+  if (0 >= strftime(
+      buf, STRING_LEN, strftime_fmt.c_str(), &this->timestruct))
     throw Err("Could not convert time struct to string from format '%s'!",
-              fmt.c_str());
+              strftime_fmt.c_str());
 
-  result = buf;
+  return std::string(buf);
 }
 
 void libathome_common::RealtimeClock::

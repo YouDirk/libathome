@@ -20,41 +20,82 @@
 #include "libathome-common/Error.hpp"
 
 
+#ifndef OSWIN
+const char* libathome_common::File::PATH_SEPERATOR = "/";
+const char* libathome_common::File::PATH_DOT = ".";
+const char* libathome_common::File::PATH_DOTDOT = "..";
+#else /* ifndef OSWIN  */
+const char* libathome_common::File::PATH_SEPERATOR = "\\";
+const char* libathome_common::File::PATH_DOT = ".";
+const char* libathome_common::File::PATH_DOTDOT = "..";
+#endif /* ifndef OSWIN  */
+
+
 libathome_common::File::
-File(FILE* fstream) noexcept(false)
-  :extern_fstream(fstream), binary(true), path(""), filename("")
+File(FILE* fstream, const std::string& stream_name) noexcept(false)
+  :extern_fstream(fstream), binary(true), path("<no path>"),
+   filename("<extern fstream>"), fstream(NULL),
+   mode(File::access_t::read_e)
 {
-  if (fstream == NULL) throw Err("Argument FSTREAM was set to NULL!");
+  if (fstream == NULL) {
+    throw
+      Err("Argument FSTREAM '%s' was set to NULL!", stream_name.c_str());
+  }
+
+  filename_full = stream_name;
 }
 
 libathome_common::File::
 File(const std::string& path, const std::string& filename, bool binary)
-  noexcept(false)
-  :extern_fstream(NULL), binary(binary), path(path), filename(filename)
+  :extern_fstream(NULL), binary(binary), path(path), filename(filename),
+   fstream(NULL), mode(File::access_t::read_e)
 {
+  filename_full = this->path + File::PATH_SEPERATOR + this->filename;
 }
 
 libathome_common::File::
 ~File()
 {
+  this->close();
 }
 
 void libathome_common::File::
-open_write() const noexcept(false)
+open(File::access_t mode)
 {
+  this->mode = mode;
+
+  if (this->extern_fstream != NULL) {
+    this->fstream = this->extern_fstream;
+    return;
+  }
+
+  
 }
 
 void libathome_common::File::
-open_append() const noexcept(false)
+close()
 {
+  this->mode = File::access_t::read_e;
+
+  if (this->extern_fstream != NULL) {
+    this->fstream = NULL;
+    return;
+  }
+
+  
+  this->fstream = NULL;
 }
 
 void libathome_common::File::
-open_read() const noexcept(false)
+vprintf(const std::string& fmt, va_list ap) const
 {
-}
+  if (this->fstream == NULL
+      || (this->mode != File::access_t::write_e &&
+          this->mode != File::access_t::append_e)) {
+    throw Err("File '%s' not opened for write- or append-access!",
+              this->filename_full.c_str());
+  }
 
-void libathome_common::File::
-close() const noexcept(false)
-{
+  if (0 >= vfprintf(this->fstream, fmt.c_str(), ap))
+    throw Err("Could not write to '%s'!", this->filename_full.c_str());
 }

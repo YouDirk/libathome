@@ -31,7 +31,7 @@ Common(int argc, char** argv)
   this->hello = new std::string("Hello World!");
 
   try {
-    File x(NULL);
+    File x(NULL, "<nullstream>");
   } catch (Error& e) {
     Log->error(e);
   }
@@ -41,7 +41,7 @@ Common(int argc, char** argv)
   Log->error("Hello %s, how are you (%d)?", "World", -999);
   //Log->fatal(3, this->hello->c_str());
 
-  //File x(NULL);
+  //File x(NULL, "<nullstream>");
 }
 
 libathome_common::Common::

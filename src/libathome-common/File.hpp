@@ -35,16 +35,27 @@ namespace libathome_common
 class File
 {
 public:
-  explicit File(FILE* fstream) noexcept(false);
-  explicit File(
-    const std::string& path, const std::string& filename, bool binary)
+  static const char* PATH_SEPERATOR;
+  static const char* PATH_DOT;
+  static const char* PATH_DOTDOT;
+
+  typedef enum {
+    read_e = 0,
+    write_e = 1,
+    append_e = 2
+  } access_t;
+
+  explicit File(FILE* fstream, const std::string& stream_name)
     noexcept(false);
+  explicit File(
+    const std::string& path, const std::string& filename, bool binary);
   virtual ~File();
 
-  virtual void open_write() const noexcept(false);
-  virtual void open_append() const noexcept(false);
-  virtual void open_read() const noexcept(false);
-  virtual void close() const noexcept(false);
+  virtual void open(File::access_t mode);
+  virtual void close();
+
+protected:
+  virtual void vprintf(const std::string& fmt, va_list ap) const;
 
 private:
   FILE* extern_fstream;
@@ -52,6 +63,23 @@ private:
   bool binary;
   std::string path;
   std::string filename;
+
+  /**
+   * Full filename or stream name.
+   *
+   * Full filename such like *'path/to/file'* if `extern_fstream ==
+   * NULL`.  Otherwise it is set to name of File::extern_fstream .
+   */
+  std::string filename_full;
+
+  /**
+   * If file is closed then `File::fstream == NULL`.
+   */
+  FILE* fstream;
+  /**
+   * Undefined if `File::fstream == NULL` (file closed).
+   */
+  File::access_t mode;
 
 }; /* class File  */
 
