@@ -1,0 +1,3 @@
+[submodule "doc-lib"]
+	path = doc/libathome
+	url = https://github.com/YouDirk/libathome-doc.git

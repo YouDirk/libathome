@@ -132,6 +132,7 @@ else
 	  )s~^ \+\.\. *$$~~;$(\
 	  )s~^\(PROJECT_NAME\).*~\1 = "$(PROJECT_NAME)"~;$(\
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(PROJECT_VERSION)~;$(\
+	  )s~^\(HTML_OUTPUT\).*~\1 = $(PROJECT_VERSION)~;$(\
 	  )s~^\(PROJECT_BRIEF\).*~\1 = "$(PROJECT_BRIEF)"~;$(\
 	  )s~^\(PROJECT_LOGO\).*~\1 = $(PROJECT_LOGO)~;$(\
 	  )s~^\(IMAGE_PATH\).*~\1 =~;$(\
@@ -139,7 +140,8 @@ else
 	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) >> $(DOCPATH)/$(DOXYGENFILE)
   else
 	@$(SED) -i '$(\
-	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_STR)~;$(\
+	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_LIB)~;$(\
+	  )s~^\(HTML_OUTPUT\).*~\1 = $(VERSION_LIB)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE)
   endif
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
@@ -155,8 +157,8 @@ else
 	$(BROWSER_OPT) $(DOCHTMLPATH)/index.html
 endif
 
-.PHONY: _clean-makecache _clean-deps _clean-tags clean clean-all \
-        _clean-all-recursive
+.PHONY: _clean-makecache _clean-deps _clean-tags _clean_doc clean \
+        clean-all _clean-all-recursive
 # _CLEAN_MAKECACHE must be the last one in the dependency list,
 # because it will be regenerated during recursive CLEAN calls
 .PHONY: _clean_makecache
@@ -166,6 +168,9 @@ _clean-deps:
 	-rm -f *.$(DEPEXT)
 _clean-tags:
 	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
+_clean_doc:
+	-rm -rf $(DOCHTMLPATH) $(DOCLATEXPATH)
+	-rmdir --ignore-fail-on-non-empty $(DOCPATH)/$(DOC_OUTDIR)
 clean: _clean-deps
 	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(addprefix $(DOCPATH)/,*.bak *~) \
 	  $(addprefix $(TOOLSPATH)/,*.bak *~)
@@ -173,12 +178,10 @@ clean: _clean-deps
 ifneq (,$(LIBNAME))
 	$(TOUCH) $(MAIN_HEADER)
 endif
-clean-all: clean _clean-tags _clean-makecache
-	-rm -rf *.$(PDBEXT) $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR) \
-	  $(TOOLSPATH)
-_clean-all-recursive: clean _clean-tags
-	-rm -rf *.$(PDBEXT) $(OUTPUT) $(DOCPATH)/$(DOC_OUTDIR) \
-	  $(TOOLSPATH)
+clean-all: clean _clean-tags _clean_doc _clean-makecache
+	-rm -rf *.$(PDBEXT) $(OUTPUT) $(TOOLSPATH)
+_clean-all-recursive: clean _clean-tags _clean_doc
+	-rm -rf *.$(PDBEXT) $(OUTPUT)
 
 %.$(DEPEXT): %.$(CEXT)
 	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<

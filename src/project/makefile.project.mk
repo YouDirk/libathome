@@ -24,7 +24,7 @@ PROJECT_EXECNAME = primeathome
 PROJECT_NAME = Prime@home
 
 # Version string of the project
-PROJECT_VERSION = 1.0.0-beta
+PROJECT_VERSION = 0.0.1-dev
 
 # Short description in one line
 PROJECT_BRIEF = Let us create together a prime-factor database using \

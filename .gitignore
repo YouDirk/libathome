@@ -36,7 +36,6 @@
 /src/**/BROWSE
 
 # Doc stuff
-/doc/libathome
 /doc/project
 
 # Tools stuff

@@ -41,6 +41,9 @@ else
   CCDEFINES +=
 endif
 
+VERSION_LIB := \
+  $(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)$(VERSION_SUFFIX)
+
 # Compiling library?
 ifneq (,$(LIBNAME))
   OUTPUT := $(LIBNAME).$(SOEXT)
@@ -48,12 +51,14 @@ ifneq (,$(LIBNAME))
   FPICFLAGS := -fPIC -DPIC
   SHAREDFLAGS += -shared
   DOC_OUTDIR := libathome
+  VERSION_THIS := $(VERSION_LIB)
 else
   OUTPUT := $(PROJECT_EXECNAME)-client$(DOT_BINEXT)
   MAIN_HEADER :=
   FPICFLAGS :=
   SHAREDFLAGS +=
   DOC_OUTDIR := project
+  VERSION_THIS := $(PROJECT_VERSION)
 endif
 
 CV2PDB := cv2pdb.exe
@@ -66,7 +71,8 @@ PROJECTPATH := ../project
 DOCPATH := ../../doc
 TOOLSPATH := ../../tools
 
-DOCHTMLPATH := $(DOCPATH)/$(DOC_OUTDIR)/html
+DOCHTMLPATH := $(DOCPATH)/$(DOC_OUTDIR)/$(VERSION_THIS)
+DOCLATEXPATH := $(DOCPATH)/$(DOC_OUTDIR)/latex
 
 EBROWSEFILE := BROWSE
 CTAGSFILE := tags
@@ -111,9 +117,6 @@ TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 CTAGSFLAGS :=
 ETAGSFLAGS :=
 EBROWSEFLAGS :=
-
-VERSION_STR = \
-  $(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)$(VERSION_SUFFIX)
 
 # End of Variable definitions of all static stuff
 # ********************************************************************
