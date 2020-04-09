@@ -34,10 +34,11 @@ on:
 # Settings
 env:
   # ${{secrets.GITHUB_TOKEN}}
-  WORKFL_DOCREPO_PATH: doc/libathome
-  WORKFL_COMMIT_EMAIL: libathome-bot@users.noreply.github.com
-  WORKFL_COMMIT_NAME:  lib@home Bot
-  WORKFL_COMMIT_MSG:   Updating API Reference Documetation
+  WORKFL_DOCREPO_PATH:    doc/libathome
+  WORKFL_DOCREPO_PUSHDIR: YouDirk/libathome-doc
+  WORKFL_COMMIT_EMAIL:    libathome-bot@users.noreply.github.com
+  WORKFL_COMMIT_NAME:     lib@home Bot
+  WORKFL_COMMIT_MSG:      Updating API Reference Documetation
 
 # Job are running in parallel
 jobs:
@@ -86,6 +87,6 @@ jobs:
       uses: ad-m/github-push-action@v0.5.0
       with:
         directory: ${{env.WORKFL_DOCREPO_PATH}}
-        repository:
+        repository: ${{WORKFL_DOCREPO_PUSHDIR}}
         github_token: ${{secrets.PUSH_TOKEN}}
         branch: master
