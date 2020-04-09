@@ -60,9 +60,32 @@ jobs:
         make all
       shell: bash
 
+  compile-windows:
+    name: Compile on Windows
+    runs-on: windows-latest
+    steps:
+    - name: Installing MSYS2 environment...
+      uses: numworks/setup-msys2@v1
+      with:
+        msystem: MINGW64
+        path-type: strict
+        update: true
+      # Checks-out under $GITHUB_WORKSPACE
+    - name: Checking out...
+      uses: actions/checkout@v2.1.0
+      with:
+        token: ${{secrets.PUSH_TOKEN}}
+        clean: true
+        lfs: true
+        submodules: true
+    - name: Running Make...
+      run: |
+        cd $GITHUB_WORKSPACE
+        msys2do make all
+
   doc:
     name: API Reference Documentation
-    needs: [ compile-linux ]
+    needs: [compile-linux, compile-windows]
     runs-on: ubuntu-latest
     steps:
       # Checks-out under $GITHUB_WORKSPACE
