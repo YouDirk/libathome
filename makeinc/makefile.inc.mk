@@ -113,7 +113,7 @@ tags-ebrowse: $(EBROWSEFILE)
 tags-all: tags-ctags tags-etags tags-ebrowse
 
 .PHONY: doc
-doc:
+doc: _clean_doc
 ifeq (,$(DOXYGEN_OPT))
 	$(error $(ERRB) DOXYGEN command not found!  Try '$$> apt-get \
 	  install doxygen' for installation.  Or use MSYS2 command \

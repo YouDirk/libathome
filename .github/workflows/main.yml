@@ -43,7 +43,7 @@ env:
 # Job are running in parallel
 jobs:
   compile-linux:
-    name: Compile on Linux
+    name: Compiles on Linux
     runs-on: ubuntu-latest
     steps:
       # Checks-out under $GITHUB_WORKSPACE
@@ -61,7 +61,7 @@ jobs:
       shell: bash
 
   compile-windows:
-    name: Compile on Windows
+    name: Compiles on Windows
     runs-on: windows-latest
     steps:
     - name: Installing MSYS2 environment...
