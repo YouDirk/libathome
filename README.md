@@ -21,8 +21,9 @@ lib@home
 A framework to develop `*@home` projects for distributed calculations.
 
 Currently this project is in an very early state and the lib@home
-library is not really usable.  But if you are interested we have the
-following resources to check the current develpoment state:
+library is not really usable for productive stuff.  But if you are
+interested in it, we provide the following resources to check the
+current progress of development
 
 * <b>lib@home API Reference Documentation</b>  
   https://youdirk.github.io/libathome-doc/
@@ -38,36 +39,21 @@ Make targets
 ------------
 
 ```make
-all: \
-    Compiles the current directory and all sub-directories
-clean: \
-    Deletes temporary files / prepare for recompilation
-clean-all: \
-    Deletes all files which are not under version control
-debug: \
-    Compiles 'all' and run 'project' in debugger (GDB)
-debug-emacs: \
-    Run 'project' in debugger (GDB) with Emacs support
-doc: \
-    Create a Doxygen documentation of the current directory
-doc-view: \
-    Runs 'doc' and show the resulting documantation in Browser
-recompile: \
-    Runs 'clean' followed by 'all'
-run: \
-    Make 'all' followed by running 'project'
-run-leakcheck: \
-    Same as 'run', but execute 'project' in Valgrind
-tags-all: \
-    Make 'tags-ctags', 'tags-etags' and 'tags-ebrowse'
-tags-ctags: \
-    Runs 'ctags' indexer for TAB auto-completion
-tags-ebrowse: \
-    Runs 'ebrowse' indexer for TAB auto-completion in Emacs
-tags-etags: \
-    Runs 'etags' indexer for TAB auto-completion
+all:           Compiles the current directory and all sub-directories
+clean:         Deletes temporary files / prepare for recompilation
+clean-all:     Deletes all files which are not under version control
+debug:         Compiles 'all' and run 'project' in debugger (GDB)
+debug-emacs:   Run 'project' in debugger (GDB) with Emacs support
+doc:           Create a Doxygen documentation of the current directory
+doc-view:      Runs 'doc' and show the resulting documantation in Browser
+recompile:     Runs 'clean' followed by 'all'
+run:           Make 'all' followed by running 'project'
+run-leakcheck: Same as 'run', but execute 'project' in Valgrind
+tags-all:      Make 'tags-ctags', 'tags-etags' and 'tags-ebrowse'
+tags-ctags:    Runs 'ctags' indexer for TAB auto-completion
+tags-ebrowse:  Runs 'ebrowse' indexer for TAB auto-completion in Emacs
+tags-etags:    Runs 'etags' indexer for TAB auto-completion
 ```
-
 
 Playing around with lib@home
 ----------------------------
@@ -118,6 +104,6 @@ $> make run
 
 > **Hint:** To automatically check the `make`-targets which are
 >           available, it´s recommended to install the Debian package
->           `$> apt-get install bash-completion`.  After doing this,
+>           `$> pacman -S msys/ bash-completion`.  After doing this,
 >           open a new Bash shell run `$> make ` and use the
 >           **TAB**-Key twice to list the `make`-targets on-the-fly.
