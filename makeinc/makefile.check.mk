@@ -105,12 +105,12 @@ endif
 
 OS_IS_WIN := $(call _CMD_TEST,loooool,operating system)
 OS_IS_WIN := $(shell test \( \
-  -n "`echo $(OS) | $(SED) -n '/^windows/Ip'`" \
-  -o -n "`$(UNAME) -o | $(SED) -n '/^msys/Ip'`" \
-  -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'`" \
-  -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'`" \
-  -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'`" \
-\) 2>&1 > /dev/null && echo -n 1)
+  -n "`echo $(OS) | $(SED) -n '/^windows/Ip'    2> /dev/null`" \
+  -o -n "`$(UNAME) -o | $(SED) -n '/^msys/Ip'   2> /dev/null`" \
+  -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'  2> /dev/null`" \
+  -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'   2> /dev/null`" \
+  -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'  2> /dev/null`" \
+\) && echo -n 1)
 ifeq (,$(OS_IS_WIN))
   $(call _CMD_TEST_RESULT,Linux/Unix-like)
   $(shell echo 'OS_IS_WIN =' >> $(_CACHE_FILE))

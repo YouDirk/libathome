@@ -70,6 +70,8 @@ jobs:
         msystem: MINGW64
         path-type: strict
         update: true
+    - name: Installing toolchain...
+      run: msys2do pacman -S --noconfirm msys/make
       # Checks-out under $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
@@ -80,7 +82,7 @@ jobs:
         submodules: true
     - name: Running Make...
       run: |
-        cd $GITHUB_WORKSPACE
+        msys2do cd $GITHUB_WORKSPACE
         msys2do make all
 
   doc:
