@@ -55,7 +55,7 @@ jobs:
     - name: Running Make...
       run: |
         cd $GITHUB_WORKSPACE
-        make make run ARGS=--version
+        make run ARGS=--version
       shell: bash
 
   compile-windows:
