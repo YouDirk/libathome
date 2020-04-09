@@ -22,7 +22,7 @@ FROM alpine:edge
 COPY entrypoint.sh /entrypoint.sh
 
 # Install required packages
-RUN apk add doxygen graphviz ttf-freefont make
+RUN apk add doxygen graphviz ttf-freefont make g++
 
 # Go!
 ENTRYPOINT ["/entrypoint.sh"]
