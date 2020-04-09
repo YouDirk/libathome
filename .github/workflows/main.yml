@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-name: Push- and Pull-Request trigger
+name: Push and pull-request trigger
 
 on:
   push:
@@ -54,13 +54,23 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         make all
+      shell: bash
 
   doc:
     name: API Reference Documentation
     needs: [ compile-linux ]
     runs-on: ubuntu-latest
     steps:
-    - name: TODO Step
+      # Checks-out under $GITHUB_WORKSPACE
+    - name: Checkout
+      uses: actions/checkout@v2.1.0
+      with:
+        token: ${{secrets.PUSH_TOKEN}}
+        clean: true
+        lfs: true
+        submodules: true
+    - name: Run Doxygen
       run: |
-        echo $GITHUB_WORKSPACE
-        ls -l
+        cd $GITHUB_WORKSPACE
+        make doc
+      shell: bash
