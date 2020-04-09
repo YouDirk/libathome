@@ -112,7 +112,7 @@ jobs:
         cd $GITHUB_WORKSPACE/${{env.WORKFL_DOCREPO_PATH}}
         git config --local user.email "${{env.WORKFL_COMMIT_EMAIL}}"
         git config --local user.name  "${{env.WORKFL_COMMIT_NAME}}"
-        git commit -a -m              "${{env.WORKFL_COMMIT_MSG}}"
+        git commit -a -m "${{env.WORKFL_COMMIT_MSG}}" || test $? = 1
     - name: Pushing to GitHub...
       uses: ad-m/github-push-action@v0.5.0
       with:
