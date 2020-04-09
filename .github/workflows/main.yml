@@ -78,14 +78,14 @@ jobs:
         exec: make doc
     - name: Committing API Reference Documentaion...
       run: |
-        cd $GITHUB_WORKSPACE/$WORKFL_DOCREPO_PATH
-        git config --local user.email "$WORKFL_COMMIT_EMAIL"
-        git config --local user.name  "$WORKFL_COMMIT_NAME"
-        git commit -a -m "$WORKFL_COMMIT_MSG"
+        cd $GITHUB_WORKSPACE/${{env.WORKFL_DOCREPO_PATH}}
+        git config --local user.email "${{env.WORKFL_COMMIT_EMAIL}}"
+        git config --local user.name  "${{env.WORKFL_COMMIT_NAME}}"
+        git commit -a -m              "${{env.WORKFL_COMMIT_MSG}}"
     - name: Pushing to GitHub...
       uses: ad-m/github-push-action@v0.5.0
       with:
-        directory: $WORKFL_DOCREPO_PATH
+        directory: ${{env.WORKFL_DOCREPO_PATH}}
         repository:
         github_token: ${{secrets.PUSH_TOKEN}}
         branch: master
