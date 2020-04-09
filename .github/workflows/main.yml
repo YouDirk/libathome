@@ -32,30 +32,30 @@ on:
 # Settings
 env:
   # ${{secrets.GITHUB_TOKEN}}
-  WORKFL_DOCREPO_PATH:    doc/libathome
-  WORKFL_DOCREPO_PUSHDIR: YouDirk/libathome-doc
-  WORKFL_COMMIT_EMAIL:    libathome-bot@users.noreply.github.com
-  WORKFL_COMMIT_NAME:     lib@home Bot
-  WORKFL_COMMIT_MSG:      Updating API Reference Documetation
+  WORKFL_DOCREPO_PATH:    'doc/libathome'
+  WORKFL_DOCREPO_PUSHDIR: 'YouDirk/libathome-doc'
+  WORKFL_COMMIT_EMAIL:    'bot-libathome@users.noreply.github.com'
+  WORKFL_COMMIT_NAME:     'Bot (from YouDirk/libathome)'
+  WORKFL_COMMIT_MSG:      '[auto] Updating API Reference Documetation'
 
-# Job are running in parallel
+# Jobs are running in parallel
 jobs:
   compile-linux:
     name: Compiles on Linux
     runs-on: ubuntu-latest
     steps:
-      # Checks-out under $GITHUB_WORKSPACE
+      # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
-        lfs: true
-        submodules: true
+        lfs: false
+        submodules: false
     - name: Running Make...
       run: |
         cd $GITHUB_WORKSPACE
-        make all
+        make make run ARGS=--version
       shell: bash
 
   compile-windows:
@@ -70,31 +70,31 @@ jobs:
         update: true
     - name: Installing toolchain...
       run: msys2do pacman -S --noconfirm msys/make mingw64/mingw-w64-x86_64-gcc wget
-      # Checks-out under $GITHUB_WORKSPACE
+      # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
-        lfs: true
-        submodules: true
+        lfs: false
+        submodules: false
     - name: Running Make...
       run: |
         msys2do cd $GITHUB_WORKSPACE
-        msys2do make all
+        msys2do make run ARGS=--version
 
   doc:
     name: API Reference Documentation
     needs: [compile-linux, compile-windows]
     runs-on: ubuntu-latest
     steps:
-      # Checks-out under $GITHUB_WORKSPACE
+      # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
-        lfs: true
+        lfs: false
         submodules: true
     - name: Checking out API Doc master branch...
       run: |
@@ -105,7 +105,7 @@ jobs:
       uses: ./.github/actions/doxygen-environment
       with:
         exec: make doc
-    - name: Committing API Reference Documentaion...
+    - name: Committing API Reference Documentation...
       run: |
         cd $GITHUB_WORKSPACE/${{env.WORKFL_DOCREPO_PATH}}
         git config --local user.email "${{env.WORKFL_COMMIT_EMAIL}}"

@@ -42,10 +42,10 @@ Make targets
 all:           Compiles the current directory and all sub-directories
 clean:         Deletes temporary files / prepare for recompilation
 clean-all:     Deletes all files which are not under version control
-debug:         Compiles 'all' and run 'project' in debugger (GDB)
+debug:         Compiles 'all' and runs 'project' in debugger (GDB)
 debug-emacs:   Run 'project' in debugger (GDB) with Emacs support
 doc:           Create a Doxygen documentation of the current directory
-doc-view:      Runs 'doc' and show the resulting documantation in Browser
+doc-view:      Runs 'doc' and show the resulting documentation in Browser
 recompile:     Runs 'clean' followed by 'all'
 run:           Make 'all' followed by running 'project'
 run-leakcheck: Same as 'run', but execute 'project' in Valgrind
@@ -61,49 +61,51 @@ Playing around with lib@home
 ### Debian (Linux)
 
 The main development is done on **Linux**.  If you are using
-**Debian** (or Ubuntu) you need to have at least installed `make`,
-`g++` and `libc-dev`.  All these packages are part of Debian package
-`build-essential`. All other dependencies will checked by running
-`make`.  So after the project was cloned run:
+**Debian** (or Ubuntu) you need to have installed at least `make`,
+`g++` and `libc-dev`, these packages are part of Debian package
+`build-essential`.  Also you need to install `git`.  If you are
+finished and have cloned the repository to your local machine then run
+`make` to check for other dependencies.
 
 ```shell
-$> apt-get install build-essential
-$> cd path/to/libathome
-$> make run
+$> sudo apt-get install git build-essential
+$> git clone https://github.com/YouDirk/libathome libathome
+$> cd libathome
+libathome$> make run
 ```
 
 > **Hint:** To automatically check the `make`-targets which are
->           available, it´s recommended to install the Debian package
->           `$> apt-get install bash-completion`.  After doing this,
->           open a new Bash shell run `$> make ` and use the
->           **TAB**-Key twice to list the `make`-targets on-the-fly.
+>           available on-the-fly using **TAB** auto-completion, it is
+>           recommended to install the MSYS2 package `$> pacman -S
+>            msys/bash-completion`.  After doing this, open a new Bash
+>           shell, type `libathome$> make ` and use the **TAB**-Key
+>           twice to list the `make`-targets.
 
 ### MSYS2/MinGW (Windows)
 
-If you are using Windows you need to install `MSYS2`. After
-installing, run a MSYS2-Shell and make the system up-to-date by
-running
+If you are using Windows you need to install `MSYS2`
+(https://www.msys2.org/). After installation is finished, run a
+MSYS2-shell and make the system up-to-date by running
 
 ```shell
 $> pacman -Syu
 ```
 
-Then install at least `git`, `make` and `g++`.
+Then install at least ths following MSYS2/MinGW packages: `git`,
+`make` and `g++`.  If you are finished and have cloned the repository
+to your local machine then run `make` to check for other dependencies.
+
 
 ```shell
 $> pacman -S msys/git msys/make mingw64/mingw-w64-x86_64-gcc
-```
-
-Then after you have cloned the repository run `make` to check for
-other dependencies.
-
-```shell
-$> cd path/to/libathome
-$> make run
+$> git clone https://github.com/YouDirk/libathome libathome
+$> cd libathome
+libathome$> make run
 ```
 
 > **Hint:** To automatically check the `make`-targets which are
->           available, it´s recommended to install the Debian package
->           `$> pacman -S msys/ bash-completion`.  After doing this,
->           open a new Bash shell run `$> make ` and use the
->           **TAB**-Key twice to list the `make`-targets on-the-fly.
+>           available on-the-fly using **TAB** auto-completion, it is
+>           recommended to install the MSYS2 package `$> pacman -S
+>           msys/bash-completion`.  After doing this, open a new Bash
+>           shell, type `libathome$> make ` and use the **TAB**-Key
+>           twice to list the `make`-targets.
