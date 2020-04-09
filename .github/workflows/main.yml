@@ -72,4 +72,4 @@ jobs:
     - name: Running Doxygen
       uses: ./.github/actions/doxygen-environment
       with:
-        exec: cd $GITHUB_WORKSPACE && make doc
+        exec: make doc
