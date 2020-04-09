@@ -25,4 +25,4 @@ COPY entrypoint.sh /entrypoint.sh
 RUN apk add doxygen graphviz ttf-freefont
 
 # Go!
-ENTRYPOINT ["sh", "-c", "/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
