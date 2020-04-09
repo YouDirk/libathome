@@ -43,14 +43,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks-out under $GITHUB_WORKSPACE
-    - name: Checkout
+    - name: Checking out...
       uses: actions/checkout@v2.1.0
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
         lfs: true
         submodules: true
-    - name: Run Make
+    - name: Running Make...
       run: |
         cd $GITHUB_WORKSPACE
         make all
@@ -61,19 +61,20 @@ jobs:
     needs: [ compile-linux ]
     runs-on: ubuntu-latest
     steps:
-    - name: Install Doxygen
+    - name: Choosing Docker container...
       uses: docker://alpine:edge
+    - name: Installing Doxygen...
       run: apk add doxygen graphviz ttf-freefont
       shell: bash
       # Checks-out under $GITHUB_WORKSPACE
-    - name: Checkout
+    - name: Checking out...
       uses: actions/checkout@v2.1.0
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
         lfs: true
         submodules: true
-    - name: Run Doxygen
+    - name: Running Doxygen
       run: |
         cd $GITHUB_WORKSPACE
         make doc
