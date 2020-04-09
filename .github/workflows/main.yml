@@ -33,8 +33,11 @@ on:
 
 # Settings
 env:
-  DOCREPO_PATH: doc/libathome
   # ${{secrets.GITHUB_TOKEN}}
+  WORKFL_DOCREPO_PATH: doc/libathome
+  WORKFL_COMMIT_EMAIL: libathome-bot@users.noreply.github.com
+  WORKFL_COMMIT_NAME:  lib@home Bot
+  WORKFL_COMMIT_MSG:   Updating API Reference Documetation
 
 # Job are running in parallel
 jobs:
@@ -69,7 +72,20 @@ jobs:
         clean: true
         lfs: true
         submodules: true
-    - name: Running Doxygen
+    - name: Running Doxygen...
       uses: ./.github/actions/doxygen-environment
       with:
         exec: make doc
+    - name: Committing API Reference Documentaion...
+      run: |
+        cd $GITHUB_WORKSPACE/$WORKFL_DOCREPO_PATH
+        git config --local user.email "$WORKFL_COMMIT_EMAIL"
+        git config --local user.name  "$WORKFL_COMMIT_NAME"
+        git commit -a -m "$WORKFL_COMMIT_MSG"
+    - name: Pushing to GitHub...
+      uses: ad-m/github-push-action@v0.5.0
+      with:
+        directory: $GITHUB_WORKSPACE/$WORKFL_DOCREPO_PATH
+        repository:
+        github_token: ${{secrets.PUSH_TOKEN}}
+        branch: master
