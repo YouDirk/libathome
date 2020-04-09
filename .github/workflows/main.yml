@@ -98,6 +98,11 @@ jobs:
         clean: true
         lfs: true
         submodules: true
+    - name: Checking out API Doc master branch...
+      run: |
+        cd $GITHUB_WORKSPACE/${{env.WORKFL_DOCREPO_PATH}}
+        git checkout -f master
+        git pull -f
     - name: Running Doxygen...
       uses: ./.github/actions/doxygen-environment
       with:
