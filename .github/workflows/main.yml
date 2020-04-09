@@ -62,6 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install Doxygen
+      uses: docker://alpine:edge
       run: apk add doxygen graphviz ttf-freefont
       shell: bash
       # Checks-out under $GITHUB_WORKSPACE
