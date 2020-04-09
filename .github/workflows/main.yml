@@ -71,8 +71,7 @@ jobs:
         path-type: strict
         update: true
     - name: Installing toolchain...
-      run: msys2do pacman -S --noconfirm msys/make \
-           mingw64/mingw-w64-x86_64-gcc wget
+      run: msys2do pacman -S --noconfirm msys/make mingw64/mingw-w64-x86_64-gcc wget
       # Checks-out under $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
