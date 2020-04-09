@@ -61,11 +61,6 @@ jobs:
     needs: [ compile-linux ]
     runs-on: ubuntu-latest
     steps:
-    - name: Choosing Docker container...
-      uses: docker://alpine:edge
-    - name: Installing Doxygen...
-      run: apk add doxygen graphviz ttf-freefont
-      shell: bash
       # Checks-out under $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
@@ -75,7 +70,8 @@ jobs:
         lfs: true
         submodules: true
     - name: Running Doxygen
-      run: |
+      uses: ./.github/actions/doxygen-environment
+      with:
+        exec: |
         cd $GITHUB_WORKSPACE
         make doc
-      shell: bash
