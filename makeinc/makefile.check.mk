@@ -110,7 +110,7 @@ OS_IS_WIN := $(shell test \( \
   -o -n "`$(UNAME) -o | $(SED) -n '/^mingw/Ip'`" \
   -o -n "`$(UNAME) -s | $(SED) -n '/^msys/Ip'`" \
   -o -n "`$(UNAME) -s | $(SED) -n '/^mingw/Ip'`" \
-\) 2> /dev/null && echo -n 1)
+\) 2>&1 > /dev/null && echo -n 1)
 ifeq (,$(OS_IS_WIN))
   $(call _CMD_TEST_RESULT,Linux/Unix-like)
   $(shell echo 'OS_IS_WIN =' >> $(_CACHE_FILE))

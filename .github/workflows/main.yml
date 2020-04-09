@@ -85,7 +85,7 @@ jobs:
     - name: Pushing to GitHub...
       uses: ad-m/github-push-action@v0.5.0
       with:
-        directory: $GITHUB_WORKSPACE/$WORKFL_DOCREPO_PATH
+        directory: $WORKFL_DOCREPO_PATH
         repository:
         github_token: ${{secrets.PUSH_TOKEN}}
         branch: master
