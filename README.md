@@ -75,10 +75,10 @@ libathome$> make run
 ```
 
 > **Hint:** To automatically check the `make`-targets which are
->           available on-the-fly using **TAB** auto-completion, it is
->           recommended to install the MSYS2 package `$> pacman -S
->            msys/bash-completion`.  After doing this, open a new Bash
->           shell, type `libathome$> make ` and use the **TAB**-Key
+>           available on-the-fly using **TAB auto-completion**, it is
+>           recommended to install the Debian package `$> apt-get
+>           install bash-completion`.  After doing this, open a new
+>           Bash shell, type `libathome$> make ` and use the TAB-key
 >           twice to list the `make`-targets.
 
 ### MSYS2/MinGW (Windows)
@@ -104,8 +104,8 @@ libathome$> make run
 ```
 
 > **Hint:** To automatically check the `make`-targets which are
->           available on-the-fly using **TAB** auto-completion, it is
+>           available on-the-fly using **TAB auto-completion**, it is
 >           recommended to install the MSYS2 package `$> pacman -S
 >           msys/bash-completion`.  After doing this, open a new Bash
->           shell, type `libathome$> make ` and use the **TAB**-Key
->           twice to list the `make`-targets.
+>           shell, type `libathome$> make ` and use the TAB-key twice
+>           to list the `make`-targets.
