@@ -84,7 +84,7 @@ libathome$> make run
 ### MSYS2/MinGW (Windows)
 
 If you are using Windows you need to install `MSYS2`
-(https://www.msys2.org/). After installation is finished, run a
+(https://www.msys2.org). After installation is finished, run a
 MSYS2-shell and make the system up-to-date by running
 
 ```shell

@@ -36,7 +36,7 @@ env:
   WORKFL_DOCREPO_PUSHDIR: 'YouDirk/libathome-doc'
   WORKFL_COMMIT_EMAIL:    'bot-libathome@users.noreply.github.com'
   WORKFL_COMMIT_NAME:     'Bot (from YouDirk/libathome)'
-  WORKFL_COMMIT_MSG:      '[auto] Updating API Reference Documetation'
+  WORKFL_COMMIT_MSG:      '[auto] Update'
 
 # Jobs are running in parallel
 jobs:
@@ -110,7 +110,7 @@ jobs:
         cd $GITHUB_WORKSPACE/${{env.WORKFL_DOCREPO_PATH}}
         git config --local user.email "${{env.WORKFL_COMMIT_EMAIL}}"
         git config --local user.name  "${{env.WORKFL_COMMIT_NAME}}"
-        git commit -a -m "${{env.WORKFL_COMMIT_MSG}}" || test $? = 1
+        git commit -a -m "${{env.WORKFL_COMMIT_MSG}} for $GITHUB_REPOSITORY@$GITHUB_SHA" || test $? = 1
     - name: Pushing to GitHub...
       uses: ad-m/github-push-action@v0.5.0
       with:
