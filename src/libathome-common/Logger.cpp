@@ -121,8 +121,8 @@ vprintf(Logger::loglevel_t level, const char* fmt, ::va_list ap)
     std::string timestr = rtc.to_string(this->strftime_fmt);
     const char* lvlname = Logger::to_string(level);
 
-    std::string out = timestr + " " + lvlname + ": " + fmt + "\n";
-    File::vprintf(out.c_str(), ap);
+    std::string out_fmt = timestr + " " + lvlname + ": " + fmt + "\n";
+    File::vprintf(out_fmt.c_str(), ap);
   } catch (Error& e) {
     /* LOGGER not working here.  So we are using FPRINTF to STDERR for
      * output.
@@ -190,55 +190,33 @@ fatal(int exit_code, const char* fmt, ...)
 /* ---------------------------------------------------------------  */
 
 void libathome_common::Logger::
-debug(const std::string& fmt, ...)
+debug(const std::string& output)
 {
-  ::va_list ap;
-
-  ::va_start(ap, fmt);
-  this->vprintf(loglevel_t::debug_e, fmt.c_str(), ap);
-  ::va_end(ap);
+  this->debug("%s", output.c_str());
 }
 
 void libathome_common::Logger::
-info(const std::string& fmt, ...)
+info(const std::string& output)
 {
-  ::va_list ap;
-
-  ::va_start(ap, fmt);
-  this->vprintf(loglevel_t::info_e, fmt.c_str(), ap);
-  ::va_end(ap);
+  this->info("%s", output.c_str());
 }
 
 void libathome_common::Logger::
-warn(const std::string& fmt, ...)
+warn(const std::string& output)
 {
-  ::va_list ap;
-
-  ::va_start(ap, fmt);
-  this->vprintf(loglevel_t::warning_e, fmt.c_str(), ap);
-  ::va_end(ap);
+  this->warn("%s", output.c_str());
 }
 
 void libathome_common::Logger::
-error(const std::string& fmt, ...)
+error(const std::string& output)
 {
-  ::va_list ap;
-
-  ::va_start(ap, fmt);
-  this->vprintf(loglevel_t::error_e, fmt.c_str(), ap);
-  ::va_end(ap);
+  this->error("%s", output.c_str());
 }
 
 void libathome_common::Logger::
-fatal(int exit_code, const std::string& fmt, ...)
+fatal(int exit_code, const std::string& output)
 {
-  ::va_list ap;
-
-  ::va_start(ap, fmt);
-  this->vprintf(loglevel_t::fatal_e, fmt.c_str(), ap);
-  ::va_end(ap);
-
-  ::exit(exit_code);
+  this->fatal(exit_code, "%s", output.c_str());
 }
 
 /* ---------------------------------------------------------------  */

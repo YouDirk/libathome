@@ -141,11 +141,7 @@ printf(const char* fmt, ...) const noexcept(false)
 }
 
 void libathome_common::File::
-printf(const std::string& fmt, ...) const noexcept(false)
+print(const std::string& output) const noexcept(false)
 {
-  ::va_list ap;
-
-  ::va_start(ap, fmt);
-  this->vprintf(fmt.c_str(), ap);
-  ::va_end(ap);
+  this->printf("%s", output.c_str());
 }

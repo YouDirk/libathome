@@ -33,8 +33,8 @@ namespace libathome_common
  * safe use instances of this class as member variables.
  *
  * After constructed you need to open the file with File::open().
- * Then you can write to it with File::printf() or read with
- * File::scanf().  If you finished then File::close() the file.
+ * Then you can write to it with File::print(), File::printf() or read
+ * with File::scanf().  If you finished then File::close() the file.
  */
 class File
 {
@@ -129,11 +129,10 @@ public:
   /**
    * Write string to file.
    *
-   * @param fmt `printf()`-like format string
-   * @param ... Arguments of `fmt` string
+   * @param output String which should be logged
    * @exception Error will be thrown if writing to file has failed
    */
-  virtual void printf(const std::string& fmt, ...) const noexcept(false);
+  virtual void print(const std::string& output) const noexcept(false);
 
 protected:
   /**

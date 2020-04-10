@@ -186,39 +186,34 @@ public:
   /**
    * Write debug output into log file.
    *
-   * @param fmt `printf()`-like format string
-   * @param ... Arguments of `fmt` string
+   * @param output String which should be logged
    */
-  virtual void debug(const std::string& fmt, ...);
+  virtual void debug(const std::string& output);
   /**
    * Write info output into log file.
    *
-   * @param fmt `printf()`-like format string
-   * @param ... Arguments of `fmt` string
+   * @param output String which should be logged
    */
-  virtual void info(const std::string& fmt, ...);
+  virtual void info(const std::string& output);
   /**
    * Write warning output into log file.
    *
-   * @param fmt `printf()`-like format string
-   * @param ... Arguments of `fmt` string
+   * @param output String which should be logged
    */
-  virtual void warn(const std::string& fmt, ...);
+  virtual void warn(const std::string& output);
   /**
    * Write ERROR output into log file.
    *
-   * @param fmt `printf()`-like format string
-   * @param ... Arguments of `fmt` string
+   * @param output String which should be logged
    */
-  virtual void error(const std::string& fmt, ...);
+  virtual void error(const std::string& output);
   /**
    * Write FATAL ERROR output into log file and `exit()`.
    *
    * @param exit_code Exit code of the terminated process
-   * @param fmt `printf()`-like format string
-   * @param ... Arguments of `fmt` string
+   * @param output String which should be logged
    */
-  virtual void fatal(int exit_code, const std::string& fmt, ...);
+  virtual void fatal(int exit_code, const std::string& output);
 
   /* -------------------------------------------------------------  */
 
