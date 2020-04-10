@@ -39,7 +39,7 @@ Make targets
 ------------
 
 ```make
-all:           Compiles the current directory and all sub-directories
+all <default>: Compiles the current directory and all sub-directories
 clean:         Deletes temporary files / prepare for recompilation
 clean-all:     Deletes all files which are not under version control
 debug:         Compiles 'all' and runs 'project' in debugger (GDB)
@@ -91,7 +91,7 @@ MSYS2-shell and make the system up-to-date by running
 $> pacman -Syu
 ```
 
-Then install at least ths following MSYS2/MinGW packages: `git`,
+Then install at least the following MSYS2/MinGW packages: `git`,
 `make` and `g++`.  If you are finished and have cloned the repository
 to your local machine then run `make` to check for other dependencies.
 

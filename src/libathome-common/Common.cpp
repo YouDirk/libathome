@@ -42,7 +42,7 @@ Common(int argc, char** argv)
     Log->error(e);
   }
 
-  Log->debug(this->hello->c_str());
+  Log->debug("%s", this->hello->c_str());
   Log->warn(*this->hello);
   Log->error("Hello %s, how are you (%d)?", "World", -999);
   //Log->fatal(3, this->hello->c_str());

@@ -62,7 +62,7 @@ OPTFLAG := -Og
 #
 # values: [-Wall -Wextra -Werror]
 #
-WARNFLAGS := -Wall -Wextra
+WARNFLAGS := -Wall -Wextra -Wformat-security
 
 # C++ standard
 #

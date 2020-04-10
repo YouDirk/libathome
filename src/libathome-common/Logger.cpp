@@ -246,31 +246,31 @@ fatal(int exit_code, const std::string& fmt, ...)
 void libathome_common::Logger::
 debug(const Error& e)
 {
-  this->debug(e.what());
+  this->debug("%s", e.what());
 }
 
 void libathome_common::Logger::
 info(const Error& e)
 {
-  this->info(e.what());
+  this->info("%s", e.what());
 }
 
 void libathome_common::Logger::
 warn(const Error& e)
 {
-  this->warn(e.what());
+  this->warn("%s", e.what());
 }
 
 void libathome_common::Logger::
 error(const Error& e)
 {
-  this->error(e.what());
+  this->error("%s", e.what());
 }
 
 void libathome_common::Logger::
 fatal(int exit_code, const Error& e)
 {
-  this->fatal(exit_code, e.what());
+  this->fatal(exit_code, "%s", e.what());
 }
 
 /* ***************************************************************  */
