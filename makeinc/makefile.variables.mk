@@ -37,7 +37,7 @@ ifeq (1,$(DEBUG_BUILD))
   CCDEFINES += -DDEBUG
 else
   OPTFLAG := -Ofast
-  DEBUGFLAGS := -g  # Provide debugging symbols in productive builds
+  DEBUGFLAGS := -g  # Also provide debugging symbols in productive builds
   CCDEFINES +=
 endif
 
@@ -70,9 +70,16 @@ CV2PDB_URL := https://ci.appveyor.com/api/projects/rainers/visuald$(\
 PROJECTPATH := ../project
 DOCPATH := ../../doc
 TOOLSPATH := ../../tools
+TRUNKPATH := ../../trunk
 
-DOCHTMLPATH := $(DOCPATH)/$(DOC_OUTDIR)/$(VERSION_THIS)
-DOCLATEXPATH := $(DOCPATH)/$(DOC_OUTDIR)/latex
+LOGO_DOC := logo-doc.640x320.png
+LOGO_110_55 := logo.110x55.png
+LOGO_FAVICON := logo-square-icon.32.ico
+LOGO_FAVICON_LARGE := logo-square-icon.640.png
+
+DOC_OUTPATH := $(DOCPATH)/$(DOC_OUTDIR)
+DOCHTMLPATH := $(DOC_OUTPATH)/$(VERSION_THIS)
+DOCLATEXPATH := $(DOC_OUTPATH)/latex
 
 EBROWSEFILE := BROWSE
 CTAGSFILE := tags

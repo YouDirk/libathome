@@ -138,15 +138,35 @@ else
 	  )s~^\(IMAGE_PATH\).*~\1 =~;$(\
 	  )s~^\(USE_MDFILE_AS_MAINPAGE\).*~\1 = $(DOXYGEN_MDFILE)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) >> $(DOCPATH)/$(DOXYGENFILE)
-  else
+	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
+	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
+  else # ifeq (,$(LIBNAME))
 	@$(SED) -i '$(\
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_LIB)~;$(\
 	  )s~^\(HTML_OUTPUT\).*~\1 = $(VERSION_LIB)~;$(\
+	  )s~^\(PROJECT_LOGO\).*~\1 = ../trunk/$(LOGO_110_55)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE)
-  endif
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
 	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
-endif
+	@echo "Generating '$(DOC_OUTPATH)/default.css'"
+	@$(SED) '$(\
+	)' $(DOCPATH)/default.templ.css > $(DOC_OUTPATH)/default.css
+	@echo "Generating '$(DOC_OUTPATH)/index.html'"
+	@versions=$$(cd $(DOC_OUTPATH); ls -dr [0-9]*); \
+	 linklist=$$(for i in $$versions; do \
+	   printf "<li><a class="version_a" href=\"$$i/index.html\">$(\
+	     )lib@home API $$i</a><br>API Reference Documentation</li>$(\
+	     )\\\\n"; \
+	   done); \
+	 $(SED) '$(\
+	   )s~{LINKLIST}~'"$$linklist"'~;$(\
+	 )' $(DOCPATH)/index.templ.html > $(DOC_OUTPATH)/index.html
+	mkdir -p $(DOC_OUTPATH)/img \
+	  && cp -f $(TRUNKPATH)/$(LOGO_DOC) $(DOC_OUTPATH)/img/ \
+	  && cp -f $(TRUNKPATH)/$(LOGO_FAVICON_LARGE) $(DOC_OUTPATH)/img/
+	cp -f $(TRUNKPATH)/$(LOGO_FAVICON) $(DOC_OUTPATH)/favicon.ico
+  endif # ifeq (,$(LIBNAME))
+endif # ifeq (,$(DOXYGEN_OPT))
 .PHONY: doc-view
 doc-view: doc
 ifeq (,$(BROWSER_OPT))
