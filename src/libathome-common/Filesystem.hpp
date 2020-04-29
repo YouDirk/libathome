@@ -62,11 +62,11 @@ public:
    * occurs.
    *
    * @param path The path (relative or absolute) where to create the
-   *             directory.
+   *             directory
    * @return `true` on success, `false` if directory does already
-   *         exist.
+   *         exist
    * @exception Error will be thrown if an error occurs, such like no
-   *            permission, etc.
+   *            permission, etc
    */
   static bool mkdir(const std::string& path) noexcept(false);
 
