@@ -162,19 +162,27 @@ else
 	   done); \
 	 $(SED) '$(\
 	   )s~{LINKLIST}~'"$$linklist"'~;$(\
+	   )s~{SITE_URL}~$(WEB_SITE_URL)~;$(\
+	   )s~{SITE_NAME}~$(WEB_SITE_NAME)~;$(\
+	   )s~{INDEX_URL}~$(WEB_INDEX_URL)~;$(\
+	   )s~{INDEX_TITLE}~$(WEB_INDEX_TITLE)~;$(\
 	   )s~{PROJECT_URL}~$(WEB_PROJECT_URL)~;$(\
 	   )s~{PROJECT_LINKNAME}~$(WEB_PROJECT_LINKNAME)~;$(\
+	   )s~{PROJECT_DESCR}~$(WEB_PROJECT_DESCR)~;$(\
 	   )s~{BUGS_URL}~$(WEB_BUGS_URL)~;$(\
 	   )s~{BUGS_LINKNAME}~$(WEB_BUGS_LINKNAME)~;$(\
 	   )s~{PROJECTDOC_URL}~$(WEB_PROJECTDOC_URL)~;$(\
 	   )s~{PROJECTDOC_LINKNAME}~$(WEB_PROJECTDOC_LINKNAME)~;$(\
+	   )s~{FAVICON_URL}~$(WEB_FAVICON_URL)~;$(\
+	   )s~{FAVICON_LARGE_URL}~$(WEB_FAVICON_LARGE_URL)~;$(\
 	   )s~{LOGODOC_URL}~$(WEB_LOGODOC_URL)~;$(\
 	 )' $(DOCPATH)/index.templ.html > $(DOC_OUTPATH)/index.html
 	mkdir -p $(DOC_OUTPATH)/$(WEB_IMG_PATH)
 	cp -f $(TRUNKPATH)/$(LOGO_DOC) $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
 	cp -f $(TRUNKPATH)/$(LOGO_FAVICON_LARGE) \
 	  $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
-	cp -f $(TRUNKPATH)/$(LOGO_FAVICON) $(DOC_OUTPATH)/favicon.ico
+	cp -f $(TRUNKPATH)/$(LOGO_FAVICON) \
+	  $(DOC_OUTPATH)/$(WEB_FAVICON_URL)
   endif # ifeq (,$(LIBNAME))
 endif # ifeq (,$(DOXYGEN_OPT))
 .PHONY: doc-view
@@ -204,7 +212,7 @@ _clean-tags:
 	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
 _clean_doc:
 	-rm -rf $(DOCHTMLPATH) $(DOCLATEXPATH)
-	-rmdir --ignore-fail-on-non-empty $(DOCPATH)/$(DOC_OUTDIR)
+	-rmdir $(DOCPATH)/$(DOC_OUTDIR) 2> /dev/null || true
 clean: _clean-deps
 	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(addprefix $(DOCPATH)/,*.bak *~) \
 	  $(addprefix $(TOOLSPATH)/,*.bak *~)

@@ -144,8 +144,17 @@ EBROWSEFLAGS :=
 
 WEB_IMG_PATH := img
 
+WEB_SITE_NAME := lib@home API Reference Documentation
+WEB_SITE_URL := https://youdirk.github.io/libathome-doc
+
+WEB_INDEX_TITLE := lib@home: API Version Index
+WEB_INDEX_URL := $(WEB_SITE_URL)/
+
 WEB_PROJECT_URL := https://github.com/YouDirk/libathome
 WEB_PROJECT_LINKNAME := Project on GitHub
+WEB_PROJECT_DESCR := \
+  lib@home, a framework to develop *@home projects for distributed \
+  calculations.
 
 WEB_BUGS_URL := https://github.com/YouDirk/libathome/issues
 WEB_BUGS_LINKNAME := Bug Tracking
@@ -153,6 +162,8 @@ WEB_BUGS_LINKNAME := Bug Tracking
 WEB_PROJECTDOC_URL := https://github.com/YouDirk/libathome-doc
 WEB_PROJECTDOC_LINKNAME := API Doc Version Control
 
+WEB_FAVICON_URL := favicon.ico
+WEB_FAVICON_LARGE_URL := $(WEB_IMG_PATH)/$(LOGO_FAVICON_LARGE)
 WEB_LOGODOC_URL := $(WEB_IMG_PATH)/$(LOGO_DOC)
 
 # End of Variable definitions of all static stuff
