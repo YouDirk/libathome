@@ -62,20 +62,39 @@ body {
 /* ***************************************************************  */
 
 div#page {
-  border: 2px solid #202020;
-  margin: 20px auto;
   padding: 10px 10px 10px;
   background-color: #60c0ff;
-  max-width: 800px;
   min-width: 420px;
 }
+
+@media (min-width: 1025px) {
+  div#page {
+    border: 2px solid #202020;
+    margin: 20px auto;
+    max-width: 800px;
+  }
+
+  div#footer_div {
+    font-size: 12px;
+  }
+} /* @media (min-width: 1025px)  */
+
 @media (max-width: 1024px) {
   div#page {
     margin: 0px;
     border-style: none;
-    max-width: none;
   }
-}
+
+  div#content_div {
+    font-size: 34px;
+  }
+
+  div#footer_div {
+    font-size: 22px;
+  }
+} /* @media (max-width: 1024px)  */
+
+/* ***************************************************************  */
 
 table#title_table {
 }
@@ -108,7 +127,6 @@ a:hover.version_a {
 
 div#footer_div {
   text-align: center;
-  font-size: 12px;
 }
 div#footer_div a {
   font-weight: bold;
