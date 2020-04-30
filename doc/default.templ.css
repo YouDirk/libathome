@@ -67,12 +67,15 @@ div#page {
   padding: 10px 10px 10px;
   background-color: #60c0ff;
   max-width: 800px;
+  min-width: 420px;
+  width: 650px;
 }
 
 table#title_table {
 }
 table#title_table td {
   padding: 0px 10px 0px 0px;
+  vertical-align: top;
 }
 
 img#title_img {
@@ -104,6 +107,7 @@ div#footer_div {
 div#footer_div a {
   font-weight: bold;
   color: #1050a0;
+  white-space: nowrap;
 }
 div#footer_div a:hover {
   color: #3070c0;
