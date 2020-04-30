@@ -68,7 +68,13 @@ div#page {
   background-color: #60c0ff;
   max-width: 800px;
   min-width: 420px;
-  width: 650px;
+}
+@media (max-width: 1024px) {
+  div#page {
+    margin: 0px;
+    border-style: none;
+    max-width: none;
+  }
 }
 
 table#title_table {
