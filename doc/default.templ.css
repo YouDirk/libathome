@@ -80,9 +80,18 @@ img#title_img {
   height: 80px;
 }
 
+h2#title_h2 {
+  margin: 0px 0px 3px;
+}
+span#titledescr_span {
+  color: #303050;
+  font-style: italic;
+  font-size: 12px;
+}
+
 a.version_a {
   font-weight: bold;
-  color: #f06000;
+  color: #e07000;
 }
 a:hover.version_a {
   color: #ff8000;
