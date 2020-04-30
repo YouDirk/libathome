@@ -30,12 +30,12 @@ li {
 a {
   outline: 0;
 
-  color: #0040b0;
+  color: #7000a0;
   text-decoration: none;
   border-style: none;
 }
 a:hover {
-  color: #0080f0;
+  color: #b000f0;
 }
 
 table {
@@ -82,6 +82,10 @@ img#title_img {
 
 a.version_a {
   font-weight: bold;
+  color: #f06000;
+}
+a:hover.version_a {
+  color: #ff8000;
 }
 
 div#footer_div {
@@ -99,7 +103,7 @@ div#footer_div a:hover {
 div#content_div {
   margin: 10px 0px;
   padding: 10px 20px 10px;
-  background-color: #b0d8ff;
+  background-color: #a0e0ff;
   border: 1px solid #4080a0;
   border-radius: 6px;
 }
