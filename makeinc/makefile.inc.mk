@@ -145,6 +145,8 @@ else
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_LIB)~;$(\
 	  )s~^\(HTML_OUTPUT\).*~\1 = $(VERSION_LIB)~;$(\
 	  )s~^\(PROJECT_LOGO\).*~\1 = ../trunk/$(LOGO_110_55)~;$(\
+	  )s~^\(HAVE_DOT\).*~\1 = $(DOXYGEN_HAVEDOT)~;$(\
+	  )s~^\(GENERATE_LATEX\).*~\1 = $(DOXYGEN_HAVELATEX)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE)
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
 	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
@@ -160,10 +162,18 @@ else
 	   done); \
 	 $(SED) '$(\
 	   )s~{LINKLIST}~'"$$linklist"'~;$(\
+	   )s~{PROJECT_URL}~$(WEB_PROJECT_URL)~;$(\
+	   )s~{PROJECT_LINKNAME}~$(WEB_PROJECT_LINKNAME)~;$(\
+	   )s~{BUGS_URL}~$(WEB_BUGS_URL)~;$(\
+	   )s~{BUGS_LINKNAME}~$(WEB_BUGS_LINKNAME)~;$(\
+	   )s~{PROJECTDOC_URL}~$(WEB_PROJECTDOC_URL)~;$(\
+	   )s~{PROJECTDOC_LINKNAME}~$(WEB_PROJECTDOC_LINKNAME)~;$(\
+	   )s~{LOGODOC_URL}~$(WEB_LOGODOC_URL)~;$(\
 	 )' $(DOCPATH)/index.templ.html > $(DOC_OUTPATH)/index.html
-	mkdir -p $(DOC_OUTPATH)/img \
-	  && cp -f $(TRUNKPATH)/$(LOGO_DOC) $(DOC_OUTPATH)/img/ \
-	  && cp -f $(TRUNKPATH)/$(LOGO_FAVICON_LARGE) $(DOC_OUTPATH)/img/
+	mkdir -p $(DOC_OUTPATH)/$(WEB_IMG_PATH)
+	cp -f $(TRUNKPATH)/$(LOGO_DOC) $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
+	cp -f $(TRUNKPATH)/$(LOGO_FAVICON_LARGE) \
+	  $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
 	cp -f $(TRUNKPATH)/$(LOGO_FAVICON) $(DOC_OUTPATH)/favicon.ico
   endif # ifeq (,$(LIBNAME))
 endif # ifeq (,$(DOXYGEN_OPT))
@@ -174,7 +184,11 @@ ifeq (,$(BROWSER_OPT))
 	  install firefox-esr' for installation. \
 	  $(NL)$(NL)      --> $(DOCHTMLPATH)/index.html$(NL))
 else
+  ifeq (,$(LIBNAME))
 	$(BROWSER_OPT) $(DOCHTMLPATH)/index.html
+  else # ifeq (,$(LIBNAME))
+	$(BROWSER_OPT) $(DOC_OUTPATH)/index.html
+  endif # ifeq (,$(LIBNAME))
 endif
 
 .PHONY: _clean-makecache _clean-deps _clean-tags _clean_doc clean \

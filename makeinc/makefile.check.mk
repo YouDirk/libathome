@@ -181,9 +181,33 @@ DOXYGEN_OPT := $(call _CMD_TEST,doxygen,Doxygen (optional))
 ifeq (,$(DOXYGEN_OPT))
   $(call _CMD_TEST_RESNO,doxygen)
   $(shell echo 'DOXYGEN_OPT =' >> $(_CACHE_FILE))
+
+  # Optional dependency of Doxygen
+  $(shell echo 'DOT_OPT =' >> $(_CACHE_FILE))
+  $(shell echo 'LATEX_OPT =' >> $(_CACHE_FILE))
 else
   $(call _CMD_TEST_RESULT,$(DOXYGEN_OPT))
   $(shell echo 'DOXYGEN_OPT = $(DOXYGEN_OPT)' >> $(_CACHE_FILE))
+
+  # Optional dependency of Doxygen
+  DOT_OPT := $(call _CMD_TEST,dot,Graphviz (optional Doxygen dependency))
+  ifeq (,$(DOT_OPT))
+    $(call _CMD_TEST_RESNO,graphviz)
+    $(shell echo 'DOT_OPT =' >> $(_CACHE_FILE))
+  else
+    $(call _CMD_TEST_RESULT,$(DOT_OPT))
+    $(shell echo 'DOT_OPT = $(DOT_OPT)' >> $(_CACHE_FILE))
+  endif
+
+  # Optional dependency of Doxygen
+  LATEX_OPT := $(call _CMD_TEST,latex,LaTeX (optional Doxygen dependency))
+  ifeq (,$(LATEX_OPT))
+    $(call _CMD_TEST_RESNO,texlive-latex-base)
+    $(shell echo 'LATEX_OPT =' >> $(_CACHE_FILE))
+  else
+    $(call _CMD_TEST_RESULT,$(LATEX_OPT))
+    $(shell echo 'LATEX_OPT = $(LATEX_OPT)' >> $(_CACHE_FILE))
+  endif
 endif
 
 # --------------------------------------------------------------------

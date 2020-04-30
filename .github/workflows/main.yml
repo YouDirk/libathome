@@ -36,7 +36,7 @@ env:
   WORKFL_DOCREPO_PUSHDIR: 'YouDirk/libathome-doc'
   WORKFL_COMMIT_EMAIL:    'bot-libathome@users.noreply.github.com'
   WORKFL_COMMIT_NAME:     'Bot'
-  WORKFL_COMMIT_MSG:      '[auto] Updating API Reference Documentation'
+  WORKFL_COMMIT_MSG:      '[auto] Updating API Reference'
 
 # Jobs are running in parallel
 jobs:

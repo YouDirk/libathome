@@ -61,6 +61,20 @@ else
   VERSION_THIS := $(PROJECT_VERSION)
 endif
 
+# Does shell command 'dot' exist?
+ifeq (,$(DOT_OPT))
+  DOXYGEN_HAVEDOT := NO
+else
+  DOXYGEN_HAVEDOT := YES
+endif
+
+# Does shell command 'latex' exist?
+ifeq (,$(LATEX_OPT))
+  DOXYGEN_HAVELATEX := NO
+else
+  DOXYGEN_HAVELATEX := YES
+endif
+
 CV2PDB := cv2pdb.exe
 CV2PDB_URL := https://ci.appveyor.com/api/projects/rainers/visuald$(\
   )/artifacts/cv2pdb.exe?job=Environment%3A%20os%3DVisual%20Studio$(\
@@ -124,6 +138,22 @@ TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 CTAGSFLAGS :=
 ETAGSFLAGS :=
 EBROWSEFLAGS :=
+
+# ********************************************************************
+# Web URL stuff
+
+WEB_IMG_PATH := img
+
+WEB_PROJECT_URL := https://github.com/YouDirk/libathome
+WEB_PROJECT_LINKNAME := Project on GitHub
+
+WEB_BUGS_URL := https://github.com/YouDirk/libathome/issues
+WEB_BUGS_LINKNAME := Bug Tracking
+
+WEB_PROJECTDOC_URL := https://github.com/YouDirk/libathome-doc
+WEB_PROJECTDOC_LINKNAME := API Doc Version Control
+
+WEB_LOGODOC_URL := $(WEB_IMG_PATH)/$(LOGO_DOC)
 
 # End of Variable definitions of all static stuff
 # ********************************************************************
