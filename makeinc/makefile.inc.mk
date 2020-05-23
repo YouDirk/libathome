@@ -138,8 +138,6 @@ else
 	  )s~^\(IMAGE_PATH\).*~\1 =~;$(\
 	  )s~^\(USE_MDFILE_AS_MAINPAGE\).*~\1 = $(DOXYGEN_MDFILE)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE_LIB) >> $(DOCPATH)/$(DOXYGENFILE)
-	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
-	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
   else # ifeq (,$(LIBNAME))
 	@$(SED) -i '$(\
 	  )s~^\(PROJECT_NUMBER\).*~\1 = $(VERSION_LIB)~;$(\
@@ -148,8 +146,11 @@ else
 	  )s~^\(HAVE_DOT\).*~\1 = $(DOXYGEN_HAVEDOT)~;$(\
 	  )s~^\(GENERATE_LATEX\).*~\1 = $(DOXYGEN_HAVELATEX)~;$(\
 	  )' $(DOCPATH)/$(DOXYGENFILE)
+  endif # ifeq (,$(LIBNAME))
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
-	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE)
+	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE) 3>&1 2>&1 >&3 \
+	  | $(SED) -n "/\\.md:.*'.home'/!p" >&2
+  ifneq (,$(LIBNAME))
 	@echo "Generating '$(DOC_OUTPATH)/default.css'"
 	@$(SED) '$(\
 	)' $(DOCPATH)/default.templ.css > $(DOC_OUTPATH)/default.css
@@ -183,7 +184,7 @@ else
 	  $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
 	cp -f $(TRUNKPATH)/$(LOGO_FAVICON) \
 	  $(DOC_OUTPATH)/$(WEB_FAVICON_URL)
-  endif # ifeq (,$(LIBNAME))
+  endif # ifneq (,$(LIBNAME))
 endif # ifeq (,$(DOXYGEN_OPT))
 .PHONY: doc-view
 doc-view: doc
@@ -211,14 +212,15 @@ _clean-deps:
 _clean-tags:
 	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
 _clean_doc:
-	-rm -rf $(DOCHTMLPATH) $(DOCLATEXPATH)
+	-rm -rf $(DOCHTMLPATH) $(DOCLATEXPATH) $(DOCRTFPATH) \
+	  $(DOCMANPATH) $(DOCXMLPATH) $(DOCDOCBOOKPATH)
 	-rmdir $(DOCPATH)/$(DOC_OUTDIR) 2> /dev/null || true
 clean: _clean-deps
 	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(addprefix $(DOCPATH)/,*.bak *~) \
 	  $(addprefix $(TOOLSPATH)/,*.bak *~)
 # Compiling library?
 ifneq (,$(LIBNAME))
-	$(TOUCH) $(MAIN_HEADER)
+	$(TOUCH) $(MAIN_HEADER_TEMPL)
 endif
 clean-all: clean _clean-tags _clean_doc _clean-makecache
 	-rm -rf *.$(PDBEXT) $(OUTPUT) $(TOOLSPATH)
@@ -269,9 +271,9 @@ $(OUTPUT): $(OBJFILES) $(TOOLSPATH)/$(CV2PDB)
 	$(TOOLSPATH)/$(CV2PDB) $@ 2> /dev/null || true
 else
 $(OUTPUT): $(OBJFILES)
-ifneq (,$(OS_IS_WIN))
+  ifneq (,$(OS_IS_WIN))
 	-rm -f *.$(PDBEXT)
-endif
+  endif
 	$(LD) $(LDFLAGS) -o $@ $(OBJFILES) $(addprefix -l,$(LIBS))
 endif
 
@@ -289,7 +291,7 @@ endif
 
 # Compiling library?
 ifneq (,$(LIBNAME))
-../$(MAIN_HEADER): $(MAIN_HEADER) $(HFILES)
+../$(MAIN_HEADER): $(MAIN_HEADER_TEMPL) $(HFILES)
 	@echo "Generating $@ from $<"
 	@$(SED) \
 	  's/^#error.*$$/$(patsubst %,\n#include "$(LIBNAME)\/%",$^)/' \

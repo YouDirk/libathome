@@ -18,6 +18,16 @@
 # ********************************************************************
 # Variable definitions of all static stuff
 
+CEXT := cpp
+HEXT := hpp
+SEXT := S
+OEXT := o
+DEPEXT := d
+LOGEXT := log
+PDBEXT := pdb
+
+# --------------------------------------------------------------------
+
 # Not Windows! :P
 ifeq (,$(OS_IS_WIN))
   SOEXT := so
@@ -47,7 +57,8 @@ VERSION_LIB := \
 # Compiling library?
 ifneq (,$(LIBNAME))
   OUTPUT := $(LIBNAME).$(SOEXT)
-  MAIN_HEADER := $(LIBNAME).hpp
+  MAIN_HEADER := $(LIBNAME).$(HEXT)
+  MAIN_HEADER_TEMPL := $(LIBNAME).templ.$(HEXT)
   FPICFLAGS := -fPIC -DPIC
   SHAREDFLAGS += -shared
   DOC_OUTDIR := libathome
@@ -55,6 +66,7 @@ ifneq (,$(LIBNAME))
 else
   OUTPUT := $(PROJECT_EXECNAME)-client$(DOT_BINEXT)
   MAIN_HEADER :=
+  MAIN_HEADER_TEMPL :=
   FPICFLAGS :=
   SHAREDFLAGS +=
   DOC_OUTDIR := project
@@ -75,6 +87,8 @@ else
   DOXYGEN_HAVELATEX := YES
 endif
 
+# --------------------------------------------------------------------
+
 CV2PDB := cv2pdb.exe
 CV2PDB_URL := https://ci.appveyor.com/api/projects/rainers/visuald$(\
   )/artifacts/cv2pdb.exe?job=Environment%3A%20os%3DVisual%20Studio$(\
@@ -94,6 +108,10 @@ LOGO_FAVICON_LARGE := logo-square-icon.640.png
 DOC_OUTPATH := $(DOCPATH)/$(DOC_OUTDIR)
 DOCHTMLPATH := $(DOC_OUTPATH)/$(VERSION_THIS)
 DOCLATEXPATH := $(DOC_OUTPATH)/latex
+DOCRTFPATH := $(DOC_OUTPATH)/rtf
+DOCMANPATH := $(DOC_OUTPATH)/man
+DOCXMLPATH := $(DOC_OUTPATH)/xml
+DOCDOCBOOKPATH := $(DOC_OUTPATH)/docbook
 
 EBROWSEFILE := BROWSE
 CTAGSFILE := tags
@@ -105,14 +123,6 @@ MAKEFILEZ := $(addprefix ../../makeinc/, \
   ../makefile.config.mk makefile.inc.mk makefile.inc-global.mk \
   makefile.check.mk makefile.variables.mk) Makefile ../Makefile \
   ../../Makefile
-
-CEXT := cpp
-HEXT := hpp
-SEXT := S
-OEXT := o
-DEPEXT := d
-LOGEXT := log
-PDBEXT := pdb
 
 OBJFILES := $(OBJ:=.$(OEXT))
 DEPFILES := $(OBJ:=.$(DEPEXT))

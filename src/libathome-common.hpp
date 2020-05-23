@@ -25,7 +25,7 @@
  * CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM !
  */
 
-#include "libathome-common/libathome-common.hpp" 
+#include "libathome-common/libathome-common.templ.hpp" 
 #include "libathome-common/Common.hpp" 
 #include "libathome-common/Error.hpp" 
 #include "libathome-common/RealtimeClock.hpp" 
