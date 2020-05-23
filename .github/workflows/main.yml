@@ -68,7 +68,6 @@ jobs:
         msystem: MINGW64
         path-type: strict
         update: false
-#        update: true
     - name: Installing toolchain...
       run: msys2do pacman -S --noconfirm msys/make wget
                    mingw64/mingw-w64-x86_64-gcc

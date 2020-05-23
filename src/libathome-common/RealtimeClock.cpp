@@ -19,6 +19,8 @@
 #include "libathome-common/RealtimeClock.hpp"
 #include "libathome-common/Error.hpp"
 
+#include <cerrno>
+
 
 const char* libathome_common::RealtimeClock::
 to_string(RealtimeClock::timezone_t timezone)
@@ -40,8 +42,10 @@ RealtimeClock() noexcept(false)
 libathome_common::RealtimeClock::
 RealtimeClock(RealtimeClock::timezone_t timezone) noexcept(false)
 {
-  if (0 > ::time(&this->timestamp))
-    throw Err("Could not fetch time from system RTC!");
+  if (0 > ::time(&this->timestamp)) {
+    throw Err("Could not fetch time from system RTC: %s!",
+              ::strerror(errno));
+  }
 
   this->set_timezone(timezone);
 }
@@ -76,10 +80,10 @@ set_timezone(RealtimeClock::timezone_t timezone) noexcept(false)
 
   switch (this->timezone) {
   case timezone_t::utc_e:
-    timestruct_result = ::gmtime_r(&timestamp, &this->timestruct);
+    timestruct_result = ::gmtime_r(&this->timestamp, &this->timestruct);
     break;
   case timezone_t::local_e:
-    timestruct_result = ::localtime_r(&timestamp, &this->timestruct);
+    timestruct_result = ::localtime_r(&this->timestamp, &this->timestruct);
     break;
   }
 
@@ -89,18 +93,20 @@ set_timezone(RealtimeClock::timezone_t timezone) noexcept(false)
 
   switch (this->timezone) {
   case timezone_t::utc_e:
-    timestruct_result = ::gmtime_s(&this->timestruct, &timestamp);
+    timestruct_result = ::gmtime_s(&this->timestruct, &this->timestamp);
     break;
   case timezone_t::local_e:
-    timestruct_result = ::localtime_s(&this->timestruct, &timestamp);
+    timestruct_result = ::localtime_s(&this->timestruct, &this->timestamp);
     break;
   }
 
   bool iserror = timestruct_result != 0;
 #endif /* #ifndef OSWIN  */
 
-  if (iserror)
-    throw Err("Could not convert unix timestamp to struct!");
+  if (iserror) {
+    throw Err("Could not convert unix timestamp to struct: %s!",
+              ::strerror(errno));
+  }
 }
 
 libathome_common::RealtimeClock::timezone_t

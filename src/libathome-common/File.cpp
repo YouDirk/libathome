@@ -76,7 +76,7 @@ open(File::access_t mode) noexcept(false)
     return;
   }
 
-  /* Don't Log here, only throw exceptions.  It's part of writing log!
+  /* Don't Log here, just throw exceptions.  It's part of writing log!
    */
   if (this->mode == File::access_t::write_e ||
       this->mode == File::access_t::append_e) {
