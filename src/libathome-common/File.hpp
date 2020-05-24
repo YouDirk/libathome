@@ -18,6 +18,10 @@
 
 #ifndef LIBATHOME_COMMON_FILE_H__
 #define LIBATHOME_COMMON_FILE_H__
+/**
+ * @file
+ * @brief Declares the class libathome_common::File.
+ */
 
 #include "libathome-common/Common.hpp"
 

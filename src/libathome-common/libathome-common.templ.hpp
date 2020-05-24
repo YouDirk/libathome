@@ -18,6 +18,10 @@
 
 #ifndef LIBATHOME_COMMON_H__
 #define LIBATHOME_COMMON_H__
+/**
+ * @file
+ * @brief Includes all header files from directory `libathome-common`.
+ */
 
 /* This file was generated using MAKE during compiling
  * LIBATHOME-COMMON.SO ...

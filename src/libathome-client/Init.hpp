@@ -18,6 +18,27 @@
 
 #ifndef LIBATHOME_CLIENT_INIT_H__
 #define LIBATHOME_CLIENT_INIT_H__
+/**
+ * @file
+ * @brief Documentation of libathome_client and declares the class
+ *        libathome_client::Init.
+ *
+ * @dir
+ * @brief Holds all files for namespace libathome_client.
+ *
+ * Include libathome-client.hpp (*implicitly includes
+ * libathome-common.hpp*) to use all header files in this directory
+ * and thereby all the classes using the namespace libathome_client
+ * which represents the API of `libathome-client.so` or
+ * `libathome-client.dll`.
+ *
+ * ```cpp
+ * // Incudes all files from directory 'libathome-client/' and implicitly
+ * // 'libathome-common/'
+ *
+ * #include <libathome-client.hpp>
+ * ```
+ */
 
 #include <libathome-common.hpp>
 
@@ -30,7 +51,7 @@
  * client-side code.
  *
  * You need to `#include` it directly by `#include
- * <libathome-client.hpp>`.  `libathome-common.hpp` will be implicit
+ * <libathome-client.hpp>`.  `libathome-common.hpp` will be implicitly
  * included, and depending on your system you need to tell the
  * compiler the correct **include path**, typically using the C++
  * compiler flag `-I/path/to/include`.  Additionally you need to tell
@@ -84,7 +105,7 @@ namespace libathome_client
  * one of first things in your `int main(int argc, char** argv)`
  * function.  Use Common::get() (or Init::get()) static method to get
  * the singleton instance from anywhere in your program.  Also
- * implicit includes STL stuff, stdlibs, etc.
+ * implicitly includes STL stuff, stdlibs, etc.
  */
 class Init: public libathome_common::Common
 {

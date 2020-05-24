@@ -18,6 +18,10 @@
 
 #ifndef LIBATHOME_COMMON_FILESYSTEM_H__
 #define LIBATHOME_COMMON_FILESYSTEM_H__
+/**
+ * @file
+ * @brief Declares the class libathome_common::Filesystem.
+ */
 
 #include "libathome-common/Common.hpp"
 

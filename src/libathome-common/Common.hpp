@@ -18,6 +18,25 @@
 
 #ifndef LIBATHOME_COMMON_COMMON_H__
 #define LIBATHOME_COMMON_COMMON_H__
+/**
+ * @file
+ * @brief Documentation of libathome_common and declares the class
+ *        libathome_common::Common.
+ *
+ * @dir
+ * @brief Holds all files for namespace libathome_common.
+ *
+ * Include libathome-common.hpp to use all header files in this
+ * directory and thereby all the classes using the namespace
+ * libathome_common which represents the API of `libathome-common.so`
+ * or `libathome-common.dll`.
+ *
+ * ```cpp
+ * // Incudes all files from directory 'libathome-common/'
+ *
+ * #include <libathome-common.hpp>
+ * ```
+ */
 
 #include <cstdio>   /* Same as <stdio.h>  */
 #include <cstdarg>  /* Same as <stdarg.h>  */
@@ -30,10 +49,13 @@
 
 /* C++ compiler depending stuff
  */
+
+/// @cond Doxygen_Suppress
 #ifndef __GNUC__
 #  /* GNU extension  */
 #  define __attribute__(x)
 #endif /* ifdef __GNUC__  */
+/// @endcond
 
 
 /**
@@ -44,7 +66,7 @@
  * both: server-side code and client-side code.
  *
  * You don't need to `#include` it directly, because it will be
- * implicit included by `#include <libathome-client.hpp>` and
+ * implicitly included by `#include <libathome-client.hpp>` and
  * `#include <libathome-server.hpp>`.  But depending on your system
  * you need to tell the compiler the correct **include path**,
  * typically using the C++ compiler flag `-I/path/to/include`.
@@ -111,7 +133,7 @@ typedef char                       string_t[STRING_LEN];
  * Just one instance per process must exitst. To instantiate it use
  * libathome_client::Init() or libathome_server::Init() constructor.
  * Use Common::get() static method to get the singleton instance from
- * anywhere in your program.  Also implicit includes STL stuff,
+ * anywhere in your program.  Also implicitly includes STL stuff,
  * stdlibs, etc ...
  */
 class Common

@@ -18,6 +18,10 @@
 
 #ifndef LIBATHOME_COMMON_REALTIMECLOCK_H__
 #define LIBATHOME_COMMON_REALTIMECLOCK_H__
+/**
+ * @file
+ * @brief Declares the class libathome_common::RealtimeClock.
+ */
 
 #include "libathome-common/Common.hpp"
 

@@ -18,6 +18,10 @@
 
 #ifndef LIBATHOME_COMMON_ERROR_H__
 #define LIBATHOME_COMMON_ERROR_H__
+/**
+ * @file
+ * @brief Declares the class libathome_common::Error.
+ */
 
 #include "libathome-common/Common.hpp"
 
@@ -25,13 +29,42 @@
 
 /* Debugging stuff
  */
+
+/// @cond Doxygen_Suppress
 #ifdef DEBUG
 #define _ERROR_BT                  true
 #else
 #define _ERROR_BT                  false
 #endif /* ifdef DEBUG  */
+/// @endcond
 
 /* C++ compiler depending stuff
+ */
+
+/**
+ * **Constructor** macro to `throw` an libathome_common::Error.
+ *
+ * It automatically provides some parameters to
+ * libathome_common::Error::Error() so that the
+ * libathome_common::Error::what() message includes the **method
+ * name** of the throwing method and optionally (depending on `DEBUG`)
+ * a **backtrace**.
+ *
+ * **Example**
+ * ```cpp
+ * try {
+ *
+ *   ...
+ *
+ *   if (error_case)
+ *     throw Err("This is an %s message!", "error");
+ *
+ *   ...
+ *
+ * } catch (Error& e) {
+ *   Log->error(e);
+ * }
+ * ```
  */
 #ifdef __GNUC__
 #  /* GNU extension  */
@@ -52,15 +85,16 @@ namespace libathome_common
 {
 
 /**
- * Base class to `throw` excpetions.
+ * Base class to `throw` excpetions, using ::Err() macro.
  *
  * Inherit from this class to implement your exception.  So we can
  * `catch (libathome_common::Error& e) {}` all exceptions in one
  * statement.
  *
- * To `throw` this class, use the macro `throw Err("error message!");`
- * defined in libathome-common/Error.hpp.  This makes sure that the
- * `Class::method()` name is included in the Error::what() message.
+ * To `throw` this class, use the ::Err() macro `throw Err("error
+ * message!");` defined in libathome-common/Error.hpp.  This makes
+ * sure that the `Class::method()` name is included in the
+ * Error::what() message.
  *
  * This class does also provides a `backtrace` functionality.  The
  * backtrace will be automatically added to Error::what(), if debug
@@ -74,7 +108,7 @@ namespace libathome_common
  *   ...
  *
  *   if (error_case)
- *     throw Err("This is an %s message!", "error");
+ *     throw ::Err("This is an %s message!", "error");
  *
  *   ...
  *
@@ -87,23 +121,23 @@ class Error: public std::runtime_error
 {
 public:
   /**
-   * Instance it via `throw Err("error %s!", "message");`
+   * Instance it via `throw ::Err("error %s!", "message");`
    *
    * See libathome_common::Error for an example.
    *
-   * @param _backtrace_append Automatic filled by `Err()` macro
-   * @param _pretty_func Automatic filled by `Err()` macro
+   * @param _backtrace_append Automatically filled by `::Err()` macro
+   * @param _pretty_func Automatically filled by `::Err()` macro
    * @param reason_fmt `printf()`-like error message
    */
   explicit Error(bool _backtrace_append, const char* _pretty_func,
     const std::string& reason_fmt, ...);
   /**
-   * Instance it via `throw Err("error %s!", "message");`
+   * Instance it via `throw ::Err("error %s!", "message");`
    *
    * See libathome_common::Error for an example.
    *
-   * @param _backtrace_append Automatic filled by `Err()` macro
-   * @param _pretty_func Automatic filled by `Err()` macro
+   * @param _backtrace_append Automatically filled by `::Err()` macro
+   * @param _pretty_func Automatically filled by `::Err()` macro
    * @param reason_fmt `printf()`-like error message
    */
   explicit Error(bool _backtrace_append, const char* _pretty_func,

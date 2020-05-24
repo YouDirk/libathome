@@ -18,12 +18,19 @@
 
 #ifndef LIBATHOME_CLIENT_H__
 #define LIBATHOME_CLIENT_H__
+/**
+ * @file
+ * @brief Includes all header files from directory `libathome-client`
+ *        (*and `libathome-common`*).
+ */
 
 /* This file was generated using MAKE during compiling
  * LIBATHOME-CLIENT.SO ...
  *
  * CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM !
  */
+
+#include <libathome-common.hpp>
 #error "This is a template header file! DO NOT INCLUDE!"
 
 #endif /* LIBATHOME_CLIENT_H__  */

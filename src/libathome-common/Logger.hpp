@@ -18,6 +18,10 @@
 
 #ifndef LIBATHOME_COMMON_LOGGER_H__
 #define LIBATHOME_COMMON_LOGGER_H__
+/**
+ * @file
+ * @brief Declares the class libathome_common::Logger.
+ */
 
 #include "libathome-common/Common.hpp"
 #include "libathome-common/RealtimeClock.hpp"
