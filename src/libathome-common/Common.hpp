@@ -106,30 +106,47 @@ const unsigned STRING_LEN          = 256;
 typedef char                       string_t[STRING_LEN];
 
 /**
- * Initialisator class, needed for everything :P
+ * Abstract singleton initialisator class, needed for everything :P
  *
- * Also implicit includes STL stuff, stdlibs, etc ...
+ * Just one instance per process must exitst. To instantiate it use
+ * libathome_client::Init() or libathome_server::Init() constructor.
+ * Use Common::get() static method to get the singleton instance from
+ * anywhere in your program.  Also implicit includes STL stuff,
+ * stdlibs, etc ...
  */
 class Common
 {
 public:
+
+  /**
+   * Singleton getter.
+   *
+   * @return The only one instance of this singleton, otherwise `NULL`
+   */
+  static Common* get();
+
   /**
    * Initialisator which test for API Version compatibility,
    * initializes all singletons, etc.
    *
    * @param argc Pass the first parameter of `int main(int argc, char**
    *             argv)` here
-   *
    * @param argv Pass the second parameter of `int main(int argc, char**
    *             argv)` here
+   * @exception Error will be thrown if this process does already
+   *            instanced a class of type libathome_common::Common
    */
-  explicit Common(int argc, char** argv);
+  explicit Common(int argc, char** argv) noexcept(false);
   /**
    * Bye bye, free memory and let forget all.
    */
   virtual ~Common();
 
 private:
+  virtual void _abstract_class() = 0;
+
+  static Common* instance;
+
   std::string* hello;
 
 }; /* class Common  */

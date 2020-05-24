@@ -20,9 +20,25 @@
 #include "libathome-common/Logger.hpp"
 
 
+libathome_common::Common*
+libathome_common::Common::instance = NULL;
+
+libathome_common::Common* libathome_common::Common::
+get()
+{
+  return Common::instance;
+}
+
 libathome_common::Common::
 Common(int argc, char** argv)
 {
+  if (Common::instance != NULL) {
+    throw Err(
+      "An instance of libathome_common::Common does already exist at"
+      " %p!  Use Common::get() instead?", Common::instance);
+  }
+  Common::instance = this;
+
 #ifndef DEBUG
   libathome_common::Log = new Logger(
     Logger::loglevel_t::info_e, RealtimeClock::timezone_t::local_e,
@@ -54,4 +70,6 @@ libathome_common::Common::
   delete this->hello;
 
   delete libathome_common::Log;
+
+  Common::instance = NULL;
 }

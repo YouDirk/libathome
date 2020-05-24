@@ -21,6 +21,8 @@
 using namespace libathome_common;
 
 
+void libathome_client::Init::_abstract_class() { }
+
 libathome_client::Init::
 Init(int argc, char** argv)
   :Common(argc, argv)
@@ -32,4 +34,12 @@ libathome_client::Init::
 ~Init()
 {
 
+}
+
+libathome_client::Init* libathome_client::Init::
+get()
+{
+  Common* common = Common::get();
+
+  return dynamic_cast<Init*>(common);
 }

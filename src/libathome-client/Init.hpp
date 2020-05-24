@@ -78,29 +78,44 @@ namespace libathome_client
 {
 
 /**
- * Initialisator class, needed for everything :P
+ * Singleton initialisator class, needed for everything :P
  *
- * Also implicit includes STL stuff, stdlibs, etc ...
+ * Just one instance per process must exitst.  Instantiation should be
+ * one of first things in your `int main(int argc, char** argv)`
+ * function.  Use Common::get() (or Init::get()) static method to get
+ * the singleton instance from anywhere in your program.  Also
+ * implicit includes STL stuff, stdlibs, etc.
  */
 class Init: public libathome_common::Common
 {
 public:
+
+  /**
+   * Singleton getter.
+   *
+   * @return The only one instance of this singleton, otherwise `NULL`
+   */
+  static Init* get();
+
   /**
    * Initialisator which test for API Version compatibility,
    * initializes all singletons, etc.
    *
    * @param argc Pass the first parameter of `int main(int argc, char**
    *             argv)` here
-   *
    * @param argv Pass the second parameter of `int main(int argc, char**
    *             argv)` here
+   * @exception Error will be thrown if this process does already
+   *            instanced a class of type libathome_common::Common
    */
-  explicit Init(int argc, char** argv);
+  explicit Init(int argc, char** argv) noexcept(false);
   /**
    * Bye bye, free memory and let forget all.
    */
   virtual ~Init();
 
+private:
+  virtual void _abstract_class() override;
 }; /* class Init  */
 
 } /* namespace libathome_client  */
