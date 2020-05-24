@@ -146,7 +146,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void debug(const char* fmt, ...)
-    __attribute__ ((format (printf, 2, 3)));
+    __attribute__((format (printf, 2, 3)));
   /**
    * Write info output into log file.
    *
@@ -154,7 +154,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void info(const char* fmt, ...)
-    __attribute__ ((format (printf, 2, 3)));
+    __attribute__((format (printf, 2, 3)));
   /**
    * Write warning output into log file.
    *
@@ -162,7 +162,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void warn(const char* fmt, ...)
-    __attribute__ ((format (printf, 2, 3)));
+    __attribute__((format (printf, 2, 3)));
   /**
    * Write ERROR output into log file.
    *
@@ -170,7 +170,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void error(const char* fmt, ...)
-    __attribute__ ((format (printf, 2, 3)));
+    __attribute__((format (printf, 2, 3)));
   /**
    * Write FATAL ERROR output into log file and `exit()`.
    *
@@ -179,7 +179,7 @@ public:
    * @param ... Arguments of `fmt` string
    */
   virtual void fatal(int exit_code, const char* fmt, ...)
-    __attribute__ ((format (printf, 3, 4)));
+    __attribute__((format (printf, 3, 4)));
 
   /* -------------------------------------------------------------  */
 

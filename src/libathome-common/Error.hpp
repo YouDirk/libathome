@@ -87,7 +87,7 @@ class Error: public std::runtime_error
 {
 public:
   /**
-   * Instance it via `throw Err("error message!");`
+   * Instance it via `throw Err("error %s!", "message");`
    *
    * See libathome_common::Error for an example.
    *
@@ -98,7 +98,7 @@ public:
   explicit Error(bool _backtrace_append, const char* _pretty_func,
     const std::string& reason_fmt, ...);
   /**
-   * Instance it via `throw Err("error message!");`
+   * Instance it via `throw Err("error %s!", "message");`
    *
    * See libathome_common::Error for an example.
    *
@@ -107,7 +107,7 @@ public:
    * @param reason_fmt `printf()`-like error message
    */
   explicit Error(bool _backtrace_append, const char* _pretty_func,
-    const char* reason_fmt, ...) __attribute__ ((format (printf, 4, 5)));
+    const char* reason_fmt, ...) __attribute__((format (printf, 4, 5)));
 
   /**
    * Default destructor.
@@ -180,18 +180,18 @@ private:
   int backtrace_size;
 
   /**
-   * `__attribute__ ((noinline))` makes sure that
+   * `__attribute__((noinline))` makes sure that
    * Error::BACKTRACE_OFFSET is set correct.
    */
   void _init(bool _backtrace_append,
     const char* _pretty_func, const std::string& reason_fmt, va_list ap)
-    __attribute__ ((noinline));
+    __attribute__((noinline));
 
   /**
-   * `__attribute__ ((noinline))` makes sure that
+   * `__attribute__((noinline))` makes sure that
    * Error::BACKTRACE_OFFSET is set correct.
    */
-  int _backtrace(void** buffer, int size) __attribute__ ((noinline));
+  int _backtrace(void** buffer, int size) __attribute__((noinline));
 
   /**
    * The result must be `free()`, usally in destructor `~Error()`!

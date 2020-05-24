@@ -113,7 +113,7 @@ tags-ebrowse: $(EBROWSEFILE)
 tags-all: tags-ctags tags-etags tags-ebrowse
 
 .PHONY: doc
-doc: _clean_doc
+doc: clean-doc
 ifeq (,$(DOXYGEN_OPT))
 	$(error $(ERRB) DOXYGEN command not found!  Try '$$> apt-get \
 	  install doxygen' for installation.  Or use MSYS2 command \
@@ -200,7 +200,7 @@ else
   endif # ifeq (,$(LIBNAME))
 endif
 
-.PHONY: _clean-makecache _clean-deps _clean-tags _clean_doc clean \
+.PHONY: _clean-makecache _clean-deps _clean-tags clean-doc clean \
         clean-all _clean-all-recursive
 # _CLEAN_MAKECACHE must be the last one in the dependency list,
 # because it will be regenerated during recursive CLEAN calls
@@ -211,10 +211,16 @@ _clean-deps:
 	-rm -f *.$(DEPEXT)
 _clean-tags:
 	-rm -f $(CTAGSFILE) $(ETAGSFILE) $(EBROWSEFILE)
-_clean_doc:
+clean-doc:
 	-rm -rf $(DOCHTMLPATH) $(DOCLATEXPATH) $(DOCRTFPATH) \
 	  $(DOCMANPATH) $(DOCXMLPATH) $(DOCDOCBOOKPATH)
 	-rmdir $(DOCPATH)/$(DOC_OUTDIR) 2> /dev/null || true
+# Compiling library?
+ifneq (,$(LIBNAME))
+	-rm -rf $(addprefix $(DOC_OUTPATH)/, \
+	  default.css index.html $(WEB_IMG_PATH) $(WEB_FAVICON_URL))
+endif
+
 clean: _clean-deps
 	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(addprefix $(DOCPATH)/,*.bak *~) \
 	  $(addprefix $(TOOLSPATH)/,*.bak *~)
@@ -222,9 +228,9 @@ clean: _clean-deps
 ifneq (,$(LIBNAME))
 	$(TOUCH) $(MAIN_HEADER_TEMPL)
 endif
-clean-all: clean _clean-tags _clean_doc _clean-makecache
+clean-all: clean _clean-tags _clean-makecache
 	-rm -rf *.$(PDBEXT) $(OUTPUT) $(TOOLSPATH)
-_clean-all-recursive: clean _clean-tags _clean_doc
+_clean-all-recursive: clean _clean-tags
 	-rm -rf *.$(PDBEXT) $(OUTPUT)
 
 %.$(DEPEXT): %.$(CEXT)

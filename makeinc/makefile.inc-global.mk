@@ -40,8 +40,8 @@ tags-ctags tags-etags tags-ebrowse tags-all:
 	$(MAKE) -C $(LIBCLIENTPATH_ROOT) $@
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 
-.PHONY: doc doc-view
-doc doc-view:
+.PHONY: doc doc-view clean-doc
+doc doc-view clean-doc:
 	$(MAKE) -C $(LIBCOMMONPATH_ROOT) $@
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 
@@ -54,5 +54,6 @@ clean:
 clean-all:
 	$(MAKE) -C $(LIBCOMMONPATH_ROOT) _$@-recursive
 	$(MAKE) -C $(LIBCLIENTPATH_ROOT) _$@-recursive
+	$(MAKE) -C $(PROJECTPATH_ROOT) clean-doc
 	$(MAKE) -C $(PROJECTPATH_ROOT) $@
 	rm -rf *.bak *~ $(CLEAN_FILES) $(CLEAN_ALL_FILES)
