@@ -124,8 +124,8 @@ public:
    * @param ... Arguments of `fmt` string
    * @exception Error will be thrown if writing to file has failed
    */
-  virtual void printf(const char* fmt, ...)
-    const noexcept(false) __attribute__((format (printf, 2, 3)));
+  virtual void printf(const char* fmt, ...) const noexcept(false)
+    __attribute__((format (printf, 2, 3)));
   /**
    * Write string to file.
    *

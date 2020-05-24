@@ -126,8 +126,10 @@ public:
   static Common* get();
 
   /**
-   * Initialisator which test for API Version compatibility,
-   * initializes all singletons, etc.
+   * **Abstract** initialisator which test for API Version
+   * compatibility, initializes all singletons, etc.
+   *
+   * See libathome_common::Common for more details.
    *
    * @param argc Pass the first parameter of `int main(int argc, char**
    *             argv)` here

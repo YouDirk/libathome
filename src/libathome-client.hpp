@@ -25,7 +25,6 @@
  * CHANGES WILL BE OVERRIDDEN BY BUILD SYSTEM !
  */
 
-#include "libathome-client/libathome-client.templ.hpp" 
 #include "libathome-client/Init.hpp"
 
 #endif /* LIBATHOME_CLIENT_H__  */

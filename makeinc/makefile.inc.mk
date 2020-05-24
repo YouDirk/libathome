@@ -127,7 +127,7 @@ else
 	  > $(DOCPATH)/$(DOXYGENFILE); \
 	$(SED) '$(\
 	  )s~^\(OUTPUT_DIRECTORY\).*~\1 = $(DOC_OUTDIR)~;$(\
-	  )s~\(\.\./src\)/[^ ]\+~\1/$(DOC_OUTDIR)~;$(\
+	  )s~\(\.\./src\)[/ $$][^ ]*~\1/$(DOC_OUTDIR)~;$(\
 	  )s~^\(STRIP_FROM_INC_PATH\).*~\1 =~;$(\
 	  )s~^ \+\.\. *$$~~;$(\
 	  )s~^\(PROJECT_NAME\).*~\1 = "$(PROJECT_NAME)"~;$(\
@@ -299,9 +299,8 @@ endif
 ifneq (,$(LIBNAME))
 ../$(MAIN_HEADER): $(MAIN_HEADER_TEMPL) $(HFILES)
 	@echo "Generating $@ from $<"
-	@$(SED) \
-	  's/^#error.*$$/$(patsubst %,\n#include "$(LIBNAME)\/%",$^)/' \
-	  $< > $@
+	@$(SED) 's/^#error.*$$/$(patsubst \
+	    %,\n#include "$(LIBNAME)\/%",$(HFILES))/' $< > $@
 endif
 
 .PHONY: _cache
