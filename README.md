@@ -34,7 +34,7 @@ current progress of development
 * <b>lib@home Bug Tracking</b>  
   https://github.com/YouDirk/libathome/issues
 
-* <b>Donate/Sponsor</b>  
+* <b>lib@home Donate/Sponsor</b>  
   [![Donate/Sponsor][sponsor-pic]][sponsor-link]
   https://github.com/sponsors/YouDirk
 
@@ -179,6 +179,7 @@ Credits
 
 * Regular contributors:  
   *Dirk "YouDirk" Lehmann*
+
 
 [sponsor-link]: https://github.com/sponsors/YouDirk
 [sponsor-pic]: https://img.shields.io/badge/%F0%9F%92%96_Donate/Sponsor--ffffff?style=social
