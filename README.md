@@ -15,8 +15,8 @@
 > along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-lib@home
-========
+Readme (lib@home)
+=================
 
 A framework to develop `*@home` projects for distributed calculations.
 
@@ -34,6 +34,64 @@ current progress of development
 * <b>lib@home Bug Tracking</b>  
   https://github.com/YouDirk/libathome/issues
 
+* <b>Donate/Sponsor</b>  
+  [![Donate/Sponsor][sponsor-pic]][sponsor-link]
+  https://github.com/sponsors/YouDirk
+
+What is lib@home?
+-----------------
+
+The goal is to develop a software library that can be used for **large
+(time intensive) calculations** which are possible to split into
+separate `tasks`.  There will be exist a server-side implementation
+for Linux, which is possible to configure as `reverse proxy` for
+common HTTP server applications (such like `Apache`) for easy
+integration into existing WWW server (hopefully without re-configuring
+firewall stuff) and the possibility to separate the **lib@home-server
+process** to a remote cloud-machine.  The lib@home-server process with
+a SQL database (`MariaDB` and `PostgreSQL` planned) distributes the
+tasks to the **lib@home-user-clients** (Windows and Linux
+implementation) which solves the `task` if it is currently not busy
+with optionally graphical output, such like a much **calculation
+intensive screensaver**.  If the `task` is solved the `task-result`
+will be sent to the server which `verifies` the task-result, and if it
+is a really possible solution then it can be saved to the database and
+used for later `tasks`.  So far, **one `task` can be interpreted as
+one iteration** of the large calculation.
+
+Additionally there is an **achievement system** planned.  Every client
+is logged-in via a cryptographic challenge-response authentication
+using `OpenSSL`, this mechanism makes it easy to register a new
+user-client without an user-interaction.  So every user have a public
+(by default anonymous) **user profile**, where are statistics
+available and achieved successes are logged for other community
+members.  It's also planned to provide some **global statistics**,
+such like the progress of the large calculation problem and
+**optionally to provide some results** of it.
+
+**Common use-cases** may be to train AI algorithms.  As you can
+imagine, the concept of this library does only work if the calculation
+itself is useful for the general public, and that is the goal of
+lib@home.  So, nowadays the **scientists in biology and public
+healthy** are interested in which **DNA/RNA sequences** matching which
+property of an organism/virus.  Categorizing properties depending on
+DNA/RNA sequences is a very popular topic which could be solved with
+very long calculating training algorithms of **Artificial Neural
+Networks**, **Support Vector Machines**, etc.  Mining digital
+currencies, such like Bitcoin, is not a goal of this library.
+
+You can find an **example application**, called `Prime@home` in the
+[lib@home repository on
+GitHub](https://github.com/YouDirk/libathome/tree/master/src/project).
+The `task` which will be distributed to the client here is just an
+incrementing integer (for example `45`).  The client takes this number
+and calculates the prime-factors of it (in this example `3 * 3 * 5 =
+45`) and send these back as `task-result` (here `{3, 3, 5}`).  The
+server `verifies` the task-result by multiplying these factors (`3 *
+3 * 5` is really `45`).  If the verification succeeded, then the
+server writes the relation to the SQL database (`id=45 -> {(45, 2, 3),
+(45, 1, 5)}`).  Now the database can be queried to get fast the
+prime-factors.
 
 Make targets
 ------------
@@ -111,3 +169,16 @@ libathome$> make run
 >           msys/bash-completion`.  After doing this, open a new Bash
 >           shell, type `libathome$> make ` and use the TAB-key twice
 >           to list the `make`-targets.
+
+Credits
+=======
+
+* Donators:  
+  [![Donate/Sponsor][sponsor-pic]][sponsor-link] *nobody1, nobody2,
+  nobody3 D':*
+
+* Regular contributors:  
+  *Dirk "YouDirk" Lehmann*
+
+[sponsor-link]: https://github.com/sponsors/YouDirk
+[sponsor-pic]: https://img.shields.io/badge/%F0%9F%92%96_Donate/Sponsor--ffffff?style=social

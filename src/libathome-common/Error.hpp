@@ -85,7 +85,7 @@ namespace libathome_common
 {
 
 /**
- * Base class to `throw` excpetions, using ::Err() macro.
+ * Base class to `throw` excpetions, use ::Err() macro to `throw`.
  *
  * Inherit from this class to implement your exception.  So we can
  * `catch (libathome_common::Error& e) {}` all exceptions in one

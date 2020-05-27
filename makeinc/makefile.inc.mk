@@ -149,7 +149,7 @@ else
   endif # ifeq (,$(LIBNAME))
 	cd $(DOCPATH) && $(DOXYGEN_OPT) -u $(DOXYGENFILE)
 	cd $(DOCPATH) && $(DOXYGEN_OPT) $(DOXYGENFILE) 3>&1 2>&1 >&3 \
-	  | $(SED) -n "/\\.md:.*'.home'/!p" >&2
+	  | $(SED) -n "/\\.md:.*[\\@]home/!p" >&2
   ifneq (,$(LIBNAME))
 	@echo "Generating '$(DOC_OUTPATH)/default.css'"
 	@$(SED) '$(\

@@ -21,7 +21,7 @@
 /**
  * @file
  * @brief Includes all header files from directory `libathome-client`
- *        (*and `libathome-common`*).
+ *        (*and implicitly `libathome-common`*).
  */
 
 /* This file was generated using MAKE during compiling
