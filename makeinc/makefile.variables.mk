@@ -172,6 +172,10 @@ WEB_BUGS_LINKNAME := Bug Tracking
 WEB_PROJECTDOC_URL := https://github.com/YouDirk/libathome-doc
 WEB_PROJECTDOC_LINKNAME := API Doc Version Control
 
+WEB_SPONSOR_URL := https://github.com/sponsors/YouDirk
+WEB_SPONSOR_LINKNAME := <img src="https://img.shields.io/badge/$(\
+  )%F0%9F%92%96_Donate/Sponsor--ffffff?style=social" alt="Donate/Sponsor">
+
 WEB_FAVICON_URL := favicon.ico
 WEB_FAVICON_LARGE_URL := $(WEB_IMG_PATH)/$(LOGO_FAVICON_LARGE)
 WEB_LOGODOC_URL := $(WEB_IMG_PATH)/$(LOGO_DOC)

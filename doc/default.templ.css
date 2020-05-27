@@ -108,6 +108,10 @@ div#footer_div {
   text-align: center;
   font-size: 12px;
 }
+div#footer_div img {
+  margin-top: 6px;
+  height: 20px;
+}
 div#footer_div a {
   font-weight: bold;
   color: #1050a0;
