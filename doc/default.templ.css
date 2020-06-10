@@ -175,6 +175,9 @@ div#content_div {
   div#footer_div {
     font-size: 9px;
   }
+  div#footer_div img {
+    height: 16px;
+  }
 } /* @media only screen and (max-width: 600px)  */
 
 /* ***************************************************************  */

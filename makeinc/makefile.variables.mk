@@ -95,15 +95,21 @@ CV2PDB_URL := https://ci.appveyor.com/api/projects/rainers/visuald$(\
   )%202015%2C%20VS%3D14%2C%20APPVEYOR_BUILD_WORKER_IMAGE%3DVisual$(\
   )%20Studio%202015
 
-PROJECTPATH := ../project
-DOCPATH := ../../doc
-TOOLSPATH := ../../tools
-TRUNKPATH := ../../trunk
+PROJECTDIR := project
+DOCDIR := doc
+TOOLSDIR := tools
+TRUNKDIR := trunk
+
+PROJECTPATH := ../$(PROJECTDIR)
+DOCPATH := ../../$(DOCDIR)
+TOOLSPATH := ../../$(TOOLSDIR)
+TRUNKPATH := ../../$(TRUNKDIR)
 
 LOGO_DOC := logo-doc.640x320.png
 LOGO_110_55 := logo.110x55.png
 LOGO_FAVICON := logo-square-icon.32.ico
 LOGO_FAVICON_LARGE := logo-square-icon.640.png
+BUTTON_SPONSOR := button-sponsor.20.png
 
 DOC_OUTPATH := $(DOCPATH)/$(DOC_OUTDIR)
 DOCHTMLPATH := $(DOC_OUTPATH)/$(VERSION_THIS)
@@ -173,8 +179,8 @@ WEB_PROJECTDOC_URL := https://github.com/YouDirk/libathome-doc
 WEB_PROJECTDOC_LINKNAME := API Doc Version Control
 
 WEB_SPONSOR_URL := https://github.com/sponsors/YouDirk
-WEB_SPONSOR_LINKNAME := <img src="https://img.shields.io/badge/$(\
-  )%F0%9F%92%96_Donate/Sponsor--ffffff?style=social" alt="Donate/Sponsor">
+WEB_SPONSOR_LINKNAME := <img src="$(WEB_IMG_PATH)/$(BUTTON_SPONSOR)" \
+  alt="Donate/Sponsor">
 
 WEB_FAVICON_URL := favicon.ico
 WEB_FAVICON_LARGE_URL := $(WEB_IMG_PATH)/$(LOGO_FAVICON_LARGE)
