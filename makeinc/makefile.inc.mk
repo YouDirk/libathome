@@ -181,7 +181,6 @@ else
 	   )s~{LOGODOC_URL}~$(WEB_LOGODOC_URL)~;$(\
 	 )' $(DOCPATH)/index.templ.html > $(DOC_OUTPATH)/index.html
 	mkdir -p $(DOC_OUTPATH)/$(WEB_IMG_PATH)
-	cd $(DOCHTMLPATH) && ln -fs ../$(WEB_IMG_PATH) $(TRUNKDIR)
 	cp -f $(TRUNKPATH)/$(LOGO_FAVICON) \
 	  $(DOC_OUTPATH)/$(WEB_FAVICON_URL)
 	cp -f $(TRUNKPATH)/$(LOGO_DOC) $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
@@ -189,6 +188,11 @@ else
 	  $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
 	cp -f $(TRUNKPATH)/$(BUTTON_SPONSOR) \
 	  $(DOC_OUTPATH)/$(WEB_IMG_PATH)/
+    ifeq (,$(OS_IS_WIN))
+	cd $(DOCHTMLPATH) && ln -fs ../$(WEB_IMG_PATH) $(TRUNKDIR)
+    else
+	cd $(DOCHTMLPATH) && cp -rf ../$(WEB_IMG_PATH) $(TRUNKDIR)
+    endif
   endif # ifneq (,$(LIBNAME))
 endif # ifeq (,$(DOXYGEN_OPT))
 .PHONY: doc-view
