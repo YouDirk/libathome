@@ -20,7 +20,7 @@
 #define LIBATHOME_COMMON_REALTIMECLOCK_H__
 /**
  * @file
- * @brief Declares the class libathome_common::RealtimeClock.
+ * @brief Declares the class ::libathome_common::RealtimeClock.
  */
 
 #include "libathome-common/Common.hpp"
@@ -33,8 +33,8 @@ namespace libathome_common
 /**
  * Provides functionality of an RTC.
  *
- * The time provided is captured on instancing the class during
- * RealtimeClock::RealtimeClock().
+ * The time provided is captured during instancing the class during
+ * ::libathome_common::RealtimeClock::RealtimeClock().
  */
 class RealtimeClock
 {
@@ -49,7 +49,8 @@ public:
   } timezone_t;
 
   /**
-   * Convert a RealtimeClock::timezone_t to string.
+   * Convert a ::libathome_common::RealtimeClock::timezone_t to
+   * string.
    *
    * @param timezone The timezone to convert
    * @return The string which names the timezone. `static` allocated,
@@ -59,10 +60,10 @@ public:
 
   /**
    * Fetch current time with timezone
-   * RealtimeClock::timezone_t::local_e.
+   * ::libathome_common::RealtimeClock::local_e.
    *
    * But you can change the timezone later, using
-   * RealtimeClock::set_timezone().
+   * ::libathome_common::RealtimeClock::set_timezone().
    *
    * @exception Error will be thrown if `timestamp` could not be
    *            fetched from system RTC
@@ -87,10 +88,10 @@ public:
   /**
    * Output the fetched time.
    *
-   * The `result` will be formated using `strftime_fmt`.  Take a look
-   * to `$> man 3 strftime` for detailed information.  Make sure to
-   * hold your format strings POSIX compatible and try to avoid other
-   * extensions.
+   * The `result` will be the formated date/time using `strftime_fmt`.
+   * Take a look to `$> man 3 strftime` for detailed information.
+   * Make sure to hold your format strings POSIX compatible and try to
+   * avoid other extensions.
    *
    * @param strftime_fmt The format string.  Make sure to hold it
    *        POSIX compatible and try to avoid other extensions.

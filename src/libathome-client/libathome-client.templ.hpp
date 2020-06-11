@@ -20,8 +20,8 @@
 #define LIBATHOME_CLIENT_H__
 /**
  * @file
- * @brief Includes all header files from directory `libathome-client`
- *        (*and implicitly `libathome-common`*).
+ * @brief Includes all header files from directory `libathome-client/`
+ *        (*and implicitly `libathome-common/`*).
  */
 
 /* This file was generated using MAKE during compiling

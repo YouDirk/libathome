@@ -20,16 +20,16 @@
 #define LIBATHOME_COMMON_COMMON_H__
 /**
  * @file
- * @brief Documentation of libathome_common and declares the class
- *        libathome_common::Common.
+ * @brief Documentation of ::libathome_common and declares the class
+ *        ::libathome_common::Common.
  *
  * @dir
- * @brief Holds all files for namespace libathome_common.
+ * @brief Holds all files for namespace ::libathome_common.
  *
  * Include libathome-common.hpp to use all header files in this
  * directory and thereby all the classes using the namespace
- * libathome_common which represents the API of `libathome-common.so`
- * or `libathome-common.dll`.
+ * ::libathome_common which represents the API of
+ * `libathome-common.so` or `libathome-common.dll`.
  *
  * ```cpp
  * // Incudes all files from directory 'libathome-common/'
@@ -76,19 +76,19 @@
  * `-L/path/to/lib`.
  *
  * Use the compiler flag `-DDEBUG` during development for things such
- * like to force `libathome_common::Log` output to `/dev/stdout`,
+ * like to force ::libathome_common::Log output to `/dev/stdout`,
  * enable logging backtrace at runtime error, etc ...
  *
  * Use the linker flag `-rdynamic` optionally on Linux or Unix-like
- * systems to make backtraces of libathome_common::Error more readable
- * for humans.
+ * systems to make backtraces of ::libathome_common::Error more
+ * readable for humans.
  *
  * **Example `main.cpp` C++ file**
  * ```cpp
  * #include <libathome-client.hpp>
  *
- * using namespace libathome_common;
- * using namespace libathome_client;
+ * using namespace ::libathome_common;
+ * using namespace ::libathome_client;
  *
  * int
  * main(int argc, char** argv)
@@ -115,7 +115,7 @@ namespace libathome_common
 {
 
 /**
- * Buffer size of static string type libathome_common::string_t.
+ * Buffer size of static string type ::libathome_common::string_t.
  */
 const unsigned STRING_LEN          = 256;
 
@@ -131,10 +131,11 @@ typedef char                       string_t[STRING_LEN];
  * Abstract singleton initialisator class, needed for everything :P
  *
  * Just one instance per process must exitst. To instantiate it use
- * libathome_client::Init() or libathome_server::Init() constructor.
- * Use Common::get() static method to get the singleton instance from
- * anywhere in your program.  Also implicitly includes STL stuff,
- * stdlibs, etc ...
+ * ::libathome_client::Init::Init() or
+ * ::libathome_server::Init::Init() constructor.  Use
+ * ::libathome_common::Common::get() static method to get the
+ * singleton instance from anywhere in your program.  Also implicitly
+ * includes STL stuff, stdlibs, etc ...
  */
 class Common
 {
@@ -151,14 +152,14 @@ public:
    * **Abstract** initialisator which test for API Version
    * compatibility, initializes all singletons, etc.
    *
-   * See libathome_common::Common for more details.
+   * See ::libathome_common::Common for more details.
    *
    * @param argc Pass the first parameter of `int main(int argc, char**
    *             argv)` here
    * @param argv Pass the second parameter of `int main(int argc, char**
    *             argv)` here
    * @exception Error will be thrown if this process does already
-   *            instanced a class of type libathome_common::Common
+   *            instanced a class of type ::libathome_common::Common
    */
   explicit Common(int argc, char** argv) noexcept(false);
   /**

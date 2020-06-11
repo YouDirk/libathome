@@ -18,7 +18,7 @@
 
 #include "libathome-client/Init.hpp"
 
-using namespace libathome_common;
+using namespace ::libathome_common;
 
 
 void libathome_client::Init::_abstract_class() { }
