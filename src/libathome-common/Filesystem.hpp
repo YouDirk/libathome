@@ -20,7 +20,7 @@
 #define LIBATHOME_COMMON_FILESYSTEM_H__
 /**
  * @file
- * @brief Declares the class libathome_common::Filesystem.
+ * @brief Declares the class ::libathome_common::Filesystem.
  */
 
 #include "libathome-common/Common.hpp"
@@ -62,15 +62,15 @@ public:
    *
    * Creates a directory in `path` **not recursively** and returns
    * `true` on success.  If the directory already exist then `false`
-   * will be returned.  Throws an libathome_common::Error if an error
-   * occurs.
+   * will be returned.  Throws an ::libathome_common::Error if an
+   * error occurs.
    *
    * @param path The path (relative or absolute) where to create the
    *             directory
    * @return `true` on success, `false` if directory does already
    *         exist
-   * @exception Error will be thrown if an error occurs, such like no
-   *            permission, etc
+   * @exception ::libathome_common::Error will be thrown if an error
+   *            occurs, such like no permission, etc
    */
   static bool mkdir(const std::string& path) noexcept(false);
 

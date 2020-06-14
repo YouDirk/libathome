@@ -20,7 +20,7 @@
 #define LIBATHOME_COMMON_ERROR_H__
 /**
  * @file
- * @brief Declares the class libathome_common::Error.
+ * @brief Declares the class ::libathome_common::Error.
  */
 
 #include "libathome-common/Common.hpp"
@@ -42,11 +42,11 @@
  */
 
 /**
- * **Constructor** macro to `throw` an libathome_common::Error.
+ * **Constructor** macro to `throw` an ::libathome_common::Error.
  *
  * It automatically provides some parameters to
- * libathome_common::Error::Error() so that the
- * libathome_common::Error::what() message includes the **method
+ * ::libathome_common::Error::Error() so that the
+ * ::libathome_common::Error::what() message includes the **method
  * name** of the throwing method and optionally (depending on `DEBUG`)
  * a **backtrace**.
  *
@@ -88,18 +88,19 @@ namespace libathome_common
  * Base class to `throw` excpetions, use ::Err() macro to `throw`.
  *
  * Inherit from this class to implement your exception.  So we can
- * `catch (libathome_common::Error& e) {}` all exceptions in one
+ * `catch (::libathome_common::Error& e) {}` all exceptions in one
  * statement.
  *
  * To `throw` this class, use the ::Err() macro `throw Err("error
- * message!");` defined in libathome-common/Error.hpp.  This makes
- * sure that the `Class::method()` name is included in the
- * Error::what() message.
+ * message!");` defined in @ref libathome-common/Error.hpp.  This
+ * makes sure that the `'Class::method()'` name will be prefixed in
+ * the ::libathome_common::Error::what() message.
  *
  * This class does also provides a `backtrace` functionality.  The
- * backtrace will be automatically added to Error::what(), if debug
- * build is enabled by defining the preprocessor constant `DEBUG`,
- * i.e. passing the flag `-DDEBUG` through the C++ compiler.
+ * backtrace will be automatically added to
+ * ::libathome_common::Error::what(), if debug build is enabled by
+ * defining the preprocessor constant `DEBUG`, i.e. passing the flag
+ * `-DDEBUG` through the C++ compiler.
  *
  * **Example**
  * ```cpp
@@ -108,7 +109,7 @@ namespace libathome_common
  *   ...
  *
  *   if (error_case)
- *     throw ::Err("This is an %s message!", "error");
+ *     throw Err("This is an %s message!", "error");
  *
  *   ...
  *
@@ -123,18 +124,18 @@ public:
   /**
    * Instance it via `throw ::Err("error %s!", "message");`
    *
-   * See libathome_common::Error for an example.
+   * See ::libathome_common::Error for an example.
    *
    * @param _backtrace_append Automatically filled by `::Err()` macro
    * @param _pretty_func Automatically filled by `::Err()` macro
-   * @param reason_fmt `printf()`-like error message
+   * @param reason The error message
    */
   explicit Error(bool _backtrace_append, const char* _pretty_func,
-    const std::string& reason_fmt, ...);
+    const std::string& reason);
   /**
    * Instance it via `throw ::Err("error %s!", "message");`
    *
-   * See libathome_common::Error for an example.
+   * See ::libathome_common::Error for an example.
    *
    * @param _backtrace_append Automatically filled by `::Err()` macro
    * @param _pretty_func Automatically filled by `::Err()` macro
@@ -149,10 +150,10 @@ public:
   virtual ~Error();
 
   /**
-   * Append backtrace to Error::what().
+   * Append backtrace to ::libathome_common::Error::what().
    *
-   * Also append backtrace to Error::what() if `-DDEBUG` was not set.
-   * Double calls will be ignored.
+   * Also append backtrace to ::libathome_common::Error::what() if
+   * `-DDEBUG` was not set.  Double calls will be ignored.
    */
   virtual void bt() noexcept;
 
@@ -171,11 +172,13 @@ public:
    */
   virtual int get_backtrace_size() const noexcept;
   /**
-   * Returns if the real stack was bigger than
-   * Error::get_backtrace_size().
+   * Returns `true` if the real stack was bigger than
+   * ::libathome_common::Error::get_backtrace_size() and the
+   * ::libathome_common::Error::what() message will be just list the
+   * top of the stack.
    *
    * @return `true` if real stack was bigger than
-   *         Error::get_backtrace_size()
+   *         ::libathome_common::Error::get_backtrace_size()
    */
   virtual bool is_backtrace_more() const noexcept;
   /**
@@ -218,7 +221,7 @@ private:
    * Error::BACKTRACE_OFFSET is set correct.
    */
   void _init(bool _backtrace_append,
-    const char* _pretty_func, const std::string& reason_fmt, va_list ap)
+    const char* _pretty_func, const char* reason_fmt, va_list ap)
     __attribute__((noinline));
 
   /**

@@ -158,8 +158,9 @@ public:
    *             argv)` here
    * @param argv Pass the second parameter of `int main(int argc, char**
    *             argv)` here
-   * @exception Error will be thrown if this process does already
-   *            instanced a class of type ::libathome_common::Common
+   * @exception ::libathome_common::Error will be thrown if this
+   *            process does already instanced a class of type
+   *            ::libathome_common::Common
    */
   explicit Common(int argc, char** argv) noexcept(false);
   /**

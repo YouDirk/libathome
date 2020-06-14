@@ -40,7 +40,7 @@ REGEX_LIBNAME("^(.*[/\\\\])?([^/\\\\].*)$");
 
 void libathome_common::Error::
 _init(bool _backtrace_append,
-  const char* _pretty_func, const std::string& reason_fmt, va_list ap)
+  const char* _pretty_func, const char* reason_fmt, va_list ap)
 {
   this->backtrace_size
     = this->_backtrace(this->backtrace_frames, Error::BACKTRACE_MAX);
@@ -57,12 +57,11 @@ _init(bool _backtrace_append,
     func = _pretty_func != NULL? _pretty_func: "???";
 
   string_t buf;
-  if (0 >=
-      ::vsnprintf(buf, STRING_LEN, reason_fmt.c_str(), ap)) {
+  if (0 >= ::vsnprintf(buf, STRING_LEN, reason_fmt, ap)) {
     /* Throwing Error in Error is a bad idea.  So we are making the
      * best what is possible.
      */
-    ::strncpy(buf, reason_fmt.c_str(), STRING_LEN-1);
+    ::strncpy(buf, reason_fmt, STRING_LEN-1);
   }
 
   this->what_msg = "*(RUNTIME)* " + func + "(): " + buf;
@@ -266,27 +265,21 @@ _backtrace_symbols(void* const* buffer, int size)
 /* ---------------------------------------------------------------  */
 
 libathome_common::Error::
-Error(bool _backtrace_append,
-  const char* _pretty_func, const std::string& reason_fmt, ...)
-  :std::runtime_error(reason_fmt)
+Error(bool _backtrace_append, const char* _pretty_func,
+      const std::string& reason)
+  :Error(_backtrace_append, _pretty_func, "%s", reason.c_str())
 {
-  ::va_list ap;
-
-  ::va_start(ap, reason_fmt);
-  this->_init(_backtrace_append, _pretty_func, reason_fmt, ap);
-  ::va_end(ap);
 }
 
 libathome_common::Error::
-Error(bool _backtrace_append,
-  const char* _pretty_func, const char* reason_fmt, ...)
+Error(bool _backtrace_append, const char* _pretty_func,
+      const char* reason_fmt, ...)
   :std::runtime_error(std::string(reason_fmt))
 {
   ::va_list ap;
 
   ::va_start(ap, reason_fmt);
-  this->_init(
-    _backtrace_append, _pretty_func, std::string(reason_fmt), ap);
+  this->_init(_backtrace_append, _pretty_func, reason_fmt, ap);
   ::va_end(ap);
 }
 

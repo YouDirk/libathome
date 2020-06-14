@@ -65,8 +65,8 @@ public:
    * But you can change the timezone later, using
    * ::libathome_common::RealtimeClock::set_timezone().
    *
-   * @exception Error will be thrown if `timestamp` could not be
-   *            fetched from system RTC
+   * @exception ::libathome_common::Error will be thrown if
+   *            `timestamp` could not be fetched from system RTC
    */
   explicit RealtimeClock() noexcept(false);
 
@@ -74,8 +74,8 @@ public:
    * Fetch current time with timezone `timezone`.
    *
    * @param timezone The timezone which should be used.
-   * @exception Error will be thrown if `timestamp` could not be
-   *            fetched from system RTC
+   * @exception ::libathome_common::Error will be thrown if
+   *            `timestamp` could not be fetched from system RTC
    */
   explicit RealtimeClock(RealtimeClock::timezone_t timezone)
     noexcept(false);
@@ -96,8 +96,8 @@ public:
    * @param strftime_fmt The format string.  Make sure to hold it
    *        POSIX compatible and try to avoid other extensions.
    * @return The resulting formatted string.
-   * @exception Error will be thrown if some formatting of
-   *            `strftime_fmt` is going wrong
+   * @exception ::libathome_common::Error will be thrown if some
+   *            formatting of `strftime_fmt` is going wrong
    */
   virtual std::string
   to_string(const std::string& strftime_fmt) const noexcept(false);
@@ -106,8 +106,9 @@ public:
    * Set `timezone`.
    *
    * @param timezone The timezone to set.
-   * @exception Error will be thrown if `timestamp` could not be
-   *            converted to localized `timestruct`
+   * @exception ::libathome_common::Error will be thrown if
+   *            `timestamp` could not be converted to localized
+   *            `timestruct`
    */
   virtual void set_timezone(RealtimeClock::timezone_t timezone)
     noexcept(false);

@@ -20,7 +20,7 @@
 #define LIBATHOME_COMMON_LOGGER_H__
 /**
  * @file
- * @brief Declares the class libathome_common::Logger.
+ * @brief Declares the class ::libathome_common::Logger.
  */
 
 #include "libathome-common/Common.hpp"
@@ -33,7 +33,7 @@ namespace libathome_common
 {
 
 /**
- * Output class for logging stuff, singleton libathome_common::Log
+ * Output class for logging stuff, singleton ::libathome_common::Log
  *
  * Depending on initialization it logs stuff into log files with a
  * daily log-rotation and deletes old obsolete files from log
@@ -58,7 +58,7 @@ public:
   } loglevel_t;
 
   /**
-   * Convert a Logger::loglevel_t to string.
+   * Convert a ::libathome_common::Logger::loglevel_t to string.
    *
    * @param loglevel The loglevel to convert
    * @return The string which names the loglevel. `static` allocated,
@@ -67,10 +67,10 @@ public:
   static const char* to_string(Logger::loglevel_t loglevel);
 
   /**
-   * Default logger instance here: libathome_common::Log.
+   * Default logger instance here: ::libathome_common::Log.
    *
-   * Logger will log to `stdout`.  Will be called during
-   * Common::Common().
+   * Will be log to `stdout` and be called during
+   * ::libathome_common::Common::Common().
    *
    * @param loglevel Log-level to filter by priority
    * @param timezone Timezone which is used for messages
@@ -79,9 +79,9 @@ public:
     Logger::loglevel_t loglevel, RealtimeClock::timezone_t timezone);
 
   /**
-   * Default logger instance here: libathome_common::Log.
+   * Default logger instance here: ::libathome_common::Log.
    *
-   * Will be called during Common::Common().
+   * Will be called during ::libathome_common::Common::Common().
    *
    * @param loglevel Log-level to filter by priority
    * @param timezone Timezone which is used for messages
@@ -99,12 +99,12 @@ public:
   /**
    * Default destructor.
    *
-   * Will be called during Common::~Common.
+   * Will be called during ::libathome_common::Common::~Common.
    */
   virtual ~Logger();
 
   /**
-   * Set the Logger::loglevel_t of the Logger.
+   * Set the ::libathome_common::Logger::loglevel_t of the Logger.
    *
    * Set the log-level to filter out messages which we don't want to
    * see.
@@ -113,29 +113,31 @@ public:
    */
   virtual void set_loglevel(Logger::loglevel_t loglevel);
   /**
-   * Set the RealtimeClock::timezone_t of the Logger.
+   * Set the ::libathome_common::RealtimeClock::timezone_t of the
+   * Logger.
    *
    * Set the timezone of the timestamps for the log messages.
-   * RealtimeClock::utc_e is usefull for server-side parts.  On client
-   * side it's better to use the local system time
-   * RealtimeClock::local_e.
+   * ::libathome_common::RealtimeClock::utc_e is usefull for
+   * server-side parts.  On client side it's better to use the local
+   * system time ::libathome_common::RealtimeClock::local_e.
    *
    * @param timezone The timezone to set
    */
   virtual void set_timezone(RealtimeClock::timezone_t timezone);
 
   /**
-   * Returns the Logger::loglevel_t of the Logger.
+   * Returns the ::libathome_common::Logger::loglevel_t of the Logger.
    *
-   * See Logger::set_loglevel for more details.
+   * See ::libathome_common::Logger::set_loglevel for more details.
    *
    * @return The current log-level
    */
   virtual Logger::loglevel_t get_loglevel() const;
   /**
-   * Returns the RealtimeClock::timezone_t of the Logger.
+   * Returns the ::libathome_common::RealtimeClock::timezone_t of the
+   * Logger.
    *
-   * See Logger::set_timezone for more details.
+   * See ::libathome_common::Logger::set_timezone for more details.
    *
    * @return The current timezone
    */
@@ -257,7 +259,7 @@ public:
 protected:
   /**
    * Use this method to output to log-file if you inherit from this
-   * class and implement your own Logger class.
+   * class and implement your own ::libathome_common::Logger class.
    *
    * @param level The loglevel which will be used.
    * @param fmt `printf()`-like format string
@@ -278,10 +280,11 @@ private:
 }; /* class Logger  */
 
 /**
- * Reference to the singleton class Logger instance.
+ * Reference to the singleton class ::libathome_common::Logger
+ * instance.
  *
- * Will be instanciated during Common::Common and freed during
- * Common::~Common().
+ * Will be instanciated during ::libathome_common::Common::Common and
+ * freed during ::libathome_common::Common::~Common().
  */
 extern Logger* Log;
 
