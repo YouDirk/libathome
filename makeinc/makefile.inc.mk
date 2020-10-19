@@ -242,15 +242,15 @@ clean-all: clean _clean-tags _clean-makecache
 _clean-all-recursive: clean _clean-tags
 	-rm -rf *.$(PDBEXT) $(OUTPUT)
 
-%.$(DEPEXT): %.$(CEXT)
-	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
-%.$(DEPEXT): %.$(SEXT)
-	@$(MAKEDEP) $(CCFLAGS) -MQ $*.$(OEXT) -o $@ $<
+%.$(DEPEXT): %.$(CEXT) $(MAKEFILEZ)
+	@$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $<
+%.$(DEPEXT): %.$(SEXT) $(MAKEFILEZ)
+	@$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $<
 
 %.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
-	$(CC) $(CCFLAGS) -o $@ $<
+	$(CC) -c $(CCFLAGS) -o $@ $<
 %.$(OEXT): %.$(SEXT) $(MAKEFILEZ)
-	$(AS) $(ASFLAGS) -o $@ $<
+	$(AS) -c $(ASFLAGS) -o $@ $<
 
 $(CTAGSFILE): $(TAGEDFILES)
 ifeq (,$(CTAGS_OPT))

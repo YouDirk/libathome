@@ -28,7 +28,7 @@
 /src/**/*.d
 
 # Make stuff
-.makefile.cache.mk
+/.makefile.cache.mk
 
 # Auto completion stuff
 /src/**/tags

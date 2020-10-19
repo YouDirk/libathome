@@ -135,7 +135,7 @@ DEPFILES := $(OBJ:=.$(DEPEXT))
 HFILES := $(OBJ:=.$(HEXT))
 
 FLAGS := $(DEBUGFLAGS) $(WARNFLAGS) $(OPTFLAG) $(CPPSTDFLAG)
-CCFLAGS := $(FLAGS) -c $(FPICFLAGS) $(CCDEFINES) \
+CCFLAGS := $(FLAGS) $(FPICFLAGS) $(CCDEFINES) \
            $(addprefix -I,$(INCLUDE_PATHS))
 ASFLAGS := $(CCFLAGS)
 LDFLAGS := $(FLAGS) $(SHAREDFLAGS) $(addprefix -L,$(LD_PATHS))
@@ -154,6 +154,8 @@ TAGEDFILES := $(wildcard *.$(CEXT) *.$(HEXT) *.$(SEXT))
 CTAGSFLAGS :=
 ETAGSFLAGS :=
 EBROWSEFLAGS :=
+
+MAKEDEP := $(CC) $(CCFLAGS) -M
 
 # ********************************************************************
 # Web URL stuff
