@@ -243,9 +243,9 @@ _clean-all-recursive: clean _clean-tags
 	-rm -rf *.$(PDBEXT) $(OUTPUT)
 
 %.$(DEPEXT): %.$(CEXT) $(MAKEFILEZ)
-	@$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $<
+	@-$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
 %.$(DEPEXT): %.$(SEXT) $(MAKEFILEZ)
-	@$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $<
+	@-$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
 
 %.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
 	$(CC) -c $(CCFLAGS) -o $@ $<
