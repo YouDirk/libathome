@@ -63,14 +63,13 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Installing MSYS2 environment...
-      uses: numworks/setup-msys2@v1
+      uses: numworks/setup-msys2@v2
       with:
         msystem: MINGW64
         path-type: strict
+        release: true
         update: false
-    - name: Installing toolchain...
-      run: msys2do pacman -S --noconfirm msys/make wget
-                   mingw64/mingw-w64-x86_64-gcc
+        install: msys/make wget mingw64/mingw-w64-x86_64-gcc
       # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
       uses: actions/checkout@v2.1.0
