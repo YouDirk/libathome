@@ -24,6 +24,8 @@
 /src/project/*-client.pdb
 
 # Compiling stuff
+/src/**/*.cc
+/src/**/*.asm
 /src/**/*.o
 /src/**/*.d
 

@@ -231,7 +231,8 @@ ifneq (,$(LIBNAME))
 endif
 
 clean: _clean-deps
-	-rm -rf *.$(OEXT) *.$(LOGEXT) *~ $(addprefix $(DOCPATH)/,*.bak *~) \
+	-rm -rf *.$(CCEXT) *.$(ASMEXT) *.$(OEXT) *.$(LOGEXT) *~ *.bak \
+	  $(addprefix $(DOCPATH)/,*.bak *~) \
 	  $(addprefix $(TOOLSPATH)/,*.bak *~)
 # Compiling library?
 ifneq (,$(LIBNAME))
@@ -247,6 +248,10 @@ _clean-all-recursive: clean _clean-tags
 %.$(DEPEXT): %.$(SEXT) $(MAKEFILEZ)
 	@-$(MAKEDEP) -E -MQ $*.$(OEXT) -o $@ $< 2> /dev/null
 
+%.$(CCEXT): %.$(CEXT) $(MAKEFILEZ)
+	$(CC) -E $(CCFLAGS) -o $@ $<
+%.$(ASMEXT): %.$(CEXT) $(MAKEFILEZ)
+	$(CC) -S $(CCFLAGS) -o $@ $<
 %.$(OEXT): %.$(CEXT) $(MAKEFILEZ)
 	$(CC) -c $(CCFLAGS) -o $@ $<
 %.$(OEXT): %.$(SEXT) $(MAKEFILEZ)

@@ -21,6 +21,8 @@
 CEXT := cpp
 HEXT := hpp
 SEXT := S
+CCEXT := cc
+ASMEXT := asm
 OEXT := o
 DEPEXT := d
 LOGEXT := log
