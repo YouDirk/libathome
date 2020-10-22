@@ -63,7 +63,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Installing MSYS2 environment...
-      uses: numworks/setup-msys2@v2
+      uses: msys2/setup-msys2@v2
       with:
         msystem: MINGW64
         path-type: strict
