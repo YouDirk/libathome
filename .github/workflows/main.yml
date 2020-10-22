@@ -79,9 +79,10 @@ jobs:
         lfs: false
         submodules: false
     - name: Running Make...
+      shell: msys2 {0}
       run: |
-        msys2do cd $GITHUB_WORKSPACE
-        msys2do make run ARGS=--version
+        cd $GITHUB_WORKSPACE
+        make run ARGS=--version
 
   doc:
     name: API Reference Documentation
