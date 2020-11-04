@@ -46,7 +46,7 @@ jobs:
     steps:
       # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
-      uses: actions/checkout@v2.1.0
+      uses: actions/checkout@v2.3.4
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
