@@ -72,7 +72,7 @@ jobs:
         install: msys/make wget mingw64/mingw-w64-x86_64-gcc
       # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
-      uses: actions/checkout@v2.1.0
+      uses: actions/checkout@v2.3.4
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
@@ -91,7 +91,7 @@ jobs:
     steps:
       # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
-      uses: actions/checkout@v2.1.0
+      uses: actions/checkout@v2.3.4
       with:
         token: ${{secrets.PUSH_TOKEN}}
         clean: true
@@ -117,7 +117,7 @@ jobs:
           "${{env.WORKFL_COMMIT_MSG}} (for commit $GITHUB_REPOSITORY@$GITHUB_SHA)" \
           || test $? = 1
     - name: Pushing to GitHub...
-      uses: ad-m/github-push-action@v0.5.0
+      uses: ad-m/github-push-action@v0.6.0
       with:
         directory: ${{env.WORKFL_DOCREPO_PATH}}
         repository: ${{env.WORKFL_DOCREPO_PUSHDIR}}
