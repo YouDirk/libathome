@@ -88,6 +88,7 @@ jobs:
     name: API Reference Documentation
     needs: [compile-linux, compile-windows]
     runs-on: ubuntu-latest
+    if: ${{github.event_name == 'push'}}
     steps:
       # Checking out to $GITHUB_WORKSPACE
     - name: Checking out...
