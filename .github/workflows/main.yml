@@ -31,7 +31,7 @@ on:
 
 # Settings
 env:
-  # ${{secrets.GITHUB_TOKEN}}
+  # ${{secrets.PUSH_TOKEN}}
   WORKFL_DOCREPO_PATH:    'doc/libathome'
   WORKFL_DOCREPO_PUSHDIR: 'YouDirk/libathome-doc'
   WORKFL_COMMIT_EMAIL:    'bot-libathome@users.noreply.github.com'
